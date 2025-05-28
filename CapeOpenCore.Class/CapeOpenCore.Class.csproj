@@ -51,15 +51,57 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArrayParameter.cs" />
+    <Compile Include="BooleanParameter.cs" />
+    <Compile Include="CapeMaterialObjectBase.cs" />
+    <Compile Include="CapeObjectBase.cs" />
+    <Compile Include="CapeOpen.cs" />
     <Compile Include="CapeOpenUI\BaseUnitEditor.cs" />
     <Compile Include="CapeOpenUI\BaseUnitEditor.Designer.cs" />
     <Compile Include="CapeOpenUI\WARalgorithm.cs" />
     <Compile Include="CapeOpenUI\WARalgorithm.Designer.cs" />
+    <Compile Include="CapeThermoSystem.cs" />
+    <Compile Include="CapeUnitBase.cs" />
+    <Compile Include="COFEidl.cs" />
+    <Compile Include="COGuids.cs" />
+    <Compile Include="COMMaterialObjectWrapper.cs" />
+    <Compile Include="CommonIDL.cs" />
+    <Compile Include="CoseIDL.cs" />
+    <Compile Include="Dimensions.cs" />
+    <Compile Include="ErrorIDL.cs" />
+    <Compile Include="Exceptions.cs" />
+    <Compile Include="IntegerParameter.cs" />
+    <Compile Include="MaterialObjectWrapper.cs" />
+    <Compile Include="MaterialObjectWrapper10.cs" />
+    <Compile Include="MaterialObjectWrapper11.cs" />
+    <Compile Include="MonitoringInterfaces.cs" />
+    <Compile Include="OptionParameter.cs" />
+    <Compile Include="ParameterCollection.cs" />
+    <Compile Include="ParameterIDL.cs" />
+    <Compile Include="PersistenceInterfacesIDL.cs" />
+    <Compile Include="PetroFractionsIDL.cs" />
+    <Compile Include="PortCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReactionsIDL.cs" />
+    <Compile Include="RealParameter.cs" />
+    <Compile Include="Resources\Resources.Designer.cs" />
+    <Compile Include="ThrmIDL.cs" />
+    <Compile Include="UnitIDL.cs" />
+    <Compile Include="UnitOperationManager.cs" />
+    <Compile Include="UnitOperationSystem.cs" />
+    <Compile Include="UnitPort.cs" />
+    <Compile Include="War.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CapeOpenUI\BaseUnitEditor.resx" />
     <EmbeddedResource Include="CapeOpenUI\WARalgorithm.resx" />
+    <EmbeddedResource Include="Resources\Resources.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="StaticFiles\epa_seal_medium.ico" />
+    <Content Include="StaticFiles\unitCategories.xml" />
+    <Content Include="StaticFiles\units.xml" />
+    <Content Include="StaticFiles\warData.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
