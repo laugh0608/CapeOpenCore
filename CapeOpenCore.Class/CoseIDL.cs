@@ -1,5 +1,4 @@
 ﻿using System;
-using CapeOpen;
 
 //#ifndef _COSE_IDL_
 //#define _COSE_IDL_
@@ -17,7 +16,7 @@ This file can viewed properly with any basic editors and browsers (validation do
 // This file was developed/modified by JEAN-PIERRE BELAUD for CO-LaN organisation - August 2003
 
 
-namespace CapeOpenClassLibrary {
+namespace CapeOpenCore.Class {
 
 	// -------------------------------------------------------------------
 	// ---- The scope of the COSE interfaces ----------------------------------

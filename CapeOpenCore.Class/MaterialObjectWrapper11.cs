@@ -1,7 +1,6 @@
 ﻿using System;
-using CapeOpen;
 
-namespace CapeOpenClassLibrary
+namespace CapeOpenCore.Class
 {    
     /// <summary>
     /// Wrapper class for COM-based CAPE-OPEN ICapeThermoMaterialObject material object.
@@ -28,17 +27,17 @@ namespace CapeOpenClassLibrary
         ICapeThermoPropertyRoutine
     {        
         [NonSerialized]
-        private CapeOpen.ICapeThermoMaterialCOM p_IMatObj;
+        private CapeOpenCore.Class.ICapeThermoMaterialCOM p_IMatObj;
         [NonSerialized]
-        private CapeOpen.ICapeThermoCompoundsCOM p_ICompounds;
+        private CapeOpenCore.Class.ICapeThermoCompoundsCOM p_ICompounds;
         [NonSerialized]
-        private CapeOpen.ICapeThermoPhasesCOM p_IPhases;
+        private CapeOpenCore.Class.ICapeThermoPhasesCOM p_IPhases;
         [NonSerialized]
-        private CapeOpen.ICapeThermoUniversalConstantCOM p_IUniversalConstant;
+        private CapeOpenCore.Class.ICapeThermoUniversalConstantCOM p_IUniversalConstant;
         [NonSerialized]
-        private CapeOpen.ICapeThermoPropertyRoutineCOM p_IPropertyRoutine;
+        private CapeOpenCore.Class.ICapeThermoPropertyRoutineCOM p_IPropertyRoutine;
         [NonSerialized]
-        private CapeOpen.ICapeThermoEquilibriumRoutineCOM p_IEquilibriumRoutine;
+        private CapeOpenCore.Class.ICapeThermoEquilibriumRoutineCOM p_IEquilibriumRoutine;
         // Track whether Dispose has been called.
         private bool _disposed;
 
@@ -598,19 +597,19 @@ namespace CapeOpenClassLibrary
         /// it is not supported by the current implementation</exception>
         /// <exception cref = "ECapeUnknown">The error to be raised when 
         /// other error(s), specified for this operation, are not suitable.</exception>
-        void ICapeThermoMaterial.GetPresentPhases(ref String[] phaseLabels, ref CapeOpen.CapePhaseStatus[] phaseStatus)
+        void ICapeThermoMaterial.GetPresentPhases(ref String[] phaseLabels, ref CapeOpenCore.Class.CapePhaseStatus[] phaseStatus)
         {
             Object obj1 = null;
             Object obj2 = null;
             p_IMatObj.GetPresentPhases(ref obj1, ref obj2);
             phaseLabels = (String[])obj1;
-            phaseStatus = new CapeOpen.CapePhaseStatus[phaseLabels.Length];
+            phaseStatus = new CapeOpenCore.Class.CapePhaseStatus[phaseLabels.Length];
             int[] values = (int[])obj2;
             for (int i = 0; i < phaseStatus.Length; i++)
             {
-                if (values[i] == 0) phaseStatus[i] = CapeOpen.CapePhaseStatus.CAPE_UNKNOWNPHASESTATUS;
-                if (values[i] == 1) phaseStatus[i] = CapeOpen.CapePhaseStatus.CAPE_ATEQUILIBRIUM;
-                if (values[i] == 2) phaseStatus[i] = CapeOpen.CapePhaseStatus.CAPE_ESTIMATES;
+                if (values[i] == 0) phaseStatus[i] = CapeOpenCore.Class.CapePhaseStatus.CAPE_UNKNOWNPHASESTATUS;
+                if (values[i] == 1) phaseStatus[i] = CapeOpenCore.Class.CapePhaseStatus.CAPE_ATEQUILIBRIUM;
+                if (values[i] == 2) phaseStatus[i] = CapeOpenCore.Class.CapePhaseStatus.CAPE_ESTIMATES;
             }
         }
 
@@ -919,14 +918,14 @@ namespace CapeOpenClassLibrary
         /// phaseStatus contains a value that is not in the above table.</exception>
         /// <exception cref = "ECapeUnknown">The error to be raised when 
         /// other error(s), specified for this operation, are not suitable.</exception>
-        void ICapeThermoMaterial.SetPresentPhases(String[] phaseLabels, CapeOpen.CapePhaseStatus[] phaseStatus)
+        void ICapeThermoMaterial.SetPresentPhases(String[] phaseLabels, CapeOpenCore.Class.CapePhaseStatus[] phaseStatus)
         {
             int[] obj1 = new int[phaseStatus.Length];
             for (int i = 0; i < obj1.Length; i++)
             {
-                if (phaseStatus[i] == CapeOpen.CapePhaseStatus.CAPE_UNKNOWNPHASESTATUS) obj1[i] = 0;
-                if (phaseStatus[i] == CapeOpen.CapePhaseStatus.CAPE_ATEQUILIBRIUM) obj1[i] = 1;
-                if (phaseStatus[i] == CapeOpen.CapePhaseStatus.CAPE_ESTIMATES) obj1[i] = 2;
+                if (phaseStatus[i] == CapeOpenCore.Class.CapePhaseStatus.CAPE_UNKNOWNPHASESTATUS) obj1[i] = 0;
+                if (phaseStatus[i] == CapeOpenCore.Class.CapePhaseStatus.CAPE_ATEQUILIBRIUM) obj1[i] = 1;
+                if (phaseStatus[i] == CapeOpenCore.Class.CapePhaseStatus.CAPE_ESTIMATES) obj1[i] = 2;
             }
             p_IMatObj.SetPresentPhases(phaseLabels, obj1);
         }

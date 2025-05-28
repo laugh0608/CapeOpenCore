@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CapeOpenClassLibrary
+namespace CapeOpenCore.Class
 {
 
     /* IMPORTANT NOTICE

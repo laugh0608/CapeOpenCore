@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-//namespace CapeOpenClassLibrary
+//namespace CapeOpenCore.Class
 //{
 
 //    [System.Runtime.InteropServices.ComImport()]

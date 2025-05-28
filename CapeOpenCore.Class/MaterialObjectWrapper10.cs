@@ -1,7 +1,6 @@
 ﻿using System;
-using CapeOpen;
 
-namespace CapeOpenClassLibrary
+namespace CapeOpenCore.Class
 {
 
     /// <summary>
@@ -39,7 +38,7 @@ namespace CapeOpenClassLibrary
         
             if (materialObject is ICapeThermoMaterialObjectCOM)
             {
-                p_MaterialObject = (CapeOpen.ICapeThermoMaterialObjectCOM)materialObject;                
+                p_MaterialObject = (CapeOpenCore.Class.ICapeThermoMaterialObjectCOM)materialObject;                
             }
         }
 

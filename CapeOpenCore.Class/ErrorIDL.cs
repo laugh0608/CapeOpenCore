@@ -17,7 +17,7 @@ This file can viewed properly with any basic editors and browsers (validation do
 
 // ---- The scope of the error interface ------------------------------
 // Reference document: Error Common Interface
-namespace CapeOpenClassLibrary {
+namespace CapeOpenCore.Class {
 
 	//.NET translations of the Error Interfaces:
 	/// <summary>

@@ -1,8 +1,7 @@
 ﻿using System;
-using CapeOpen;
-using CapeOpenClassLibrary;
+using CapeOpenCore.Class;
 
-namespace ClassLibraryTest
+namespace CapeOpenCore.Test
 {
     /// <summary>
     /// This is a mixer eample class that models an adiabtic mixer.
@@ -368,14 +367,14 @@ namespace ClassLibraryTest
                 in1 = (ICapeThermoMaterial)temp.CreateMaterial();
                 in1.CopyFromMaterial(temp);
                 if (temp.GetType().IsCOMObject) System.Runtime.InteropServices.Marshal.ReleaseComObject(temp);
-                ((CapeOpen.ICapeThermoCompounds)in1).GetCompoundList(ref compIds1, ref forms, ref names, ref bTemps, ref molWts, ref casNos);
+                ((CapeOpenCore.Class.ICapeThermoCompounds)in1).GetCompoundList(ref compIds1, ref forms, ref names, ref bTemps, ref molWts, ref casNos);
                 temp = (ICapeThermoMaterial)this.Ports[1].connectedObject;
                 in2 = (ICapeThermoMaterial)temp.CreateMaterial();
                 in2.CopyFromMaterial(temp);
                 if (temp.GetType().IsCOMObject) System.Runtime.InteropServices.Marshal.FinalReleaseComObject(temp);
-                ((CapeOpen.ICapeThermoCompounds)in2).GetCompoundList(ref compIds2, ref forms, ref names, ref bTemps, ref molWts, ref casNos);
+                ((CapeOpenCore.Class.ICapeThermoCompounds)in2).GetCompoundList(ref compIds2, ref forms, ref names, ref bTemps, ref molWts, ref casNos);
                 outlet = (ICapeThermoMaterial)this.Ports[2].connectedObject;
-                ((CapeOpen.ICapeThermoCompounds)outlet).GetCompoundList(ref compIds3, ref forms, ref names, ref bTemps, ref molWts, ref casNos);
+                ((CapeOpenCore.Class.ICapeThermoCompounds)outlet).GetCompoundList(ref compIds3, ref forms, ref names, ref bTemps, ref molWts, ref casNos);
             }
             catch (System.Exception p_Ex)
             {
@@ -420,7 +419,7 @@ namespace ClassLibraryTest
             String[] overall = { "Overall" };
             double[] enthalpy = { 0 };            
             String[] phases = null;
-            CapeOpen.ICapeThermoEquilibriumRoutine eqRoutine;
+            CapeOpenCore.Class.ICapeThermoEquilibriumRoutine eqRoutine;
             string[] strArr1 = null;
             string[] strArr2 = null;
             try
@@ -433,8 +432,8 @@ namespace ClassLibraryTest
                     totalFlow = totalFlow + flow;
                 }
                 in1.GetOverallProp("pressure", "", ref press1);
-                CapeOpen.ICapeThermoPropertyRoutine p_Calc = (CapeOpen.ICapeThermoPropertyRoutine)in1;
-                CapeOpen.ICapeThermoPhases phaseList = (CapeOpen.ICapeThermoPhases)in1;
+                CapeOpenCore.Class.ICapeThermoPropertyRoutine p_Calc = (CapeOpenCore.Class.ICapeThermoPropertyRoutine)in1;
+                CapeOpenCore.Class.ICapeThermoPhases phaseList = (CapeOpenCore.Class.ICapeThermoPhases)in1;
                 phaseList.GetPhaseList(ref phases, ref strArr1, ref strArr2);
                 foreach (String phase in phases)
                 {
@@ -466,8 +465,8 @@ namespace ClassLibraryTest
                     totalFlow = totalFlow + flow;
                 }
                 in2.GetOverallProp("pressure", "", ref press2);
-                CapeOpen.ICapeThermoPropertyRoutine p_Calc = (CapeOpen.ICapeThermoPropertyRoutine)in2;
-                CapeOpen.ICapeThermoPhases phaseList = (CapeOpen.ICapeThermoPhases)in2;
+                CapeOpenCore.Class.ICapeThermoPropertyRoutine p_Calc = (CapeOpenCore.Class.ICapeThermoPropertyRoutine)in2;
+                CapeOpenCore.Class.ICapeThermoPhases phaseList = (CapeOpenCore.Class.ICapeThermoPhases)in2;
                 phaseList.GetPhaseList(ref phases, ref strArr1, ref strArr2);
                 foreach (String phase in phases)
                 {
@@ -511,7 +510,7 @@ namespace ClassLibraryTest
                 CapePhaseStatus[] status = { CapePhaseStatus.CAPE_ATEQUILIBRIUM, CapePhaseStatus.CAPE_ATEQUILIBRIUM};
                 outlet.SetPresentPhases(phases, status);
                 this.calcReport = String.Concat(this.calcReport, "The outlet ethalpy is: ", enthalpy[0].ToString(), "J/Mole", System.Environment.NewLine);
-                eqRoutine = (CapeOpen.ICapeThermoEquilibriumRoutine)outlet;
+                eqRoutine = (CapeOpenCore.Class.ICapeThermoEquilibriumRoutine)outlet;
                 String[] spec1 = { "pressure", String.Empty, "Overall" };
                 String[] spec2 = { "enthalpy", String.Empty, "Overall" };
                 eqRoutine.CalcEquilibrium(spec1, spec2, "unspecified");

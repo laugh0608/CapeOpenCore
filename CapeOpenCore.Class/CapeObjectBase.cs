@@ -1,7 +1,6 @@
 ﻿using System;
-using CapeOpen;
 
-namespace CapeOpenClassLibrary
+namespace CapeOpenCore.Class
 {
     /// <summary>
     /// Abstract base class that implements ICapeIdentification and ICapeUtilities. 

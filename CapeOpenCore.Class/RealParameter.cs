@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CapeOpenClassLibrary
+namespace CapeOpenCore.Class
 {
 
     class UnitConverter : System.ComponentModel.StringConverter

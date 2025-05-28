@@ -1,8 +1,9 @@
 ﻿using System;
 using CapeOpen;
-using CapeOpenClassLibrary.CoUI;
+using CapeOpenCore.Class.CapeOpenUI;
+using CapeOpenCore.Class;
 
-namespace CapeOpenClassLibrary
+namespace CapeOpenCore.Class
 {
     /// <summary>
     /// Summary for WAR

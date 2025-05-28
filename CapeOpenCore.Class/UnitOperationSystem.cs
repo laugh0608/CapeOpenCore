@@ -1,7 +1,6 @@
 ﻿using System;
-using CapeOpen;
 
-namespace CapeOpenClassLibrary
+namespace CapeOpenCore.Class
 {
     /// <summary>
     /// Interface that provides access to unit operation packages available on the computer.

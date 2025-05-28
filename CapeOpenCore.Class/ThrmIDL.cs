@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using CapeOpenClassLibrary;
 
 /* IMPORTANT NOTICE
 (c) The CAPE-OPEN Laboratory Network, 2002.
@@ -20,7 +19,7 @@ This file can viewed properly with any basic editors and browsers (validation do
 // ---- The scope of thermodynamic and physical properties interface
 // Reference document: Thermodynamic and physical properties
 
-namespace CapeOpen
+namespace CapeOpenCore.Class
 {
 
     /// <summary>

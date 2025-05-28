@@ -3,7 +3,7 @@
 //#pragma once
 //#ifndef _COGUIDS_IDL_
 //public const String  _COGUIDS_IDL_
-namespace CapeOpenClassLibrary
+namespace CapeOpenCore.Class
 {
 
 

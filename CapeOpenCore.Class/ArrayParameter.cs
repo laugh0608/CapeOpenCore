@@ -1,9 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using CapeOpen;
 
-namespace CapeOpenClassLibrary
+namespace CapeOpenCore.Class
 {
     internal class ArrayParameter
     {

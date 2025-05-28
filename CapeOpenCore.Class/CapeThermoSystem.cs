@@ -1,7 +1,6 @@
 ﻿using System;
-using CapeOpen;
 
-namespace CapeOpenClassLibrary
+namespace CapeOpenCore.Class
 {
 
     // Type definition of the interface for subsequent use

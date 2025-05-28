@@ -5,7 +5,7 @@
 // core components of the CAPE-OPEN object model. More information on CAPE-OPEN is available 
 // from the CO-Lan website, http:\\www.co-lan.org.
 // </summary>
-namespace CapeOpenClassLibrary
+namespace CapeOpenCore.Class
 {
 
     /// <summary>

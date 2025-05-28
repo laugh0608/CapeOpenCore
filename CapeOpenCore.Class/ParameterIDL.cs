@@ -1,5 +1,4 @@
 ﻿using System;
-using CapeOpen;
 
 //#ifndef _PARAMETER_IDL_
 //#define _PARAMETER_IDL_
@@ -15,7 +14,7 @@ This file can viewed properly with any basic editors and browsers (validation do
 */
 
 // This file was developed/modified by JEAN-PIERRE BELAUD for CO-LaN organisation - March 2003
-namespace CapeOpenClassLibrary
+namespace CapeOpenCore.Class
 {
 
     /// <summary>

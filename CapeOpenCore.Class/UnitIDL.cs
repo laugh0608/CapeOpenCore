@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CapeOpenClassLibrary {
+namespace CapeOpenCore.Class {
 	/// <summary>
 	/// The direction that objects or information connected to the port is expected to flow (e.g. material, energy or information objects).
 	/// </summary>

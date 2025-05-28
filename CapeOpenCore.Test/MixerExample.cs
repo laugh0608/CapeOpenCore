@@ -1,8 +1,7 @@
 ﻿using System;
-using CapeOpen;
-using CapeOpenClassLibrary;
+using CapeOpenCore.Class;
 
-namespace ClassLibraryTest;
+namespace CapeOpenCore.Test;
 
 /// <summary>
 /// This is a mixer eample class that models an adiabtic mixer.

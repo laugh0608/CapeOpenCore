@@ -1,5 +1,4 @@
 ﻿using System;
-using CapeOpen;
 
 // This idl file was ported from the CAPE-OPEN common.idl file and 
 // the interfaces were updated to conform to .NET format.
@@ -15,7 +14,7 @@ This file can viewed properly with any basic editors and browsers (validation do
 
 // This file was developed/modified by JEAN-PIERRE BELAUD for CO-LaN organisation - August 2003
 
-namespace CapeOpenClassLibrary
+namespace CapeOpenCore.Class
 {
 
     //typedef System.Int32		CapeLong;

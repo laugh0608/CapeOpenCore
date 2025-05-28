@@ -1,5 +1,4 @@
 ﻿using System;
-using CapeOpen;
 
 /* IMPORTANT NOTICE
 (c) The CAPE-OPEN Laboratory Network, 2002.
@@ -27,7 +26,7 @@ CAPE_EQUILIBRIUM 	= 0,
 CAPE_KINETIC		= 1,
 } CapeReactionType;
 */
-namespace CapeOpenClassLibrary
+namespace CapeOpenCore.Class
 {
 
     // interface ICapeReactionProperties

@@ -1,7 +1,6 @@
 ﻿using System;
-using CapeOpen;
 
-namespace CapeOpenClassLibrary
+namespace CapeOpenCore.Class
 {
 
     /// <summary>
@@ -32,13 +31,13 @@ namespace CapeOpenClassLibrary
         ICapeThermoEquilibriumRoutineCOM,
         ICapeThermoPropertyRoutineCOM
     {
-        private CapeOpen.ICapeThermoMaterialObject p_MaterialObject;
-        private CapeOpen.ICapeThermoMaterial p_IMatObj;
-        private CapeOpen.ICapeThermoCompounds p_ICompounds;
-        private CapeOpen.ICapeThermoPhases p_IPhases;
-        private CapeOpen.ICapeThermoUniversalConstant p_IUniversalConstant;
-        private CapeOpen.ICapeThermoPropertyRoutine p_IPropertyRoutine;
-        private CapeOpen.ICapeThermoEquilibriumRoutine p_IEquilibriumRoutine;
+        private CapeOpenCore.Class.ICapeThermoMaterialObject p_MaterialObject;
+        private CapeOpenCore.Class.ICapeThermoMaterial p_IMatObj;
+        private CapeOpenCore.Class.ICapeThermoCompounds p_ICompounds;
+        private CapeOpenCore.Class.ICapeThermoPhases p_IPhases;
+        private CapeOpenCore.Class.ICapeThermoUniversalConstant p_IUniversalConstant;
+        private CapeOpenCore.Class.ICapeThermoPropertyRoutine p_IPropertyRoutine;
+        private CapeOpenCore.Class.ICapeThermoEquilibriumRoutine p_IEquilibriumRoutine;
         
         // Track whether Dispose has been called.
         private bool _disposed;
@@ -59,7 +58,7 @@ namespace CapeOpenClassLibrary
             _disposed = false;
             Thermo10 = true;
             Thermo11 = true;
-            p_MaterialObject = (CapeOpen.ICapeThermoMaterialObject)materialObject;
+            p_MaterialObject = (CapeOpenCore.Class.ICapeThermoMaterialObject)materialObject;
             if (p_MaterialObject == null) Thermo10 = false;
             p_IMatObj = null;
             p_IMatObj = (ICapeThermoMaterial)materialObject;

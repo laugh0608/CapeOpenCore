@@ -1,8 +1,7 @@
 ﻿using System;
-using CapeOpen;
-using CapeOpenClassLibrary.CoUI;
+using CapeOpenCore.Class.CapeOpenUI;
 
-namespace CapeOpenClassLibrary
+namespace CapeOpenCore.Class
 {
     class SelectedReportConverter : System.ComponentModel.StringConverter
     {

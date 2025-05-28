@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using CapeOpen;
 
-namespace CapeOpenClassLibrary
+namespace CapeOpenCore.Class
 {
     /// <summary>
     /// This class provides access to unit operations based upon .Net-based assembly location rules.
