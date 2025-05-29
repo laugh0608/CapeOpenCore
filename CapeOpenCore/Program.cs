@@ -76,13 +76,13 @@ internal abstract class Program
 
         RegistrationServices regSvcs = new RegistrationServices();
 
-        Assembly asm1 = Assembly.LoadFrom("CapeOpenClassLibrary.dll");
+        Assembly asm1 = Assembly.LoadFrom("CapeOpenCore.Class.dll");
         regSvcs.RegisterAssembly(asm1, AssemblyRegistrationFlags.SetCodeBase);
 
         Console.WriteLine("环境依赖注册成功...");
         await Task.Delay(1000);
 
-        Assembly asm2 = Assembly.LoadFrom("ClassLibraryTest.dll");
+        Assembly asm2 = Assembly.LoadFrom("CapeOpenCore.Test.dll");
         regSvcs.RegisterAssembly(asm2, AssemblyRegistrationFlags.SetCodeBase);
 
         Console.WriteLine("单元模块注册成功...");
@@ -101,7 +101,7 @@ internal abstract class Program
             await Task.Delay(1000);
 
             // 取消注册第一个组件
-            Assembly asm2 = Assembly.LoadFrom("ClassLibraryTest.dll");
+            Assembly asm2 = Assembly.LoadFrom("CapeOpenCore.Test.dll");
             regSvcs.UnregisterAssembly(asm2);
             Console.WriteLine("单元模块取消注册成功...");
 
@@ -110,7 +110,7 @@ internal abstract class Program
             await Task.Delay(1000);
 
             // 取消注册第二个组件
-            Assembly asm1 = Assembly.LoadFrom("CapeOpenClassLibrary.dll");
+            Assembly asm1 = Assembly.LoadFrom("CapeOpenCore.Class.dll");
             regSvcs.UnregisterAssembly(asm1);
             Console.WriteLine("环境依赖取消注册成功");
 
