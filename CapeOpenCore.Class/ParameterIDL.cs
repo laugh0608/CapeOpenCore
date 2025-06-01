@@ -746,14 +746,14 @@ namespace CapeOpenCore.Class
         /// <returns>
         /// True if the parameter is valid, false if not valid.
         /// </returns>
-        /// <param name = "value">Boolean value that will be validated against the parameter's current specification.</param>
+        /// <param name = "pValue">Boolean value that will be validated against the parameter's current specification.</param>
         /// <param name = "message">Reference to a string that will conain a message regarding the validation of the parameter.</param>
         /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
         /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
         [System.Runtime.InteropServices.DispIdAttribute(2)]
         [System.ComponentModel.DescriptionAttribute("Check if value is OK for this spec")]
         [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.VariantBool)]
-        bool Validate(bool value, ref String message);
+        bool Validate(bool pValue, ref String message);
     };
 
     /// <summary>
