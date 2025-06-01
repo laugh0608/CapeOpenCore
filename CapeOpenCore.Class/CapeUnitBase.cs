@@ -646,7 +646,7 @@ namespace CapeOpenCore.Class
         {
             get
             {
-                return this.m_ValidationMessage;
+                return this.MValidationMessage;
             }
         }
 
@@ -786,7 +786,7 @@ namespace CapeOpenCore.Class
                 args = new UnitOperationValidatedEventArgs(this.ComponentName, message, m_ValStatus, CapeValidationStatus.CAPE_INVALID);
                 m_ValStatus = CapeValidationStatus.CAPE_INVALID;
                 OnUnitOperationValidated(args);
-                this.m_ValidationMessage = message;
+                this.MValidationMessage = message;
                 return false;
             }
             for (int i = 0; i < this.Ports.Count; i++)
@@ -794,7 +794,7 @@ namespace CapeOpenCore.Class
                 if (m_Ports[i].connectedObject == null)
                 {
                     message = String.Concat("Port ", ((CapeIdentification)m_Ports[i]).ComponentName, " does not have a connected object.");
-                    this.m_ValidationMessage = message;
+                    this.MValidationMessage = message;
                     args = new UnitOperationValidatedEventArgs(this.ComponentName, message, m_ValStatus, CapeValidationStatus.CAPE_INVALID);
                     m_ValStatus = CapeValidationStatus.CAPE_INVALID;
                     OnUnitOperationValidated(args);
@@ -802,7 +802,7 @@ namespace CapeOpenCore.Class
                 }
             }
             message = "Unit is valid.";
-            this.m_ValidationMessage = message;
+            this.MValidationMessage = message;
             args = new UnitOperationValidatedEventArgs(this.ComponentName, message, m_ValStatus, CapeValidationStatus.CAPE_INVALID);
             m_ValStatus = CapeValidationStatus.CAPE_VALID;
             OnUnitOperationValidated(args);
