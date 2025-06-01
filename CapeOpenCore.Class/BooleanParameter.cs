@@ -64,8 +64,8 @@ public class BooleanParameter : CapeParameter,
     }
         
     /// <summary>布尔值参数的构造函数。</summary>
-    /// <remarks><para>这个构造函数设置参数的 <see cref="ICapeIdentification.ComponentName"/>。参数值和默认值被设置为值。
-    /// 此外，参数 <see cref="CapeParamMode"/> 被设置。</para></remarks>
+    /// <remarks>这个构造函数设置参数的 <see cref="ICapeIdentification.ComponentName"/>。参数值和默认值被设置为值。
+    /// 此外，参数 <see cref="CapeParamMode"/> 被设置。</remarks>
     /// <param name="name">设置为参数的 ICapeIdentification 接口的 ComponentName。</param>
     /// <param name="value">设置参数的初始值和默认值。</param>
     /// <param name="mode">设置参数的 CapeParamMode 模式。</param>
@@ -78,8 +78,8 @@ public class BooleanParameter : CapeParameter,
     }
     
     /// <summary>布尔值参数的构造函数。</summary>
-    /// <remarks><para>此构造函数设置参数的 <see cref="ICapeIdentification.ComponentName"/> 和 <see cref="ICapeIdentification.ComponentDescription"/>。
-    /// 参数的值和默认值设置为该值。此外，还设置了参数 CapeParamMode。</para></remarks>
+    /// <remarks>此构造函数设置参数的 <see cref="ICapeIdentification.ComponentName"/> 和 <see cref="ICapeIdentification.ComponentDescription"/>。
+    /// 参数的值和默认值设置为该值。此外，还设置了参数 CapeParamMode。</remarks>
     /// <param name="name">设置为参数的 ICapeIdentification 接口的 ComponentName。</param>
     /// <param name="description">设置为参数的 ICapeIdentification 接口的 ComponentDescription。</param>
     /// <param name="value">设置参数的初始值。</param>
@@ -147,8 +147,8 @@ public class BooleanParameter : CapeParameter,
 
     // ICapeParameterSpec
     /// <summary>获取参数的类型。</summary>
-    /// <remarks><para>获取此 <see cref="CapeParamType"/> 参数的类型：real(CAPE_REAL), integer(CAPE_INT),
-    /// option(CAPE_OPTION), boolean(CAPE_BOOLEAN) or array(CAPE_ARRAY).</para></remarks>
+    /// <remarks>获取此 <see cref="CapeParamType"/> 参数的类型：real(CAPE_REAL), integer(CAPE_INT),
+    /// option(CAPE_OPTION), boolean(CAPE_BOOLEAN) or array(CAPE_ARRAY)。</remarks>
     /// <value>参数的类型。</value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用。</exception>
@@ -255,7 +255,7 @@ internal class BooleanParameterWrapper : CapeParameter, ICapeParameter, ICapePar
     }
 
     /// <summary>根据参数说明验证参数的当前值。</summary>
-    /// <remarks><para>此方法检查参数的当前值，以确定它是否是一个允许的值。任何有效的布尔值（true/false）对于 <see cref="ICapeBooleanParameterSpec"/> 参数都是有效的。</para></remarks>
+    /// <remarks>此方法检查参数的当前值，以确定它是否是一个允许的值。任何有效的布尔值（true/false）对于 <see cref="ICapeBooleanParameterSpec"/> 参数都是有效的。</remarks>
     /// <returns>如果参数有效，则为 true；如果无效，则为 false。</returns>
     /// <param name="message">消息用于返回参数无效的原因。</param>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
@@ -290,7 +290,7 @@ internal class BooleanParameterWrapper : CapeParameter, ICapeParameter, ICapePar
 
     //ICapeBooleanParameterSpec
     /// <summary>获取封装参数的默认值。</summary>
-    /// <remarks><para>基于 COM 的 <see cref="ICapeBooleanParameterSpec"/> 布尔接口没有提供更改参数默认值的方法。因此，无法更改封装的参数的默认值。</para></remarks>
+    /// <remarks>基于 COM 的 <see cref="ICapeBooleanParameterSpec"/> 布尔接口没有提供更改参数默认值的方法。因此，无法更改封装的参数的默认值。</remarks>
     /// <value>参数的默认值。</value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不合适时将引发的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递的参数值无效时使用，例如未识别的复合标识符或道具参数的 UNDEFINED。</exception>
