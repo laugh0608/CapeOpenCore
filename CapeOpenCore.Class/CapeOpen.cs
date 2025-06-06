@@ -265,16 +265,11 @@ public class CapeFlowsheetMonitoringAttribute : Attribute
     public bool Monitors { get; }
 }
 
-/// <summary>Provides information regarding whether the object consumes Thermodynamics 
-/// during registration of a CAPE-OPEN object.</summary>
-/// <remarks><para>
-/// This attribute is used during the registration of a CAPE-OPEN object with the
-/// COM registry to add the Consumes_Thermo_CATID to the object's registration key. </para>
-/// </remarks>
+/// <summary>提供有关对象在注册 CAPE-OPEN 对象时是否消耗热力学的信息。</summary>
+/// <remarks>该属性用于在 COM 注册表中注册 CAPE-OPEN 对象时，将 Consumes_Thermo_CATID 添加到对象的注册密钥中。</remarks>
 /// <code>
-/// [Serializable]
-/// [System.Runtime.InteropServices.ComVisible(true)]
-/// [System.Runtime.InteropServices.Guid("C79CAFD3-493B-46dc-8585-1118A0B5B4AB")]  //ICapeThermoMaterialObject_IID)
+/// [Serializable, ComVisible(true)]
+/// [Guid("C79CAFD3-493B-46dc-8585-1118A0B5B4AB")]  //ICapeThermoMaterialObject_IID)
 /// [Description("")]
 /// [CapeDescriptionAttribute("An example mixer unit operation.")]
 /// [CapeVersionAttribute("1.0")]
@@ -288,40 +283,25 @@ public class CapeFlowsheetMonitoringAttribute : Attribute
 [AttributeUsage(AttributeTargets.Class)]
 public class CapeConsumesThermoAttribute : Attribute
 {
-    private bool m_ConsumesThermo;
-
-    /// <summary>Initializes a new instance of the CapeConsumesThermoAttribute class.</summary>
-    /// <remarks>This attribute is used to indicate whether the object consumes thermodynamic
-    /// models. It is also used by the COM registration function to place the appropriate CATID
-    /// value in the system registry.</remarks>
-    /// <param name="consumes">A boolean value indicating whether the CAPE-OPEN component consumes thermodynamics.</param>
+    /// <summary>初始化 CapeConsumesThermoAttribute 类的全新实例。</summary>
+    /// <remarks>这个属性用于指示对象是否消耗热力学模型。它还被 COM 注册函数用于将适当的 CATID 值放置在系统注册表中。</remarks>
+    /// <param name="consumes">一个布尔值，用于指示 CAPE-OPEN 组件是否消耗热力学数据。</param>
     public CapeConsumesThermoAttribute(bool consumes)
     {
-        m_ConsumesThermo = consumes;
+        ConsumesThermo = consumes;
     }
 
-    /// <summary>Gets information about whether the object consumes Thermodynamics models.</summary>
-    /// <remarks>This property indicates whether the object consumes thermodynamics.</remarks>
-    /// <value>The CAPE-OPEN component consumes thermodynamics.</value>
-    public bool ConsumesThermo
-    {
-        get
-        {
-            return m_ConsumesThermo;
-        }
-    }
+    /// <summary>一个布尔值，用于指示 CAPE-OPEN 组件是否使用热力学模型。获取有关对象是否使用热力学模型的信息。</summary>
+    /// <remarks>此属性指示对象是否消耗热力学能量。</remarks>
+    /// <value>CAPE-OPEN 组件使用热力学数据。</value>
+    public bool ConsumesThermo { get; }
 }
 
-/// <summary>Provides information regarding whether the object supports Thermodynamics 
-/// version 1.0 during registration of a CAPE-OPEN object.</summary>
-/// <remarks><para>
-/// This attribute is used during the registration of a CAPE-OPEN object with the
-/// COM registry to add the SupportsThermodynamics10_CATID to the object's registration key. </para>
-/// </remarks>
+/// <summary>在注册 CAPE-OPEN 对象时，提供有关对象是否支持热力学版本 1.0 的信息。</summary>
+/// <remarks>这个属性在将 CAPE-OPEN 对象注册到 COM 注册表时使用，以将 SupportsThermodynamics10_CATID 添加到对象的注册键中。</remarks>
 /// <code>
-/// [Serializable]
-/// [System.Runtime.InteropServices.ComVisible(true)]
-/// [System.Runtime.InteropServices.Guid("C79CAFD3-493B-46dc-8585-1118A0B5B4AB")]  //ICapeThermoMaterialObject_IID)
+/// [Serializable, ComVisible(true)]
+/// [Guid("C79CAFD3-493B-46dc-8585-1118A0B5B4AB")]  //ICapeThermoMaterialObject_IID)
 /// [Description("")]
 /// [CapeDescriptionAttribute("An example mixer unit operation.")]
 /// [CapeVersionAttribute("1.0")]
@@ -336,40 +316,25 @@ public class CapeConsumesThermoAttribute : Attribute
 [AttributeUsage(AttributeTargets.Class)]
 public class CapeSupportsThermodynamics10Attribute : Attribute
 {
-    private bool m_Supported;
-
-    /// <summary>Initializes a new instance of the CapeSupportsThermodynamics10Attribute class.</summary>
-    /// <remarks>This attribute is used to indicate whether the object supports thermodynamic
-    /// version 1.0. It is also used by the COM registration function to place the appropriate CATID
-    /// value in the system registry.</remarks>
-    /// <param name="supported">The CAPE-OPEN component consumes thermodynamics.</param>
+    /// <summary>初始化 CapeSupportsThermodynamics10Attribute 类的全新实例。</summary>
+    /// <remarks>此属性用于指示对象是否支持热力学版本 1.0。COM 注册函数也使用此属性将适当的 CATID 值放置在系统注册表中。</remarks>
+    /// <param name="supported">CAPE-OPEN 组件使用热力学数据。</param>
     public CapeSupportsThermodynamics10Attribute(bool supported)
     {
-        m_Supported = supported;
+        Supported = supported;
     }
 
-    /// <summary>Gets the the about information.</summary>
-    /// <remarks>This property indicates whether the object consumes thermodynamics.</remarks>
-    /// <value>The CAPE-OPEN component supports thermodynamics version 1.0.</value>
-    public bool Supported
-    {
-        get
-        {
-            return m_Supported;
-        }
-    }
+    /// <summary>获取关于信息。</summary>
+    /// <remarks>此属性指示对象是否消耗热力学能量。</remarks>
+    /// <value>CAPE-OPEN 组件支持热力学版本 1.0。</value>
+    public bool Supported { get; }
 }
 
-/// <summary>Provides information regarding whether the object supports Thermodynamics 
-/// version 1.0 during registration of a CAPE-OPEN object.</summary>
-/// <remarks><para>
-/// This attribute is used during the registration of a CAPE-OPEN object with the
-/// COM registry to add the SupportsThermodynamics10_CATID to the object's registration key. </para>
-/// </remarks>
+/// <summary>在注册 CAPE-OPEN 对象时，提供有关对象是否支持热力学版本 1.0 的信息。</summary>
+/// <remarks>这个属性在将 CAPE-OPEN 对象注册到 COM 注册表时使用，以将 SupportsThermodynamics10_CATID 添加到对象的注册键中。</remarks>
 /// <code>
-/// [Serializable]
-/// [System.Runtime.InteropServices.ComVisible(true)]
-/// [System.Runtime.InteropServices.Guid("C79CAFD3-493B-46dc-8585-1118A0B5B4AB")]  //ICapeThermoMaterialObject_IID)
+/// [Serializable, ComVisible(true)]
+/// [Guid("C79CAFD3-493B-46dc-8585-1118A0B5B4AB")]  //ICapeThermoMaterialObject_IID)
 /// [Description("")]
 /// [CapeDescriptionAttribute("An example mixer unit operation.")]
 /// [CapeVersionAttribute("1.0")]
@@ -384,68 +349,16 @@ public class CapeSupportsThermodynamics10Attribute : Attribute
 [AttributeUsage(AttributeTargets.Class)]
 public class CapeSupportsThermodynamics11Attribute : Attribute
 {
-    private bool m_Supported;
-    /// <summary>Initializes a new instance of the CapeSupportsThermodynamics10Attribute class.</summary>
-    /// <remarks>This attribute is used to indicate whether the object supports thermodynamic
-    /// version 1.0. It is also used by the COM registration function to place the appropriate CATID
-    /// value in the system registry.</remarks>
-    /// <param name="supported">The CAPE-OPEN component consumes thermodynamics.</param>
+    /// <summary>初始化 CapeSupportsThermodynamics10Attribute 类的全新实例。</summary>
+    /// <remarks>此属性用于指示对象是否支持热力学版本 1.0。COM 注册函数也使用此属性将适当的 CATID 值放置在系统注册表中。</remarks>
+    /// <param name="supported">CAPE-OPEN 组件使用热力学数据。</param>
     public CapeSupportsThermodynamics11Attribute(bool supported)
     {
-        m_Supported = supported;
+        Supported = supported;
     }
 
-    /// <summary>Gets the the about information.</summary>
-    /// <remarks>This property indicates whether the object consumes thermodynamics.</remarks>
-    /// <value>The CAPE-OPEN component supports thermodynamics version 1.0.</value>
-    public bool Supported
-    {
-        get
-        {
-            return m_Supported;
-        }
-    }
+    /// <summary>获取关于信息。</summary>
+    /// <remarks>此属性指示对象是否消耗热力学能量。</remarks>
+    /// <value>CAPE-OPEN 组件支持热力学版本 1.0。</value>
+    public bool Supported { get; }
 }
-
-/*	[
-odl,
-uuid(B777A1BD-0C88-11D3-822E-00C04F4F66C9),
-version(20.0),
-helpstring("IATCapeXRealParameterSpec Interface"),
-dual,
-oleautomation
-]
-interface IATCapeXRealParameterSpec : IDispatch {
-[id(0x60040003), propget, helpstring(" Provide the Aspen Plus display units for for this parameter.")]
-HRESULT DisplayUnits([out, retval] BSTR* bsUOM);
-};
-
-typedef [version(1.0)]
-enum {
-ErrorSeverityTerminal = 0,
-ErrorSeveritySevere = 1,
-ErrorSeverityError = 2,
-ErrorSeverityWarning = 3
-} __MIDL___MIDL_itf_AspenCapeX_0244_0001;
-
-[
-odl,
-uuid(B777A1B9-0C88-11D3-822E-00C04F4F66C9),
-version(1.0),
-hidden,
-dual,
-nonextensible,
-oleautomation
-]
-interface IATCapeXDiagnostic : IDispatch {
-[id(0x60040000), helpstring("Print a message to the history device.")]
-HRESULT SendMsgToHistory([in] BSTR message);
-[id(0x60040001), helpstring("Print a message to the terminal device.")]
-HRESULT SendMsgToTerminal([in] BSTR message);
-[id(0x60040002), helpstring("Signal a simulation error.")]
-HRESULT RaiseError(
-[in] ErrorSeverity severity,
-[in] BSTR context,
-[in] BSTR message);
-};
-*/
