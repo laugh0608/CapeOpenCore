@@ -251,25 +251,18 @@ public class CapeUnitOperationAttribute : Attribute
 [AttributeUsage(AttributeTargets.Class)]
 public class CapeFlowsheetMonitoringAttribute : Attribute
 {
-    private bool _mMonitors;
     /// <summary>初始化 CapeFlowsheetMonitoringAttribute 类的新实例。</summary>
     /// <remarks>此属性用于指示对象是否使用 PME 的流程图监控功能。COM 注册函数也使用此属性将适当的 CATID 值放入此对象的系统注册表中。</remarks>
     /// <param name="monitors">The CAPE-OPEN component is a flowsheet monitoring object.</param>
     public CapeFlowsheetMonitoringAttribute(bool monitors)
     {
-        _mMonitors = monitors;
+        Monitors = monitors;
     }
 
-    /// <summary>Gets the the about information.</summary>
-    /// <remarks>This property indicates whether the object uses the flowsheet monitoring interfaces of the PME.</remarks>
-    /// <value>A boolean value indicating whether the CAPE-OPEN component supports flowsheet monitoring.</value>
-    public bool Monitors
-    {
-        get
-        {
-            return _mMonitors;
-        }
-    }
+    /// <summary>获取 About 相关信息。</summary>
+    /// <remarks>该属性表示对象是否使用 PME 的流程表监控接口。</remarks>
+    /// <value>布尔值，表示 CAPE-OPEN 组件是否支持流量表监控。</value>
+    public bool Monitors { get; }
 }
 
 /// <summary>Provides information regarding whether the object consumes Thermodynamics 
