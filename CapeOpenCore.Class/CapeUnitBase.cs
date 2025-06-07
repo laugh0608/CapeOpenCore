@@ -128,11 +128,11 @@ public abstract class CapeUnitBase : CapeObjectBase, ICapeUnit, ICapeUnitCOM, IC
     /// <para>当 disposing 参数为 true 时，此方法会释放此组件引用的任何托管对象持有的所有资源。此方法会调用每个引用对象的 Dispose() 方法。</para>
     /// <para>留给继承者的注释：Dispose 可以被其他对象多次调用。在重写 Dispose(Boolean) 方法时，要小心不要引用在之前调用 Dispose 时已经处理过的对象。
     /// 有关如何实现 Dispose(Boolean) 的更多信息，请参阅实现一个 Dispose 方法。</para>
-    /// <para>有关 Dispose 和 Finalize 的更多信息，请参阅清理未托管资源和重写 Finalize 方法。</para></remarks> 
+    /// <para>有关 Dispose 和 Finalize 的更多信息，请参阅清理未托管资源和重写 Finalize 方法。</para></remarks>
     /// <param name="disposing">true 表示释放受管和不受管资源；false 表示仅释放不受管资源。</param>
     protected override void Dispose(bool disposing)
     {
-        // 检查是否已经调用了Dispose方法。
+        // 检查是否已经调用了 Dispose 方法。
         if (_disposed) return;
         // 如果处置为真，则释放所有受管和非受管资源。
         if (disposing)
