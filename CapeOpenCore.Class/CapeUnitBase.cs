@@ -1,1262 +1,698 @@
-﻿using System;
+﻿/*
+ * 原作者：wbarret1 (https://github.com/wbarret1/CapeOpen)
+ * 重构 & 翻译：DaBaiLuoBo
+ * 帮助社区：CEPD@BBS (https://bbs.imbhj.com)
+ * 重构时间：2025.06.07
+ */
+
+using System;
+using System.ComponentModel;
+using System.Globalization;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
 using CapeOpenCore.Class.CapeOpenUI;
 
-namespace CapeOpenCore.Class
+namespace CapeOpenCore.Class;
+
+internal class SelectedReportConverter : StringConverter
 {
-    class SelectedReportConverter : System.ComponentModel.StringConverter
+    public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
     {
-
-        override public bool GetStandardValuesSupported(System.ComponentModel.ITypeDescriptorContext context)
-        {
-            return true;
-        }
-        override public System.ComponentModel.TypeConverter.StandardValuesCollection GetStandardValues(System.ComponentModel.ITypeDescriptorContext context)
-        {
-            CapeUnitBase unit = (CapeUnitBase)context.Instance;
-            return new System.ComponentModel.TypeConverter.StandardValuesCollection(unit.Reports);
-        }
-
-        override public bool GetStandardValuesExclusive(System.ComponentModel.ITypeDescriptorContext context)
-        {
-            return true;
-        }
-    };
-
-    /// <summary>
-    /// Abstract base class to be used to develop unit operation models. 
-    /// </summary>
-    /// <remarks>
-    /// This abstract class contains all required functionality for a unit operation
-    /// PMC except the <c>Calculate()</c> method, which is a pure virtual function that 
-    /// must be overridden. To use, add  parameters and ports to the appropriate collection 
-    /// and implement the <c>Calculate()</c> method.
-    /// </remarks>
-    [Serializable]
-    [System.Runtime.InteropServices.ComVisible(true)]
-    [System.Runtime.InteropServices.ComSourceInterfaces(typeof(IUnitOperationValidatedEventArgs))]
-    [System.Runtime.InteropServices.ClassInterface(System.Runtime.InteropServices.ClassInterfaceType.None)]
-    public abstract class CapeUnitBase : CapeObjectBase,
-        ICapeUnit,
-        ICapeUnitCOM,
-        ICapeUnitReport,
-        ICapeUnitReportCOM
-    //  IPersist,
-    //  IPersistStream,
-    //  IPersistStreamInit
+        return true;
+    }
+    public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
     {
-        private PortCollection m_Ports;
-        private CapeValidationStatus m_ValStatus;
-        // private bool m_dirty;
-        private String m_selecetdReport;
-        private System.Collections.Generic.List<String> m_Reports;
-        // Track whether Dispose has been called.
-        private bool _disposed;
+        var unit = (CapeUnitBase)context.Instance;
+        return new StandardValuesCollection(unit.Reports);
+    }
+
+    public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+    {
+        return true;
+    }
+}
+
+/// <summary>用于开发单元操作模型的抽象基类。</summary>
+/// <remarks>这个抽象类包含了一个单元操作 PMC 所需的所有功能，除了 <c>Calculate()</c> 方法，这是一个必须被重写的纯虚函数。
+/// 要使用它，请在适当的集合中添加参数和端口，并实现 <c>Calculate()</c> 方法。</remarks>
+[Serializable, ComVisible(true)]
+[ComSourceInterfaces(typeof(IUnitOperationValidatedEventArgs))]
+[ClassInterface(ClassInterfaceType.None)]
+public abstract class CapeUnitBase : CapeObjectBase, ICapeUnit, ICapeUnitCOM, ICapeUnitReport,
+    ICapeUnitReportCOM  // IPersist, IPersistStream, IPersistStreamInit
+{
+    private CapeValidationStatus _mValStatus;
+    // private bool m_dirty;
+    private string _mSelecetdReport;
+    private System.Collections.Generic.List<string> _mReports;
+    // 跟踪是否已调用 Dispose 方法。
+    private bool _disposed;
         
-        /// <summary>
-        /// Gets the collection of unit operation ports. 
-        /// </summary>
-        /// <remarks>
-        /// Return type is System.Object and this method is simply here for classic 
-        /// COM-based CAPE-OPEN interop.
-        /// </remarks>
-        /// <value>The port collection of the unit operation.</value>
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        /// <exception cref = "ECapeFailedInitialisation">ECapeFailedInitialisation</exception>
-        /// <exception cref = "ECapeBadInvOrder">ECapeBadInvOrder</exception>
-        [System.ComponentModel.BrowsableAttribute(false)]
-        Object ICapeUnitCOM.ports
-        {
-            get
-            {
-                return m_Ports;
-            }
-        }
+    /// <summary>获取单元操作端口集合。</summary>
+    /// <remarks>返回类型为 System.Object，此方法仅用于基于经典的 COM 的 CAPE-OPEN 互操作。</remarks>
+    /// <value>该单元操作的端口集合。</value>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    /// <exception cref="ECapeFailedInitialisation">ECapeFailedInitialisation</exception>
+    /// <exception cref="ECapeBadInvOrder">ECapeBadInvOrder</exception>
+    [Browsable(false)]
+    object ICapeUnitCOM.ports => Ports;
 
-        /// <summary>
-        ///	Gets the list of possible reports for the unit operation.
-        /// </summary>
-        /// <value>
-        /// Return type is System.Object and this method is simply here for 
-        /// classic COM-based CAPE-OPEN interop.
-        /// </value>
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        /// <exception cref = "ECapeNoImpl">ECapeNoImpl</exception>
-        [System.ComponentModel.BrowsableAttribute(false)]
-        Object ICapeUnitReportCOM.reports
-        {
-            get
-            {
-                return m_Reports.ToArray();
-            }
-        }
-
-
-        /// <summary>
-        ///	Produces the active report for the unit operation.
-        /// </summary>
-        /// <remarks>
-        ///	Produce the designated report. If no value has been set, it produces the default report.
-        /// </remarks>
-        /// <param name = "message">String containing the text for the currently selected report.</param>
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        /// <exception cref = "ECapeNoImpl">ECapeNoImpl</exception>
-        void ICapeUnitReportCOM.ProduceReport(ref string message)
-        {
-            message = this.ProduceReport();
-        }
+    /// <summary>获取单元操作的可能报告列表。</summary>
+    /// <value>返回类型为 System.Object，此方法仅用于基于经典的 COM 的 CAPE-OPEN 互操作。</value>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    /// <exception cref="ECapeNoImpl">ECapeNoImpl</exception>
+    [Browsable(false)]
+    object ICapeUnitReportCOM.reports => _mReports.ToArray();
     
-    /// <summary>
-        ///	Constructor for the unit operation.
-        /// </summary>
-        /// <remarks>
-        /// This method is creates the port and parameter collections for the unit 
-        /// operation. As a result, ports and parameters can be added in the constructor
-        /// for the derived unt or during the <c>Initialize()</c> call. 
-        /// </remarks>
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        /// <exception cref = "ECapeOutOfResources">ECapeOutOfResources</exception>
-        /// <exception cref = "ECapeLicenceError">ECapeLicenceError</exception>
-        /// <exception cref = "ECapeFailedInitialisation">ECapeFailedInitialisation</exception>
-        /// <exception cref = "ECapeBadInvOrder">ECapeBadInvOrder</exception>
-        public CapeUnitBase()
-            : base()
-        {
-            m_Ports = new PortCollection();
-            m_Ports.AddingNew += new System.ComponentModel.AddingNewEventHandler(m_Ports_AddingNew);
-            m_Ports.ListChanged += new System.ComponentModel.ListChangedEventHandler(m_Ports_ListChanged);
-            m_ValStatus = CapeValidationStatus.CAPE_NOT_VALIDATED;
-            m_Reports = new System.Collections.Generic.List<String>();
-            m_Reports.Add("Default Report");
-            m_selecetdReport = "Default Report";
-        }
+    /// <summary>生成该单元操作的活动报告。</summary>
+    /// <remarks>生成指定的报告。如果未设置值，则生成默认报告。</remarks>
+    /// <param name="message">包含当前选定报告文本的字符串。</param>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    /// <exception cref="ECapeNoImpl">ECapeNoImpl</exception>
+    void ICapeUnitReportCOM.ProduceReport(ref string message)
+    {
+        message = ProduceReport();
+    }
+    
+    /// <summary>单元操作的构造函数。</summary>
+    /// <remarks>这种方法为单元操作创建了端口和参数集合。因此，可以在派生单元的构造函数中或在 <c>Initialize()</c> 调用期间添加端口和参数。</remarks>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    /// <exception cref="ECapeOutOfResources">ECapeOutOfResources</exception>
+    /// <exception cref="ECapeLicenceError">ECapeLicenceError</exception>
+    /// <exception cref="ECapeFailedInitialisation">ECapeFailedInitialisation</exception>
+    /// <exception cref="ECapeBadInvOrder">ECapeBadInvOrder</exception>
+    protected CapeUnitBase()
+    {
+        // _mPorts = new PortCollection();
+        Ports = [];
+        // _mPorts.AddingNew += new AddingNewEventHandler(m_Ports_AddingNew);
+        Ports.AddingNew += m_Ports_AddingNew;
+        // _mPorts.ListChanged += new ListChangedEventHandler(m_Ports_ListChanged);
+        Ports.ListChanged += m_Ports_ListChanged;
+        _mValStatus = CapeValidationStatus.CAPE_NOT_VALIDATED;
+        // _mReports = new System.Collections.Generic.List<string>();
+        // _mReports.Add("Default Report");
+        _mReports =
+        [
+            "Default Report"
+        ];
+        _mSelecetdReport = "Default Report";
+    }
 
-        /// <summary>
-        /// Finalizer for the <see cref = "CapeUnitBase"/> class.
-        /// </summary>
-        /// <remarks>
-        /// This will finalize the current instance of the class.
-        /// </remarks>
-        ~CapeUnitBase()
-        {
-            this.Dispose(true);
-        }
+    /// <summary><see cref="CapeUnitBase"/> 类的终结器。</summary>
+    /// <remarks>这将最终确定当前类的实例。</remarks>
+    ~CapeUnitBase()
+    {
+        Dispose(true);
+    }
          
-        /// <summary>Creates a new object that is a copy of the current instance.</summary>
-        /// <remarks>
-        /// <para>
-        /// Clone can be implemented either as a deep copy or a shallow copy. In a deep copy, all objects are duplicated; 
-        /// in a shallow copy, only the top-level objects are duplicated and the lower levels contain references.
-        /// </para>
-        /// <para>
-        /// The resulting clone must be of the same type as, or compatible with, the original instance.
-        /// </para>
-        /// <para>
-        /// See <see cref="Object.MemberwiseClone"/> for more information on cloning, deep versus shallow copies, and examples.
-        /// </para>
-        /// </remarks>
-        /// <returns>A new object that is a copy of this instance.</returns>
-        /// <param name = "objectToBeCopied">The unit operation being cloned.</param>
-        public CapeUnitBase(CapeUnitBase objectToBeCopied)
-            : base((CapeObjectBase)objectToBeCopied)
-        {
-            m_Ports = (PortCollection)objectToBeCopied.Ports.Clone();
-            m_Reports.AddRange(objectToBeCopied.Reports);
-            m_ValStatus = CapeValidationStatus.CAPE_NOT_VALIDATED;
-            this.m_selecetdReport = objectToBeCopied.selectedReport;
-        }
+    /// <summary>创建一个与当前实例相同的副本对象。</summary>
+    /// <remarks><para>克隆可以以深度复制或浅度复制的方式实现。在深度复制中，所有对象都被复制；在浅度复制中，只有顶层对象被复制，较低层包含引用。</para>
+    /// <para>生成的克隆必须与原始实例属于同一类型或与之兼容。</para>
+    /// <para>请参阅 <see cref="Object.MemberwiseClone"/> 以获取有关克隆、深度复制与浅层复制以及示例的更多信息。</para></remarks>
+    /// <returns>一个与该实例相同的副本对象。</returns>
+    /// <param name="objectToBeCopied">正在克隆的单元操作。</param>
+    protected CapeUnitBase(CapeUnitBase objectToBeCopied) : base(objectToBeCopied)
+    {
+        Ports = (PortCollection)objectToBeCopied.Ports.Clone();
+        _mReports.AddRange(objectToBeCopied.Reports);
+        _mValStatus = CapeValidationStatus.CAPE_NOT_VALIDATED;
+        _mSelecetdReport = objectToBeCopied.selectedReport;
+    }
 
-        // Dispose(bool disposing) executes in two distinct scenarios.
-        // If disposing equals true, the method has been called directly
-        // or indirectly by a user's code. Managed and unmanaged resources
-        // can be disposed.
-        // If disposing equals false, the method has been called by the
-        // runtime from inside the finalizer and you should not reference
-        // other objects. Only unmanaged resources can be disposed.
-        /// <summary>
-        /// Releases the unmanaged resources used by the CapeIdentification object and optionally releases 
-        /// the managed resources.
-        /// </summary>
-        /// <remarks><para>This method is called by the public <see href="http://msdn.microsoft.com/en-us/library/system.componentmodel.component.dispose.aspx">Dispose</see>see> 
-        /// method and the <see href="http://msdn.microsoft.com/en-us/library/system.object.finalize.aspx">Finalize</see> method. 
-        /// <bold>Dispose()</bold> invokes the protected <bold>Dispose(Boolean)</bold> method with the disposing
-        /// parameter set to <bold>true</bold>. <see href="http://msdn.microsoft.com/en-us/library/system.object.finalize.aspx">Finalize</see> 
-        /// invokes <bold>Dispose</bold> with disposing set to <bold>false</bold>.</para>
-        /// <para>When the <italic>disposing</italic> parameter is <bold>true</bold>, this method releases all 
-        /// resources held by any managed objects that this Component references. This method invokes the 
-        /// <bold>Dispose()</bold> method of each referenced object.</para>
-        /// <para><bold>Notes to Inheritors</bold></para>
-        /// <para><bold>Dispose</bold> can be called multiple times by other objects. When overriding 
-        /// <bold>Dispose(Boolean)</bold>, be careful not to reference objects that have been previously 
-        /// disposed of in an earlier call to <bold>Dispose</bold>. For more information about how to 
-        /// implement <bold>Dispose(Boolean)</bold>, see <see href="http://msdn.microsoft.com/en-us/library/fs2xkftw.aspx">Implementing a Dispose Method</see>.</para>
-        /// <para>For more information about <bold>Dispose</bold> and <see href="http://msdn.microsoft.com/en-us/library/system.object.finalize.aspx">Finalize</see>, 
-        /// see <see href="http://msdn.microsoft.com/en-us/library/498928w2.aspx">Cleaning Up Unmanaged Resources</see> 
-        /// and <see href="http://msdn.microsoft.com/en-us/library/ddae83kx.aspx">Overriding the Finalize Method</see>.</para>
-        /// </remarks> 
-        /// <param name = "disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
-        protected override void Dispose(bool disposing)
+    // Dispose(bool disposing) 在两种不同的情况下执行。如果 disposing 等于 true，则该方法已由用户的代码直接或间接调用。可以处理托管和非托管资源。
+    // 如果 disposing 等于 false，则该方法已由运行时从 finalizer 内部调用，您不应引用其他对象。只有非托管资源可以处理。
+    /// <summary>释放 CapeIdentification 对象使用的非托管资源，并可选地释放托管资源。</summary>
+    /// <remarks><para>此方法由公共的 Dispose 方法以及 Finalize 方法调用。Dispose() 方法会调用受保护的 Dispose(Boolean) 方法，
+    /// 并将 disposing 参数设置为 true。Finalize 方法会调用 Dispose，并将 disposing 参数设置为 false。</para>
+    /// <para>当 disposing 参数为 true 时，此方法会释放此组件引用的任何托管对象持有的所有资源。此方法会调用每个引用对象的 Dispose() 方法。</para>
+    /// <para>留给继承者的注释：Dispose 可以被其他对象多次调用。在重写 Dispose(Boolean) 方法时，要小心不要引用在之前调用 Dispose 时已经处理过的对象。
+    /// 有关如何实现 Dispose(Boolean) 的更多信息，请参阅实现一个 Dispose 方法。</para>
+    /// <para>有关 Dispose 和 Finalize 的更多信息，请参阅清理未托管资源和重写 Finalize 方法。</para></remarks> 
+    /// <param name="disposing">true 表示释放受管和不受管资源；false 表示仅释放不受管资源。</param>
+    protected override void Dispose(bool disposing)
+    {
+        // 检查是否已经调用了Dispose方法。
+        if (_disposed) return;
+        // 如果处置为真，则释放所有受管和非受管资源。
+        if (disposing)
         {
-            // Check to see if Dispose has already been called.
-            if (!_disposed)
+            foreach (UnitPort port in Ports)
+                port.Disconnect();
+            Ports.Clear();
+            _disposed = true;
+        }
+        base.Dispose(disposing);
+    }
+
+    /// <summary>创建一个与当前实例相同的副本对象。</summary>
+    /// <remarks><para>克隆可以以深度复制或浅度复制的方式实现。在深度复制中，所有对象都被复制；在浅度复制中，只有顶层对象被复制，较低层包含引用。</para>
+    /// <para>生成的克隆必须与原始实例属于同一类型或与之兼容。</para>
+    /// <para>请参阅 <see cref="Object.MemberwiseClone"/> 以获取有关克隆、深度复制与浅层复制以及示例的更多信息。</para></remarks>
+    /// <returns>一个与该实例相同的副本对象。</returns>
+    public override object Clone()
+    {
+        var unitType = GetType();
+        var retVal = (CapeUnitBase)Activator.CreateInstance(unitType);
+        retVal.Parameters.Clear();
+        foreach (CapeParameter param in Parameters)
+        {
+            retVal.Parameters.Add((CapeParameter)param.Clone());
+        }
+        retVal.Ports.Clear();
+        foreach (UnitPort port in Ports)
+        {
+            retVal.Ports.Add((UnitPort)port.Clone());
+        }
+        retVal.Reports.Clear();
+        retVal.Reports.AddRange(_mReports);
+        retVal.selectedReport = _mSelecetdReport;
+        retVal.SimulationContext = SimulationContext;
+        return retVal;
+    }
+
+    /// <summary>表示用于处理组件名称更改的方法。</summary>
+    /// <remarks>当您创建一个 ComponentNameChangedHandler 委托时，您确定将处理该事件的方法。要将事件与事件处理程序关联，
+    /// 请向事件添加委托的实例。每当事件发生时，都会调用事件处理程序，除非您删除委托。有关委托的更多信息，请参阅“事件和委托”。</remarks>
+    /// <param name="sender">PMC 作为数据源。</param>
+    /// <param name="args">提供有关名称更改信息的 <see cref="System.ComponentModel.ListChangedEventArgs"/>。</param>
+    private void m_Ports_ListChanged(object sender, ListChangedEventArgs args)
+    {
+        OnPortCollectionListChanged(args);
+    }
+
+    /// <summary>表示用于处理组件名称更改的方法。</summary>
+    /// <remarks>当您创建一个 ComponentNameChangedHandler 委托时，您确定将处理该事件的方法。要将事件与事件处理程序关联，
+    /// 请向事件添加委托的实例。每当事件发生时，都会调用事件处理程序，除非您删除委托。有关委托的更多信息，请参阅“事件和委托”。</remarks>
+    /// <param name="sender">PMC 作为数据源。</param>
+    /// <param name="args">提供有关名称更改信息的 <see cref="System.ComponentModel.AddingNewEventArgs"/>。</param>
+    private void m_Ports_AddingNew(object sender, AddingNewEventArgs args)
+    {
+        OnPortCollectionAddingNew(args);
+    }
+
+    /// <summary>当列表或列表中的某项发生变化时触发。</summary>
+    /// <remarks>只有当列表项类型实现 INotifyPropertyChanged 接口时，才会发出项目值更改的 ListChanged 通知。</remarks>
+    public event ListChangedEventHandler PortCollectionListChanged;
+
+    /// <summary>当列表或列表中的某项发生变化时触发。</summary>
+    /// <remarks>只有当列表项类型实现 INotifyPropertyChanged 接口时，才会发出项目值更改的 ListChanged 通知。</remarks>
+    /// <param name="args">提供有关名称更改信息的 <see cref="System.ComponentModel.ListChangedEventArgs"/>。</param>
+    protected void OnPortCollectionListChanged(ListChangedEventArgs args)
+    {
+        // if (PortCollectionListChanged != null)
+        // {
+        //     PortCollectionListChanged(this, args);
+        // }
+        PortCollectionListChanged?.Invoke(this, args);
+    }
+
+    /// <summary>当用户向端口集合添加新元素时触发。</summary>
+    /// <remarks>当 PMC 名称发生变更时触发的事件。</remarks> 
+    public event AddingNewEventHandler PortCollectionAddingNew;
+
+    /// <summary>当列表或列表中的某项发生变化时触发。</summary>
+    /// <remarks>AddingNew 事件在将新对象添加到由 Items 属性表示的集合之前发生。该事件是在调用 AddNew 方法之后，但在创建新项并将其添加到内部列表之前触发的。
+    /// 通过处理此事件，程序员可以提供自定义项创建和插入行为，而无需从 BindingList&lt;T&gt; 类派生。</remarks>
+    /// <param name="args">包含有关事件信息的 <see cref="System.ComponentModel.AddingNewEventArgs"/>。</param>
+    protected void OnPortCollectionAddingNew(AddingNewEventArgs args)
+    {
+        // if (PortCollectionAddingNew != null)
+        // {
+        //     PortCollectionAddingNew(this, args);
+        // }
+        PortCollectionAddingNew?.Invoke(this, args);
+    }
+
+    /// <summary>当用户验证单元操作时发生。</summary>
+    public event UnitOperationValidatedHandler UnitOperationValidated;
+    
+    /// <summary>当单元操作被验证时发生。</summary>
+    /// <remarks><para>通过委托调用事件处理程序时，会引发事件。<c>OnUnitOperationValidated</c> 方法还允许子类在不附加委托的情况下处理事件。这是子类处理事件的优选技术。</para>
+    /// <para>留给继承者的注释：当在派生类中重写<c>OnUnitOperationValidated</c>时，请务必调用基类的<c>OnUnitOperationValidate</c>方法，以便注册的委托接收事件。</para></remarks>
+    /// <param name="args">包含有关此事件的信息的 <see cref="UnitOperationValidatedEventArgs"/>。</param>
+    protected void OnUnitOperationValidated(UnitOperationValidatedEventArgs args)
+    {
+        // if (UnitOperationValidated != null)
+        // {
+        //     UnitOperationValidated(this, args);
+        // }
+        UnitOperationValidated?.Invoke(this, args);
+    }
+
+    /// <summary>当用户开始计算单元操作时发生。</summary>
+    public event UnitOperationBeginCalculationHandler UnitOperationBeginCalculation;
+    
+    /// <summary>发生在单元操作计算过程的开始阶段。</summary>
+    /// <remarks><para>触发事件时，会通过委托调用事件处理程序。</para>
+    /// <para><c>OnUnitOperationBeginCalculation</c> 方法还允许子类在不附加委托的情况下处理事件。这是子类处理事件的优选技术。</para>
+    /// <para>留给继承者的注释：当在派生类中重写 <c>OnUnitOperationBeginCalculation</c> 时，
+    /// 请务必调用基类的 <c>OnUnitOperationBeginCalculation</c> 方法，以便注册的委托接收事件。</para></remarks>
+    /// <param name="message">包含有关计算信息的字符串。</param>
+    protected void OnUnitOperationBeginCalculation(string message)
+    {
+        var args = new UnitOperationBeginCalculationEventArgs(ComponentName, message);
+        // if (UnitOperationBeginCalculation != null)
+        // {
+        //     UnitOperationBeginCalculation(this, args);
+        // }
+        UnitOperationBeginCalculation?.Invoke(this, args);
+    }
+
+    /// <summary> 在完成单一操作的计算后发生。</summary>
+    public event UnitOperationEndCalculationHandler UnitOperationEndCalculation;
+    
+    /// <summary>在单元操作计算过程完成时发生。</summary>
+    /// <remarks><para>触发事件时，会通过委托调用事件处理程序。</para>
+    /// <para><c>OnUnitOperationEndCalculation</c> 方法还允许子类在不附加委托的情况下处理事件。这是子类处理事件的优选技术。</para>
+    /// <para>留给继承者的注释：当在派生类中重写 <c>OnUnitOperationEndCalculation</c> 时，
+    /// 请务必调用基类的 <c>OnUnitOperationBeginCalculation</c> 方法，以便注册过的委托能够接收到事件。</para></remarks>
+    /// <param name="message">包含计算信息的字符串。</param>
+    protected void OnUnitOperationEndCalculation(string message)
+    {
+        var args = new UnitOperationEndCalculationEventArgs(ComponentName, message);
+        // if (UnitOperationEndCalculation != null)
+        // {
+        //     UnitOperationEndCalculation(this, args);
+        // }
+        UnitOperationEndCalculation?.Invoke(this, args);
+    }
+
+    /// <summary>控制 COM 注册的功能。</summary>
+    /// <remarks>此函数添加 CAPE-OPEN 方法和工具规范中指定的注册键。特别是，它表明此单元操作实现了 CAPE-OPEN 单元操作类别标识。
+    /// 它还使用 <see cref="CapeNameAttribute"/>、<see cref="CapeDescriptionAttribute"/>、<see cref="CapeVersionAttribute"/>、
+    /// <see cref="CapeVendorURLAttribute"/>、<see cref="CapeHelpURLAttribute"/>、<see ref="CapeAboutAttribute"/> 属性添加 CapeDescription 注册键。</remarks>
+    /// <param name="t">正在注册的类类型。</param> 
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    [ComRegisterFunction]
+    public new static void RegisterFunction(Type t)
+    {
+        var assembly = t.Assembly;
+        var versionNumber = (new System.Reflection.AssemblyName(assembly.FullName)).Version.ToString();
+
+        var keyName = string.Concat("CLSID\\{", t.GUID.ToString(), "}\\Implemented Categories");
+        var catidKey = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey(keyName, true);
+        catidKey.CreateSubKey(COGuids.CapeOpenComponent_CATID);
+        catidKey.CreateSubKey(COGuids.CapeUnitOperation_CATID);
+
+        keyName = string.Concat("CLSID\\{", t.GUID.ToString(), "}\\InprocServer32");
+        var key = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey(keyName, true);
+        var keys = key.GetSubKeyNames();
+        foreach (var pT in keys)
+        {
+            if (pT == versionNumber)
             {
-                // If disposing equals true, dispose all managed
-                // and unmanaged resources.
-                if (disposing)
-                {
-                    foreach (UnitPort port in m_Ports)
-                        port.Disconnect();
-                    m_Ports.Clear();
-                    _disposed = true;
-                }
-                base.Dispose(disposing);
+                key.DeleteSubKey(pT);
             }
         }
+        key.SetValue("CodeBase", assembly.CodeBase);
+        key.Close();
 
-        /// <summary>Creates a new object that is a copy of the current instance.</summary>
-        /// <remarks>
-        /// <para>
-        /// Clone can be implemented either as a deep copy or a shallow copy. In a deep copy, all objects are duplicated; 
-        /// in a shallow copy, only the top-level objects are duplicated and the lower levels contain references.
-        /// </para>
-        /// <para>
-        /// The resulting clone must be of the same type as, or compatible with, the original instance.
-        /// </para>
-        /// <para>
-        /// See <see cref="Object.MemberwiseClone"/> for more information on cloning, deep versus shallow copies, and examples.
-        /// </para>
-        /// </remarks>
-        /// <returns>A new object that is a copy of this instance.</returns>
-        override public object Clone()
+        key = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey(string.Concat("CLSID\\{", t.GUID.ToString(), "}"), true);
+        keyName = string.Concat("CLSID\\{", t.GUID.ToString(), "}\\CapeDescription");
+
+        var attributes = t.GetCustomAttributes(false);
+        var nameInfoString = t.FullName;
+        var descriptionInfoString = "";
+        var versionInfoString = "";
+        var companyURLInfoString = "";
+        var helpURLInfoString = "";
+        var aboutInfoString = "";
+        foreach (var mT in attributes)
         {
-            Type unitType = this.GetType();
-            CapeUnitBase retVal = (CapeUnitBase)Activator.CreateInstance(unitType);
-            retVal.Parameters.Clear();
-            foreach (CapeParameter param in this.Parameters)
+            switch (mT)
             {
-                retVal.Parameters.Add((CapeParameter)param.Clone());
-            }
-            retVal.Ports.Clear();
-            foreach (UnitPort port in this.Ports)
-            {
-                retVal.Ports.Add((UnitPort)port.Clone());
-            }
-            retVal.Reports.Clear();
-            retVal.Reports.AddRange(this.m_Reports);
-            retVal.selectedReport = m_selecetdReport;
-            retVal.SimulationContext = this.SimulationContext;
-            return retVal;
-        }
-
-        /// <summary>
-        /// Represents the method that will handle the changing the name of a component.
-        /// </summary>
-        /// <remarks>
-        /// When you create a ComponentNameChangedHandler delegate, you identify the method that will handle the event. To associate the event with your event handler, add an 
-        /// instance of the delegate to the event. The event handler is called whenever the event occurs, unless you remove the delegate. For more information about delegates, 
-        /// see Events and Delegates.
-        /// </remarks>
-        /// <param name = "sender">The PMC that is the source .</param>
-        /// <param name = "args">A <see cref = "System.ComponentModel.ListChangedEventArgs">System.ComponentModel.ListChangedEventArgs</see> that provides information about the name change.</param>
-        void m_Ports_ListChanged(object sender, System.ComponentModel.ListChangedEventArgs args)
-        {
-            OnPortCollectionListChanged(args);
-        }
-
-        /// <summary>
-        /// Represents the method that will handle the changing the name of a component.
-        /// </summary>
-        /// <remarks>
-        /// When you create a ComponentNameChangedHandler delegate, you identify the method that will handle the event. To associate the event with your event handler, add an 
-        /// instance of the delegate to the event. The event handler is called whenever the event occurs, unless you remove the delegate. For more information about delegates, 
-        /// see Events and Delegates.
-        /// </remarks>
-        /// <param name = "sender">The PMC that is the source .</param>
-        /// <param name = "args">A <see cref = "System.ComponentModel.AddingNewEventArgs">System.ComponentModel.AddingNewEventArgs</see> that provides information about the name change.</param>
-        void m_Ports_AddingNew(object sender, System.ComponentModel.AddingNewEventArgs args)
-        {
-            OnPortCollectionAddingNew(args);
-        }
-
-        /// <summary>
-        /// Occurs when the list or an item in the list changes.
-        /// </summary>
-        /// <remarks>ListChanged notifications for item value changes are only raised if the 
-        /// list item type implements the INotifyPropertyChanged interface.</remarks> 
-        public event System.ComponentModel.ListChangedEventHandler PortCollectionListChanged;
-
-        /// <summary>
-        /// Occurs when the list or an item in the list changes.
-        /// </summary>
-        /// <remarks>ListChanged notifications for item value changes are only raised if the 
-        /// list item type implements the INotifyPropertyChanged interface.</remarks> 
-        /// <param name = "args">A <see cref = "System.ComponentModel.ListChangedEventArgs">System.ComponentModel.ListChangedEventArgs</see> that contains information about the event.</param>
-        protected void OnPortCollectionListChanged(System.ComponentModel.ListChangedEventArgs args)
-        {
-            if (PortCollectionListChanged != null)
-            {
-                PortCollectionListChanged(this, args);
+                case CapeFlowsheetMonitoringAttribute:
+                    catidKey.CreateSubKey(COGuids.CATID_MONITORING_OBJECT);
+                    break;
+                case CapeConsumesThermoAttribute:
+                    catidKey.CreateSubKey(COGuids.Consumes_Thermo_CATID);
+                    break;
+                case CapeSupportsThermodynamics10Attribute:
+                    catidKey.CreateSubKey(COGuids.SupportsThermodynamics10_CATID);
+                    break;
+                case CapeSupportsThermodynamics11Attribute:
+                    catidKey.CreateSubKey(COGuids.SupportsThermodynamics11_CATID);
+                    break;
+                case CapeNameAttribute capeNameAttribute:
+                    nameInfoString = capeNameAttribute.Name;
+                    break;
+                case CapeDescriptionAttribute capeDescriptionAttribute:
+                    descriptionInfoString = capeDescriptionAttribute.Description;
+                    break;
+                case CapeVersionAttribute capeVersionAttribute:
+                    versionInfoString = capeVersionAttribute.Version;
+                    break;
+                case CapeVendorURLAttribute capeVendorUrlAttribute:
+                    versionInfoString = capeVendorUrlAttribute.VendorURL;
+                    break;
+                case CapeHelpURLAttribute capeHelpUrlAttribute:
+                    helpURLInfoString = capeHelpUrlAttribute.HelpURL;
+                    break;
+                case CapeAboutAttribute capeAboutAttribute:
+                    aboutInfoString = capeAboutAttribute.About;
+                    break;
             }
         }
+        catidKey.Close();
+        key = Microsoft.Win32.Registry.ClassesRoot.CreateSubKey(keyName);
+        key.SetValue("Name", nameInfoString);
+        key.SetValue("Description", descriptionInfoString);
+        key.SetValue("CapeVersion", versionInfoString);
+        key.SetValue("ComponentVersion", versionNumber);
+        key.SetValue("VendorURL", companyURLInfoString);
+        key.SetValue("HelpURL", helpURLInfoString);
+        key.SetValue("About", aboutInfoString);
+        key.Close();
+    }
 
-        /// <summary>
-        /// Occurs when the user Adds a new element to the port collection.
-        /// </summary>
-        /// <remarks>The event to be handles when the name of the PMC is changed.</remarks> 
-        public event System.ComponentModel.AddingNewEventHandler PortCollectionAddingNew;
-
-        /// <summary>
-        /// Occurs before an item is added to the list.
-        /// </summary>
-        /// <remarks>
-        /// The AddingNew event occurs before a new object is added to the collection 
-        /// represented by the Items property. This event is raised after the AddNew method is 
-        /// called, but before the new item is created and added to the internal list. By 
-        /// handling this event, the programmer can provide custom item creation and insertion 
-        /// behavior without being forced to derive from the BindingList&gt;T&lt; class. 
-        /// </remarks>
-        /// <param name = "args">A <see cref = "System.ComponentModel.AddingNewEventArgs">System.ComponentModel.AddingNewEventArgs</see> that contains information about the event.</param>
-        protected void OnPortCollectionAddingNew(System.ComponentModel.AddingNewEventArgs args)
+    /// <summary>此功能用于控制在卸载类时从 COM 注册表中删除该类。</summary>
+    /// <remarks>该方法将删除类注册中添加的所有子键，包括在 <see cref="RegisterFunction"/> 方法中添加的 CAPE-OPEN 特定键。</remarks>
+    /// <param name="t">该类未注册。</param> 
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    [ComUnregisterFunction]
+    public new static void UnregisterFunction(Type t)
+    {
+        var keyName = string.Concat("CLSID\\{", t.GUID.ToString(), "}");
+        var key = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey(keyName, true);
+        var keyNames = key.GetSubKeyNames();
+        foreach (var mT in keyNames)
         {
-            if (PortCollectionAddingNew != null)
-            {
-                PortCollectionAddingNew(this, args);
-            }
+            key.DeleteSubKeyTree(mT);
         }
-
-
-        /// <summary>
-        /// Occurs when the user validates the unit operation.
-        /// </summary>
-        public event UnitOperationValidatedHandler UnitOperationValidated;
-        /// <summary>
-        /// Occurs when a unit operation is validated.
-        /// </summary>
-        /// <remarks><para>Raising an event invokes the event handler through a delegate.</para>
-        /// <para>The <c>OnUnitOperationValidated</c> method also allows derived classes to handle the event without attaching a delegate. This is the preferred 
-        /// technique for handling the event in a derived class.</para>
-        /// <para>Notes to Inheritors: </para>
-        /// <para>When overriding <c>OnUnitOperationValidated</c> in a derived class, be sure to call the base class's <c>OnUnitOperationValidated</c> method so that registered 
-        /// delegates receive the event.</para>
-        /// </remarks>
-        /// <param name = "args">A <see cref = "UnitOperationValidatedEventArgs">UnitOperationValidatedEventArgs</see> that contains information about the event.</param>
-        protected void OnUnitOperationValidated(UnitOperationValidatedEventArgs args)
+        var valueNames = key.GetValueNames();
+        foreach (var pT in valueNames)
         {
-            if (UnitOperationValidated != null)
-            {
-                UnitOperationValidated(this, args);
-            }
+            key.DeleteValue(pT);
         }
+    }
 
-        /// <summary>
-        /// Occurs when the user begins the calculation of the unit operation.
-        /// </summary>
-        public event UnitOperationBeginCalculationHandler UnitOperationBeginCalculation;
-        /// <summary>
-        /// Occurs at the start of a unit operation calculation process.
-        /// </summary>
-        /// <remarks><para>Raising an event invokes the event handler through a delegate.</para>
-        /// <para>The <c>OnUnitOperationBeginCalculation</c> method also allows derived classes to handle the event without attaching a delegate. This is the preferred 
-        /// technique for handling the event in a derived class.</para>
-        /// <para>Notes to Inheritors: </para>
-        /// <para>When overriding <c>OnUnitOperationBeginCalculation</c> in a derived class, be sure to call the base class's <c>OnUnitOperationBeginCalculation</c> method so that registered 
-        /// delegates receive the event.</para>
-        /// </remarks>
-        /// <param name = "message">A string that contains information about the the calculation.</param>
-        protected void OnUnitOperationBeginCalculation(String message)
+    /// <summary>如果可用，显示 PMC 图形界面。</summary>
+    /// <remarks><para>默认情况下，此方法会抛出一个 <see cref="CapeNoImplException"/>，根据 CAPE-OPEN 规范，
+    /// 该异常被过程建模环境解释为 PMC 没有编辑器 GUI，而 PME 必须执行编辑步骤。</para>
+    /// <para>为了使 PMC 提供自己的编辑器，需要重写 Edit 方法以创建图形编辑器。当用户请求显示编辑器的流程图时，将调用此方法来编辑单元。
+    /// 重写类不应返回失败（抛出和异常），因为这将被流程图工具解释为单元没有提供自己的编辑器。</para></remarks>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    public override DialogResult Edit()
+    {
+        var editor = new BaseUnitEditor(this);
+        editor.ShowDialog();
+        return editor.DialogResult;
+    }
+
+    /// <summary>获取单元操作端口集合。</summary>
+    /// <remarks><para>将接口返回给包含单元端口列表的集合（例如 <see cref="PortCollection"/>）。</para>
+    /// <para>返回单元端口的集合（即 ICapeCollection）。这些作为暴露接口 <see cref="ICapeUnitPort"/> 的元素的集合交付。</para></remarks>
+    /// <value>The port collection of the unit operation.</value>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    /// <exception cref="ECapeFailedInitialisation">ECapeFailedInitialisation</exception>
+    /// <exception cref="ECapeBadInvOrder">ECapeBadInvOrder</exception>
+    //  [System.ComponentModel.EditorAttribute(typeof(capePortCollectionEditor), typeof(System.Drawing.Design.UITypeEditor))]
+    [Category("ICapeUnit")]
+    [Description("Unit Operation Port Collection. Click on the (...) button to edit collection.")]
+    [TypeConverter(typeof(PortCollectionTypeConverter))]
+    public PortCollection Ports { get; }  // get { return m_Ports; }
+
+    /// <summary>获取标志位以指示单元操作的验证状态。</summary>
+    /// <remarks><para>获取指示流程表单元是否有效的标志（例如，某些参数值已更改，但尚未使用 Validate 进行验证）。它有三种可能值：</para>
+    /// <list type="bullet"> 
+    /// <item>notValidated(CAPE_NOT_VALIDATED)</item>
+    /// <description>该单元的 validate() 方法自上次可能更改该单元验证状态的操作（例如更新到端口的连接参数值）以来尚未调用。</description>
+    /// <item>invalid(CAPE_INVALID)</item>
+    /// <description>该单元的 validate() 方法上次被调用时返回了 false。</description>
+    /// <item>valid(CAPE_VALID)</item>
+    /// <description>该单元的 validate() 方法上次被调用时返回 true。</description>
+    /// </list></remarks>
+    /// <value>一个指示单元操作验证状态的标志。</value>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为未定义。</exception>
+    /// <see cref= "CapeValidationStatus">CapeValidationStatus</see>.
+    [Category("ICapeUnit")]
+    [Description("Validation status of the unit. Either CAPE_VALID, CAPE_NOT_VALIDATED or CAPE_INVALID")]
+    public virtual CapeValidationStatus ValStatus => _mValStatus;
+
+    /// <summary>获取在单元操作的最后一次验证过程中返回的消息。</summary>
+    /// <remarks>获取从上次尝试验证流程图单元（例如，某些参数值已更改，但尚未使用 Validate 进行验证）返回的消息。</remarks>
+    /// <value>在最后一次对单元操作进行验证时返回的消息。</value>
+    /// <see cref= "CapeValidationStatus">CapeValidationStatus</see>.
+    [Category("ICapeUnit")]
+    [Description("Validation message of the unit.")]
+    public virtual string ValidationMessage => MValidationMessage;
+
+    /// <summary>执行单元操作模型中涉及的必要计算。</summary>
+    /// <remarks>该方法由 PME 调用以执行单元操作的运算。计算过程首先触发 <see cref="UnitOperationBeginCalculation"/> 事件。
+    /// 在事件触发后，调用 <see cref="OnCalculate"/> 方法。派生类必须实现 <see cref="OnCalculate"/> 方法。在单元完成其计算后，
+    /// 该方法会触发 <see cref="UnitOperationEndCalculation"/>事件。</remarks>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    /// <exception cref="ECapeBadInvOrder">ECapeBadInvOrder</exception>
+    /// <exception cref="ECapeOutOfResources">ECapeOutOfResources</exception>
+    /// <exception cref="ECapeTimeOut">ECapeTimeOut</exception>
+    /// <exception cref="ECapeSolvingError">ECapeSolvingError</exception>
+    /// <exception cref="ECapeLicenceError">ECapeLicenceError</exception>
+    void ICapeUnitCOM.Calculate()
+    {
+        OnUnitOperationBeginCalculation("Starting Calculation");
+        OnCalculate();
+        OnUnitOperationEndCalculation("Calculation completed normally.");
+    }
+    
+    /// <summary>执行单元操作模型中涉及的必要计算。</summary>
+    /// <remarks>该方法由 PME 调用以执行单元操作的运算。计算过程首先触发 <see cref="UnitOperationBeginCalculation"/> 事件。
+    /// 在事件触发后，调用 <see cref="OnCalculate"/> 方法。派生类必须实现 <see cref="OnCalculate"/> 方法。在单元完成其计算后，
+    /// 该方法会触发 <see cref="UnitOperationEndCalculation"/>事件。</remarks>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    /// <exception cref="ECapeBadInvOrder">ECapeBadInvOrder</exception>
+    /// <exception cref="ECapeOutOfResources">ECapeOutOfResources</exception>
+    /// <exception cref="ECapeTimeOut">ECapeTimeOut</exception>
+    /// <exception cref="ECapeSolvingError">ECapeSolvingError</exception>
+    /// <exception cref="ECapeLicenceError">ECapeLicenceError</exception>
+    void ICapeUnit.Calculate()
+    {
+        OnUnitOperationBeginCalculation("Starting Calculation");
+        OnCalculate();
+        OnUnitOperationEndCalculation("Calculation completed normally.");
+    }
+
+    /// <summary>执行单元操作模型中涉及的必要计算。</summary>
+    /// <remarks>该方法由 PME 调用以执行单元操作的运算。计算过程首先触发 <see cref="UnitOperationBeginCalculation"/> 事件。
+    /// 在事件触发后，调用 <see cref="OnCalculate"/> 方法。派生类必须实现 <see cref="OnCalculate"/> 方法。在单元完成其计算后，
+    /// 该方法会触发 <see cref="UnitOperationEndCalculation"/>事件。</remarks>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    /// <exception cref="ECapeBadInvOrder">ECapeBadInvOrder</exception>
+    /// <exception cref="ECapeOutOfResources">ECapeOutOfResources</exception>
+    /// <exception cref="ECapeTimeOut">ECapeTimeOut</exception>
+    /// <exception cref="ECapeSolvingError">ECapeSolvingError</exception>
+    /// <exception cref="ECapeLicenceError">ECapeLicenceError</exception>
+    private void OnCalculate()
+    {
+        OnUnitOperationBeginCalculation("Starting Calculation");
+        Calculate();
+        OnUnitOperationEndCalculation("Calculation completed normally.");
+    }
+
+    /// <summary>该方法由 Calculate 方法调用，以执行单位操作模型中涉及的必要计算。</summary>
+    /// <remarks><para>流程图单元执行其计算，即计算输入和输出流完整描述中在此阶段缺失的变量，并计算任何需要显示的公共参数值。
+    /// OnCalculate 将能够根据需要使用模拟上下文进行进度监控和中断检查。目前，对此没有达成一致的标准。</para>
+    /// <para>建议流程图单元对所有输出流进行适当的闪点计算。在某些情况下，模拟执行器将能够进行闪点计算，但流程图单元的作者最适合决定使用正确的闪点。</para>
+    /// <para>在进行计算之前，此方法应执行任何必要的最终验证测试。例如，此时可以检查连接到端口的物流对象的合法性。</para>
+    /// <para>此方法没有输入或输出参数。</para></remarks>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    /// <exception cref="ECapeBadInvOrder">ECapeBadInvOrder</exception>
+    /// <exception cref="ECapeOutOfResources">ECapeOutOfResources</exception>
+    /// <exception cref="ECapeTimeOut">ECapeTimeOut</exception>
+    /// <exception cref="ECapeSolvingError">ECapeSolvingError</exception>
+    /// <exception cref="ECapeLicenceError">ECapeLicenceError</exception>
+    protected abstract void Calculate();
+
+    /// <summary>验证单元操作。</summary>
+    /// <remarks><para>设置标志，通过验证流程图单元的端口和参数来确定流程图单元是否有效。例如，此方法可以检查所有必填端口是否已连接，并且所有参数值是否在范围内。</para>
+    /// <para>请注意，Simulation Executive 可以在任何时间调用 Validate 例行程序，特别是在 Executive 准备好调用 Calculate 方法之前。
+    /// 这意味着在调用 Validate 时，连接到单元端口的材料对象可能没有正确配置。推荐的方法是使用此方法验证参数和端口，而不是材料对象配置。
+    /// 可以在 Calculate 方法中实现检查材料对象的第二个验证级别，当可以合理预期连接到端口的材料对象将正确配置时。</para>
+    /// <para>该方法的基类实现会遍历端口和参数集合，并调用每个成员的 <see cref="Validate"/> 方法。如果所有端口和参数都是有效的，
+    /// 则单元是有效的，这由 Validate 方法返回 <c>true</c> 表示。</para></remarks>
+    /// <returns><para>如果该单元操作有效，则返回 true。</para>
+    /// <para>如果该单元操作无效，则返回 false。</para></returns>
+    /// <param name="message">引用一个字符串，该字符串将包含关于参数验证的消息。</param>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    /// <exception cref="ECapeBadCOParameter">ECapeBadCOParameter</exception>
+    /// <exception cref="ECapeBadInvOrder">ECapeBadInvOrder</exception>
+    public override bool Validate(ref string message)
+    {
+        // m_dirty = true;
+        UnitOperationValidatedEventArgs args;
+        if (!base.Validate(ref message))
         {
-            UnitOperationBeginCalculationEventArgs args = new UnitOperationBeginCalculationEventArgs(this.ComponentName, message);
-            if (UnitOperationBeginCalculation != null)
-            {
-                UnitOperationBeginCalculation(this, args);
-            }
-        }
-
-        /// <summary>
-        /// Occurs at the completion of a calculation of a unit operation.
-        /// </summary>
-        public event UnitOperationEndCalculationHandler UnitOperationEndCalculation;
-        /// <summary>
-        /// Occurs at the completion of a unit operation calculation process.
-        /// </summary>
-        /// <remarks><para>Raising an event invokes the event handler through a delegate.</para>
-        /// <para>The <c>OnUnitOperationEndCalculation</c> method also allows derived classes to handle the event without attaching a delegate. This is the preferred 
-        /// technique for handling the event in a derived class.</para>
-        /// <para>Notes to Inheritors: </para>
-        /// <para>When overriding <c>OnUnitOperationEndCalculation</c> in a derived class, be sure to call the base class's <c>OnUnitOperationBeginCalculation</c> method so that registered 
-        /// delegates receive the event.</para>
-        /// </remarks>
-        /// <param name = "message">A string that contains information about the the calculation.</param>
-        protected void OnUnitOperationEndCalculation(string message)
-        {
-            UnitOperationEndCalculationEventArgs args = new UnitOperationEndCalculationEventArgs(this.ComponentName, message);
-            if (UnitOperationEndCalculation != null)
-            {
-                UnitOperationEndCalculation(this, args);
-            }
-        }
-
-        // Removed because no longer supporting IDisposable.
-
-        //// Dispose(bool disposing) executes in two distinct scenarios.
-        //// If disposing equals true, the method has been called directly
-        //// or indirectly by a user's code. Managed and unmanaged resources
-        //// can be disposed.
-        //// If disposing equals false, the method has been called by the
-        //// runtime from inside the finalizer and you should not reference
-        //// other objects. Only unmanaged resources can be disposed.
-        ///// <summary>
-        ///// Releases the unmanaged resources used by the CapeIdentification object and optionally releases 
-        ///// the managed resources.
-        ///// </summary>
-        ///// <remarks><para>This method is called by the public <see href="http://msdn.microsoft.com/en-us/library/system.componentmodel.component.dispose.aspx">Dispose</see>see> 
-        ///// method and the <see href="http://msdn.microsoft.com/en-us/library/system.object.finalize.aspx">Finalize</see> method. 
-        ///// <bold>Dispose()</bold> invokes the protected <bold>Dispose(Boolean)</bold> method with the disposing
-        ///// parameter set to <bold>true</bold>. <see href="http://msdn.microsoft.com/en-us/library/system.object.finalize.aspx">Finalize</see> 
-        ///// invokes <bold>Dispose</bold> with disposing set to <bold>false</bold>.</para>
-        ///// <para>When the <italic>disposing</italic> parameter is <bold>true</bold>, this method releases all 
-        ///// resources held by any managed objects that this Component references. This method invokes the 
-        ///// <bold>Dispose()</bold> method of each referenced object.</para>
-        ///// <para><bold>Notes to Inheritors</bold></para>
-        ///// <para><bold>Dispose</bold> can be called multiple times by other objects. When overriding 
-        ///// <bold>Dispose(Boolean)</bold>, be careful not to reference objects that have been previously 
-        ///// disposed of in an earlier call to <bold>Dispose</bold>. For more information about how to 
-        ///// implement <bold>Dispose(Boolean)</bold>, see <see href="http://msdn.microsoft.com/en-us/library/fs2xkftw.aspx">Implementing a Dispose Method</see>.</para>
-        ///// <para>For more information about <bold>Dispose</bold> and <see href="http://msdn.microsoft.com/en-us/library/system.object.finalize.aspx">Finalize</see>, 
-        ///// see <see href="http://msdn.microsoft.com/en-us/library/498928w2.aspx">Cleaning Up Unmanaged Resources</see> 
-        ///// and <see href="http://msdn.microsoft.com/en-us/library/ddae83kx.aspx">Overriding the Finalize Method</see>.</para>
-        ///// </remarks> 
-        ///// <param name = "disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
-        //protected override void Dispose(bool disposing)
-        //{
-        //    // Check to see if Dispose has already been called.
-        //    if (!this.disposed)
-        //    {
-        //        // If disposing equals true, dispose all managed
-        //        // and unmanaged resources.
-        //        if (disposing)
-        //        {
-        //            // disconnect all ports and clear the list...
-        //            foreach (UnitPort port in m_Ports){
-        //                port.Disconnect();
-        //            }
-        //            m_Ports.Clear();
-
-        //            // Dispose managed resources.
-        //            component.Dispose();
-        //        }
-        //        base.Dispose(disposing);
-        //    }
-        //}
-
-        /// <summary>
-        ///	The function that controls COM registration.  
-        /// </summary>
-        /// <remarks>
-        ///	This function adds the registration keys specified in the CAPE-OPEN Method and
-        /// Tools specifications. In particular, it indicates that this unit operation implements
-        /// the CAPE-OPEN Unit Operation Category Identification. It also adds the CapeDescription
-        /// registry keys using the <see cref ="CapeNameAttribute"/>, <see cref ="CapeDescriptionAttribute"/>, <see cref ="CapeVersionAttribute"/>
-        /// <see cref ="CapeVendorURLAttribute"/>, <see cref ="CapeHelpURLAttribute"/>, 
-        /// and <see cref ="CapeAboutAttribute"/> attributes.
-        /// </remarks>
-        /// <param name = "t">The type of the class being registered.</param> 
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        [System.Runtime.InteropServices.ComRegisterFunction()]
-        public new static void RegisterFunction(Type t)
-        {
-            System.Reflection.Assembly assembly = t.Assembly;
-            String versionNumber = (new System.Reflection.AssemblyName(assembly.FullName)).Version.ToString();
-
-            String keyname = String.Concat("CLSID\\{", t.GUID.ToString(), "}\\Implemented Categories");
-            Microsoft.Win32.RegistryKey catidKey = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey(keyname, true);
-            catidKey.CreateSubKey(COGuids.CapeOpenComponent_CATID);
-            catidKey.CreateSubKey(COGuids.CapeUnitOperation_CATID);
-
-            keyname = String.Concat("CLSID\\{", t.GUID.ToString(), "}\\InprocServer32");
-            Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey(keyname, true);
-            String[] keys = key.GetSubKeyNames();
-            for (int i = 0; i < keys.Length; i++)
-            {
-                if (keys[i] == versionNumber)
-                {
-                    key.DeleteSubKey(keys[i]);
-                }
-            }
-            key.SetValue("CodeBase", assembly.CodeBase);
-            key.Close();
-
-            key = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey(String.Concat("CLSID\\{", t.GUID.ToString(), "}"), true);
-            keyname = String.Concat("CLSID\\{", t.GUID.ToString(), "}\\CapeDescription");
-
-            Object[] attributes = t.GetCustomAttributes(false);
-            String nameInfoString = t.FullName;
-            String descriptionInfoString = "";
-            String versionInfoString = "";
-            String companyURLInfoString = "";
-            String helpURLInfoString = "";
-            String aboutInfoString = "";
-            for (int i = 0; i < attributes.Length; i++)
-            {
-                if (attributes[i] is CapeFlowsheetMonitoringAttribute) catidKey.CreateSubKey(COGuids.CATID_MONITORING_OBJECT);
-                if (attributes[i] is CapeConsumesThermoAttribute) catidKey.CreateSubKey(COGuids.Consumes_Thermo_CATID);
-                if (attributes[i] is CapeSupportsThermodynamics10Attribute) catidKey.CreateSubKey(COGuids.SupportsThermodynamics10_CATID);
-                if (attributes[i] is CapeSupportsThermodynamics11Attribute) catidKey.CreateSubKey(COGuids.SupportsThermodynamics11_CATID);
-                if (attributes[i] is CapeNameAttribute) nameInfoString = ((CapeNameAttribute)attributes[i]).Name;
-                if (attributes[i] is CapeDescriptionAttribute) descriptionInfoString = ((CapeDescriptionAttribute)attributes[i]).Description;
-                if (attributes[i] is CapeVersionAttribute) versionInfoString = ((CapeVersionAttribute)attributes[i]).Version;
-                if (attributes[i] is CapeVendorURLAttribute) versionInfoString = ((CapeVendorURLAttribute)attributes[i]).VendorURL;
-                if (attributes[i] is CapeHelpURLAttribute) helpURLInfoString = ((CapeHelpURLAttribute)attributes[i]).HelpURL;
-                if (attributes[i] is CapeAboutAttribute) aboutInfoString = ((CapeAboutAttribute)attributes[i]).About;
-            }
-            catidKey.Close();
-            key = Microsoft.Win32.Registry.ClassesRoot.CreateSubKey(keyname);
-            key.SetValue("Name", nameInfoString);
-            key.SetValue("Description", descriptionInfoString);
-            key.SetValue("CapeVersion", versionInfoString);
-            key.SetValue("ComponentVersion", versionNumber);
-            key.SetValue("VendorURL", companyURLInfoString);
-            key.SetValue("HelpURL", helpURLInfoString);
-            key.SetValue("About", aboutInfoString);
-            key.Close();
-        }
-
-        /// <summary>
-        ///	This function controls the removal of the class from the COM registry when the class is unistalled.  
-        /// </summary>
-        /// <remarks>
-        ///	The method will remove all subkeys added to the class' regristration, including the CAPE-OPEN
-        /// specific keys added in the <see cref ="RegisterFunction"/> method.
-        /// </remarks>
-        /// <param name = "t">The type of the class being unregistered.</param> 
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        [System.Runtime.InteropServices.ComUnregisterFunction()]
-        public new static void UnregisterFunction(Type t)
-        {
-            String keyname = String.Concat("CLSID\\{", t.GUID.ToString(), "}");
-            Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey(keyname, true);
-            String[] keyNames = key.GetSubKeyNames();
-            for (int i = 0; i < keyNames.Length; i++)
-            {
-                key.DeleteSubKeyTree(keyNames[i]);
-            }
-            String[] valueNames = key.GetValueNames();
-            for (int i = 0; i < valueNames.Length; i++)
-            {
-                key.DeleteValue(valueNames[i]);
-            }
-        }
-
-        /// <summary>
-        ///	Displays the PMC graphic interface, if available.
-        /// </summary>
-        /// <remarks>
-        /// <para>By default, this method throws a <see cref="CapeNoImplException">CapeNoImplException</see>
-        /// that according to the CAPE-OPEN specification, is interpreted by the process
-        /// modeling environment as indicating that the PMC does not have a editor 
-        /// GUI, and the PME must perform editing steps.</para>
-        /// <para>In order for a PMC to provide its own editor, the Edit method will
-        /// need to be overridden to create a graphical editor. When the user requests the flowheet
-        /// to show the editor, this method will be called to edit the unit. Overriden classes should
-        /// not return a failure (throw and exception) as this will be interpreted by the flowsheeting 
-        /// tool as the unit not providing its own editor.</para>
-        /// </remarks>
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        public override System.Windows.Forms.DialogResult Edit()
-        {
-            BaseUnitEditor editor = new BaseUnitEditor(this);
-            editor.ShowDialog();
-            return editor.DialogResult;
-        }
-
-        /// <summary>
-        /// Gets the collection of unit operation ports.
-        /// </summary>
-        /// <remarks>
-        /// <para>Return an interface to a collection containing the list of unit ports 
-        /// (e.g. <see cref = "PortCollection"/>).</para>
-        /// <para>Return the collection of unit ports (i.e. ICapeCollection). 
-        /// These are delivered as a collection of elements exposing the interfaces 
-        /// <see cref = "ICapeUnitPort"/>.</para>
-        /// </remarks>
-        /// <value>The port collection of the unit operation.</value>
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        /// <exception cref = "ECapeFailedInitialisation">ECapeFailedInitialisation</exception>
-        /// <exception cref = "ECapeBadInvOrder">ECapeBadInvOrder</exception>
-        //        [System.ComponentModel.EditorAttribute(typeof(capePortCollectionEditor), typeof(System.Drawing.Design.UITypeEditor))]
-        [System.ComponentModel.CategoryAttribute("ICapeUnit")]
-        [System.ComponentModel.DescriptionAttribute("Unit Operation Port Collection. Click on the (...) button to edit collection.")]
-        [System.ComponentModel.TypeConverter(typeof(PortCollectionTypeConverter))]
-        public PortCollection Ports
-        {
-            get
-            {
-                return m_Ports;
-            }
-        }
-
-        /// <summary>
-        /// Gets the flag to indicate the unit operation's validation status
-        /// </summary>
-        /// <remarks>
-        /// <para> Get the flag that indicates whether the Flowsheet Unit is valid (e.g. some 
-        /// parameter values have changed but they have not been validated by using 
-        /// Validate). It has three possible values:</para>
-        /// <list type="bullet"> 
-        /// <item>notValidated(CAPE_NOT_VALIDATED)</item>
-        /// <description>The unit’s validate() method has not 
-        /// been called since the last operation that could have changed the validation 
-        /// status of the unit, for example an update to a parameter value of a connection 
-        /// to a port.</description>
-        /// <item>invalid(CAPE_INVALID)</item>
-        /// <description>The last time the unit’s validate() method was 
-        /// called it returned false.</description>
-        /// <item>valid(CAPE_VALID)</item>
-        /// <description>The last time the unit’s validate() method was 
-        /// called it returned true.</description>
-        /// </list>
-        /// </remarks>
-        /// <value>A flag that indiciates the validation status of the unit operation.</value>
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-        /// <see cref= "CapeValidationStatus">CapeValidationStatus</see>.
-        [System.ComponentModel.CategoryAttribute("ICapeUnit")]
-        [System.ComponentModel.DescriptionAttribute("Validation status of the unit. Either CAPE_VALID, CAPE_NOT_VALIDATED or CAPE_INVALID")]
-        public virtual CapeValidationStatus ValStatus
-        {
-            get
-            {
-                return m_ValStatus;
-            }
-        }
-
-
-        /// <summary>
-        /// Gets the message returned during the last validation of the unit operation.
-        /// </summary>
-        /// <remarks>
-        /// Gets the message that was retured fromt he last attempt to validate the Flowsheet Unit (e.g. some 
-        /// parameter values have changed but they have not been validated by using 
-        /// Validate). 
-        /// </remarks>
-        /// <value>The message returned during the last validation of the unit operation.</value>
-        /// <see cref= "CapeValidationStatus">CapeValidationStatus</see>.
-        [System.ComponentModel.CategoryAttribute("ICapeUnit")]
-        [System.ComponentModel.DescriptionAttribute("Validation message of the unit.")]
-        public virtual string ValidationMessage
-        {
-            get
-            {
-                return this.MValidationMessage;
-            }
-        }
-
-        /// <summary>
-        ///	Executes the necessary calculations involved in the unit operation model.
-        /// </summary>
-        /// <remarks>
-        /// <para>This method is called by the PME to execute the calculation of the unit operation. The calculation process
-        /// first fires the <see cref = "UnitOperationBeginCalculation" /> event. After the event is fired, the 
-        /// <see cref = "OnCalculate"/> method is called. Derived classes must implement the 
-        /// <see cref = "OnCalculate"/> method. After the unit has completed its calculation, this method fires the 
-        /// <see cref = "UnitOperationEndCalculation"/> event.</para>
-        /// </remarks>
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        /// <exception cref = "ECapeBadInvOrder">ECapeBadInvOrder</exception>
-        /// <exception cref = "ECapeOutOfResources">ECapeOutOfResources</exception>
-        /// <exception cref = "ECapeTimeOut">ECapeTimeOut</exception>
-        /// <exception cref = "ECapeSolvingError">ECapeSolvingError</exception>
-        /// <exception cref = "ECapeLicenceError">ECapeLicenceError</exception>
-        void ICapeUnitCOM.Calculate()
-        {
-            this.OnUnitOperationBeginCalculation("Starting Calculation");
-            this.OnCalculate();
-            this.OnUnitOperationEndCalculation("Calculation completed normally.");
-        }
-
-
-        /// <summary>
-        ///	Executes the necessary calculations involved in the unit operation model.
-        /// </summary>
-        /// <remarks>
-        /// <para>This method is called by the PME to execute the calculation of the unit operation. The calculation process
-        /// first fires the <see cref = "UnitOperationBeginCalculation" /> event. After the event is fired, the 
-        /// <see cref = "OnCalculate"/> method is called. Derived classes must implement the 
-        /// <see cref = "OnCalculate"/> method. After the unit has completed its calculation, this method fires the 
-        /// <see cref = "UnitOperationEndCalculation"/> event.</para>
-        /// </remarks>
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        /// <exception cref = "ECapeBadInvOrder">ECapeBadInvOrder</exception>
-        /// <exception cref = "ECapeOutOfResources">ECapeOutOfResources</exception>
-        /// <exception cref = "ECapeTimeOut">ECapeTimeOut</exception>
-        /// <exception cref = "ECapeSolvingError">ECapeSolvingError</exception>
-        /// <exception cref = "ECapeLicenceError">ECapeLicenceError</exception>
-        void ICapeUnit.Calculate()
-        {
-            this.OnUnitOperationBeginCalculation("Starting Calculation");
-            this.OnCalculate();
-            this.OnUnitOperationEndCalculation("Calculation completed normally.");
-        }
-
-        /// <summary>
-        ///	Executes the necessary calculations involved in the unit operation model.
-        /// </summary>
-        /// <remarks>
-        /// <para>This method is called by the PME to execute the calculation of the unit operation. The calculation process
-        /// first fires the <see cref = "UnitOperationBeginCalculation" /> event. After the event is fired, the 
-        /// <see cref = "OnCalculate"/> method is called. Derived classes must implement the 
-        /// <see cref = "OnCalculate"/> method. After the unit has completed its calculation, this method fires the 
-        /// <see cref = "UnitOperationEndCalculation"/> event.</para>
-        /// </remarks>
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        /// <exception cref = "ECapeBadInvOrder">ECapeBadInvOrder</exception>
-        /// <exception cref = "ECapeOutOfResources">ECapeOutOfResources</exception>
-        /// <exception cref = "ECapeTimeOut">ECapeTimeOut</exception>
-        /// <exception cref = "ECapeSolvingError">ECapeSolvingError</exception>
-        /// <exception cref = "ECapeLicenceError">ECapeLicenceError</exception>
-        void OnCalculate()
-        {
-            this.OnUnitOperationBeginCalculation("Starting Calculation");
-            this.Calculate();
-            this.OnUnitOperationEndCalculation("Calculation completed normally.");
-        }
-
-        /// <summary>
-        ///	This method is called by the Calculate method to perform necessary calculations involved in the 
-        ///	unit operation model.
-        /// </summary>
-        /// <remarks>
-        /// <para>The Flowsheet Unit performs its calculation, that is, computes the variables 
-        /// that are missing at this stage in the complete description of the input and 
-        /// output streams and computes any public parameter value that needs to be 
-        /// displayed. OnCalculate will be able to do progress monitoring and checks for 
-        /// interrupts as required using the simulation context. At present, there are no
-        /// standards agreed for this.</para>
-        /// <para>It is recommended that Flowsheet Units perform a suitable flash 
-        /// calculation on all output streams. In some cases a Simulation Executive will 
-        /// be able to perform a flash calculation but the writer of a Flowsheet Unit is 
-        /// in the best position to decide the correct flash to use.</para>
-        /// <para>Before performing the calculation, this method should perform any final 
-        /// validation tests that are required. For example, at this point the validity of 
-        /// Material Objects connected to ports can be checked.</para>
-        /// <para>There are no input or output arguments for this method.</para>
-        /// </remarks>
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        /// <exception cref = "ECapeBadInvOrder">ECapeBadInvOrder</exception>
-        /// <exception cref = "ECapeOutOfResources">ECapeOutOfResources</exception>
-        /// <exception cref = "ECapeTimeOut">ECapeTimeOut</exception>
-        /// <exception cref = "ECapeSolvingError">ECapeSolvingError</exception>
-        /// <exception cref = "ECapeLicenceError">ECapeLicenceError</exception>
-        abstract protected void Calculate();
-
-        /// <summary>
-        /// Validates the unit operation. 
-        /// </summary>
-        /// <remarks>
-        /// <para>Sets the flag that indicates whether the Flowsheet Unit is valid by 
-        /// validating the ports and parameters of the Flowsheet Unit. For example, this 
-        /// method could check that all mandatory ports have connections and that the 
-        /// values of all parameters are within bounds.</para>
-        /// <para>Note that the Simulation Executive can call the Validate routine at any 
-        /// time, in particular it may be called before the executive is ready to call 
-        /// the Calculate method. This means that Material Objects connected to unit ports 
-        /// may not be correctly configured when Validate is called. The recommended approach 
-        /// is for this method to validate parameters and ports but not Material Object 
-        /// configuration. A second level of validation to check Material Objects can be
-        /// implemented as part of Calculate, when it is reasonable to expect that the 
-        /// Material Objects connected to ports will be correctly configured. </para>
-        /// <para>The base-class implementation of this method traverses the port and 
-        /// parameter collections and calls the  <see cref = "Validate"/> method of each 
-        /// member. The unit is valid if all port and parameters are valid, which is 
-        /// signified by the Validate method returning <c>true</c>.</para>
-        /// </remarks>
-        /// <returns>
-        /// <para>true, if the unit is valid.</para>
-        /// <para>false, if the unit is not valid.</para>
-        /// </returns>
-        /// <param name = "message">Reference to a string that will conain a message regarding the validation of the parameter.</param>
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        /// <exception cref = "ECapeBadCOParameter">ECapeBadCOParameter</exception>
-        /// <exception cref = "ECapeBadInvOrder">ECapeBadInvOrder</exception>
-        public override bool Validate(ref String message)
-        {
-            // m_dirty = true;
-            UnitOperationValidatedEventArgs args;
-            if (!base.Validate(ref message))
-            {
-                args = new UnitOperationValidatedEventArgs(this.ComponentName, message, m_ValStatus, CapeValidationStatus.CAPE_INVALID);
-                m_ValStatus = CapeValidationStatus.CAPE_INVALID;
-                OnUnitOperationValidated(args);
-                this.MValidationMessage = message;
-                return false;
-            }
-            for (int i = 0; i < this.Ports.Count; i++)
-            {
-                if (m_Ports[i].connectedObject == null)
-                {
-                    message = String.Concat("Port ", ((CapeIdentification)m_Ports[i]).ComponentName, " does not have a connected object.");
-                    this.MValidationMessage = message;
-                    args = new UnitOperationValidatedEventArgs(this.ComponentName, message, m_ValStatus, CapeValidationStatus.CAPE_INVALID);
-                    m_ValStatus = CapeValidationStatus.CAPE_INVALID;
-                    OnUnitOperationValidated(args);
-                    return false;
-                }
-            }
-            message = "Unit is valid.";
-            this.MValidationMessage = message;
-            args = new UnitOperationValidatedEventArgs(this.ComponentName, message, m_ValStatus, CapeValidationStatus.CAPE_INVALID);
-            m_ValStatus = CapeValidationStatus.CAPE_VALID;
+            args = new UnitOperationValidatedEventArgs(ComponentName, message, _mValStatus, CapeValidationStatus.CAPE_INVALID);
+            _mValStatus = CapeValidationStatus.CAPE_INVALID;
             OnUnitOperationValidated(args);
-            return true;
+            MValidationMessage = message;
+            return false;
         }
-        /*        // IPersist
-                /// <summary>This method retrieves the class identifier (CLSID) of an object. The 
-                /// CLSID is a unique value that identifies the code that can manipulate the 
-                /// persistent data.</summary>
-                /// <remarks>
-                /// The GetClassID method retrieves the class identifier (CLSID) for an object, 
-                /// used in later operations to load object-specific code into the caller's context.
-                /// </remarks>
-                /// <param name ="pClassID"><para>Pointer to the location of the CLSID on return.</para>
-                /// <para>The CLSID is a globally unique identifier (GUID) that uniquely represents 
-                /// an object class that defines the code that can manipulate the object's data. </para>
-                /// </param>
-                void IPersist.GetClassID(out Guid pClassID)
-                {
-                    pClassID = this.GetType().GUID;
-                }
-
-                // IPersistStream
-
-                /// <summary>
-                /// This method checks the object for changes since it was last saved.
-                /// </summary>
-                /// <remarks>
-                /// This method checks whether an object has changed since it was last saved so you can 
-                /// avoid losing information in objects that have not yet been saved.
-                /// </remarks>
-                /// <returns>
-                /// <para>If the object has changed since it was last saved, the return value 
-                /// is the HRESULT S_OK, which has a numerical value of 0. </para>
-                /// <para>If the object has not changed since the last save, the return value 
-                /// is the HRESULT S_FALSE, which has a numerical value of 1. </para>
-                /// </returns>
-                int IPersistStream.IsDirty()
-                {
-                    if (m_dirty) return 0;
-                    return 1;
-                }
-
-                /// <summary>This method saves an object to the specified stream.</summary>
-                /// <remarks>
-                /// IPersistStream.Save saves an object into the specified stream and indicates 
-                /// whether the object should reset its dirty flag.
-                /// </remarks>
-                /// <param name ="fClearDirty">Value that indicates whether to clear the dirty flag after the save 
-                /// is complete. If TRUE, the flag should be cleared. If FALSE, the flag should be left unchanged. </param>
-                /// <param name ="pStm">IStream pointer to the stream into which the object should be saved. </param>
-                void IPersistStream.Save(System.Runtime.InteropServices.ComTypes.IStream pStm, bool fClearDirty)
-                {
-                    Byte[] arrLen = new Byte[2];
-                    // Convert the string into a byte array    
-                    System.IO.MemoryStream memoryStream = new System.IO.MemoryStream();
-                    Object[] saveObjects = new Object[4];
-                    saveObjects[0] = this.ComponentName;
-                    saveObjects[1] = this.ComponentDescription;
-                    saveObjects[2] = this.Parameters;
-                    saveObjects[3] = m_Ports;
-                    System.Runtime.Serialization.Formatters.Binary.BinaryFormatter binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-                    binaryFormatter.Serialize(memoryStream, saveObjects);
-                    Byte[] bytes = memoryStream.ToArray();
-                    memoryStream.Close();
-                    // construct length (separate into two separate bytes)    
-                    arrLen[0] = (Byte)(bytes.Length % 256);
-                    arrLen[1] = (Byte)(bytes.Length / 256);
-                    try
-                    {
-                        // Save the array in the stream    
-                        pStm.Write(arrLen, 2, IntPtr.Zero);
-                        pStm.Write(bytes, bytes.Length, IntPtr.Zero);
-                        System.Runtime.InteropServices.Marshal.ReleaseComObject(pStm);
-                        if (fClearDirty) m_dirty = false;
-                    }
-                    catch (System.Exception p_Ex)
-                    {
-                        System.Windows.Forms.MessageBox.Show(p_Ex.ToString());
-                        System.Runtime.InteropServices.Marshal.ReleaseComObject(pStm);
-                    }
-                }
-
-                /// <summary>This method initializes an object from the stream where it was previously saved.</summary>
-                /// <remarks>
-                /// This method loads an object from its associated stream.
-                /// </remarks>
-                /// <param name ="pStm">IStream pointer to the stream from which the object should be loaded. </param>
-                void IPersistStream.Load(System.Runtime.InteropServices.ComTypes.IStream pStm)
-                {
-                    m_Loaded = true;
-                    m_Ports.Clear();
-                    this.Parameters.Clear();
-                    int cb;
-                    Byte[] arrLen = new Byte[2];
-                    // Read the length of the string  
-                    IntPtr pcb = IntPtr.Zero;
-                    pStm.Read(arrLen, 2, IntPtr.Zero);
-                    // Calculate the length    
-                    cb = 256 * arrLen[1] + arrLen[0];
-                    // Read the stream to get the string    
-                    Byte[] bytes = new Byte[cb];
-                    pStm.Read(bytes, cb, pcb);
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(pStm);
-                    // Deserialize byte array    
-                    System.IO.MemoryStream memoryStream = new System.IO.MemoryStream(bytes);
-                    System.Runtime.Serialization.Formatters.Binary.BinaryFormatter binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-                    try
-                    {
-                        AppDomain domain = AppDomain.CurrentDomain;
-                        domain.AssemblyResolve += new ResolveEventHandler(CapeOpen.CapeUnitBase.MyResolveEventHandler);
-                        Object[] loadObject = (Object[])(binaryFormatter.Deserialize(memoryStream));
-                        this.ComponentName = loadObject[0].ToString();
-                        this.ComponentDescription = loadObject[1].ToString();
-                        ParameterCollection parameters = (ParameterCollection)loadObject[2];
-                        foreach (ICapeParameter param in parameters)
-                        {
-                            this.Parameters.Add(param);
-                        }
-                        m_Ports = (PortCollection)loadObject[3];
-                        domain.AssemblyResolve -= new ResolveEventHandler(CapeOpen.CapeUnitBase.MyResolveEventHandler);
-                    }
-                    catch (System.Exception p_Ex)
-                    {
-                        System.Windows.Forms.MessageBox.Show(p_Ex.ToString());
-                    }
-                    memoryStream.Close();
-                }
-
-                /// <summary>This method returns the size, in bytes, of the stream needed to save the object.</summary>
-                /// <remarks>
-                /// <para>This method returns the size needed to save an object. </para>
-                /// <para>You can call this method to determine the size and set the necessary 
-                /// buffers before calling the Save method.</para>
-                /// </remarks>
-                /// <param name ="pcbSize">Pointer to a 64-bit unsigned integer value indicating the size, in bytes, of the stream needed to save this object. </param>
-                void IPersistStream.GetSizeMax(out long pcbSize)
-                {
-                    pcbSize = 0;
-                }
-                // IPersistStreamInit
-
-                /// <summary>
-                /// This method checks the object for changes since it was last saved.
-                /// </summary>
-                /// <remarks>
-                /// This method checks whether an object has changed since it was last saved so you can 
-                /// avoid losing information in objects that have not yet been saved.
-                /// </remarks>
-                /// <returns>
-                /// <para>If the object has changed since it was last saved, the return value 
-                /// is the HRESULT S_OK, which has a numerical value of 0. </para>
-                /// <para>If the object has not changed since the last save, the return value 
-                /// is the HRESULT S_FALSE, which has a numerical value of 1. </para>
-                /// </returns>
-                int IPersistStreamInit.IsDirty()
-                {
-                    if (m_dirty) return 0;
-                    return 1;
-                }
-
-                /// <summary>This method saves an object to the specified stream.</summary>
-                /// <remarks>
-                /// IPersistStream.Save saves an object into the specified stream and indicates 
-                /// whether the object should reset its dirty flag.
-                /// </remarks>
-                /// <param name ="fClearDirty">Value that indicates whether to clear the dirty flag after the save 
-                /// is complete. If TRUE, the flag should be cleared. If FALSE, the flag should be left unchanged. </param>
-                /// <param name ="pStm">IStream pointer to the stream into which the object should be saved. </param>
-                void IPersistStreamInit.Save(System.Runtime.InteropServices.ComTypes.IStream pStm, bool fClearDirty)
-                {
-                    Byte[] arrLen = new Byte[2];
-                    // Convert the string into a byte array    
-                    System.IO.MemoryStream memoryStream = new System.IO.MemoryStream();
-                    Object[] saveObjects = new Object[4];
-                    saveObjects[0] = this.ComponentName;
-                    saveObjects[1] = this.ComponentDescription;
-                    saveObjects[2] = this.Parameters;
-                    saveObjects[3] = m_Ports;
-                    System.Runtime.Serialization.Formatters.Binary.BinaryFormatter binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-                    binaryFormatter.Serialize(memoryStream, saveObjects);
-                    Byte[] bytes = memoryStream.ToArray();
-                    memoryStream.Close();
-                    // construct length (separate into two separate bytes)    
-                    arrLen[0] = (Byte)(bytes.Length % 256);
-                    arrLen[1] = (Byte)(bytes.Length / 256);
-                    try
-                    {
-                        // Save the array in the stream    
-                        pStm.Write(arrLen, 2, IntPtr.Zero);
-                        pStm.Write(bytes, bytes.Length, IntPtr.Zero);
-                        System.Runtime.InteropServices.Marshal.ReleaseComObject(pStm);
-                        if (fClearDirty) m_dirty = false;
-                    }
-                    catch (System.Exception p_Ex)
-                    {
-                        System.Windows.Forms.MessageBox.Show(p_Ex.ToString());
-                        System.Runtime.InteropServices.Marshal.ReleaseComObject(pStm);
-                    }
-                }
-
-                /// <summary>This method initializes an object from the stream where it was previously saved.</summary>
-                /// <remarks>
-                /// This method loads an object from its associated stream.
-                /// </remarks>
-                /// <param name ="pStm">IStream pointer to the stream from which the object should be loaded. </param>
-                void IPersistStreamInit.Load(System.Runtime.InteropServices.ComTypes.IStream pStm)
-                {
-                    m_Loaded = true;
-                    m_Ports.Clear();
-                    this.Parameters.Clear();
-                    int cb;
-                    Byte[] arrLen = new Byte[2];
-                    // Read the length of the string  
-                    IntPtr pcb = IntPtr.Zero;
-                    pStm.Read(arrLen, 2, IntPtr.Zero);
-                    // Calculate the length    
-                    cb = 256 * arrLen[1] + arrLen[0];
-                    // Read the stream to get the string    
-                    Byte[] bytes = new Byte[cb];
-                    pStm.Read(bytes, cb, pcb);
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(pStm);
-                    // Deserialize byte array    
-                    System.IO.MemoryStream memoryStream = new System.IO.MemoryStream(bytes);
-                    System.Runtime.Serialization.Formatters.Binary.BinaryFormatter binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-                    try
-                    {
-                        AppDomain domain = AppDomain.CurrentDomain;
-                        domain.AssemblyResolve += new ResolveEventHandler(CapeOpen.CapeUnitBase.MyResolveEventHandler);
-                        Object[] loadObject = (Object[])(binaryFormatter.Deserialize(memoryStream));
-                        this.ComponentName = loadObject[0].ToString();
-                        this.ComponentDescription = loadObject[1].ToString();
-                        ParameterCollection parameters = (ParameterCollection)loadObject[2];
-                        foreach (ICapeParameter param in parameters)
-                        {
-                            this.Parameters.Add(param);
-                        }
-                        m_Ports = (PortCollection)loadObject[3];
-                        domain.AssemblyResolve -= new ResolveEventHandler(CapeOpen.CapeUnitBase.MyResolveEventHandler);
-                    }
-                    catch (System.Exception p_Ex)
-                    {
-                        System.Windows.Forms.MessageBox.Show(p_Ex.ToString());
-                    }
-                    memoryStream.Close();
-                }
-
-                /// <summary>This method returns the size, in bytes, of the stream needed to save the object.</summary>
-                /// <remarks>
-                /// <para>This method returns the size needed to save an object. </para>
-                /// <para>You can call this method to determine the size and set the necessary 
-                /// buffers before calling the Save method.</para>
-                /// </remarks>
-                /// <param name ="pcbSize">Pointer to a 64-bit unsigned integer value indicating the size, in bytes, of the stream needed to save this object. </param>
-                void IPersistStreamInit.GetSizeMax(out long pcbSize)
-                {
-                    pcbSize = 0;
-                }
-
-                /// <summary>Initializes an object to a default state. This method is to be called 
-                /// instead of IPersistStreamInit.Load.</summary>
-                /// <remarks>
-                /// If the object has already been initialized with IPersistStreamInit.Load, then 
-                /// this method must return E_UNEXPECTED.
-                /// </remarks>
-                void IPersistStreamInit.InitNew()
-                {
-                    if (m_Loaded)
-                    {
-                        CapeOpen.CapeUnexpectedException p_Ex = new CapeUnexpectedException("The object has already been initialized with IPersistStreamInit.Load.");
-                        throw p_Ex;
-                    }
-                }
-        */
-
-        /// <summary>
-        ///	Gets the list of possible reports for the unit operation.
-        /// </summary>
-        /// <remarks>
-        ///	Gets the list of possible reports for the unit operation.
-        /// </remarks>
-        /// <value>
-        ///	The list of possible reports for the unit operation.
-        /// </value>
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        /// <exception cref = "ECapeNoImpl">ECapeNoImpl</exception>
-        [System.ComponentModel.CategoryAttribute("ICapeUnitReport")]
-        [System.ComponentModel.DescriptionAttribute("Reports available for the unit.")]
-        virtual public System.Collections.Generic.List<String> Reports
+        foreach (var pT in Ports)
         {
-            get
-            {
-                return m_Reports;
-            }
+            if (pT.connectedObject != null) continue;
+            message = string.Concat("Port ", ((CapeIdentification)pT).ComponentName, " does not have a connected object.");
+            MValidationMessage = message;
+            args = new UnitOperationValidatedEventArgs(ComponentName, message, _mValStatus, CapeValidationStatus.CAPE_INVALID);
+            _mValStatus = CapeValidationStatus.CAPE_INVALID;
+            OnUnitOperationValidated(args);
+            return false;
         }
-        
-        /// <summary>
-        ///	Gets and sets the current active report for the unit operation.
-        /// </summary>
-        /// <remarks>
-        ///	Gets and sets the current active report for the unit operation.
-        /// </remarks>
-        /// <value>
-        ///	The current active report for the unit operation.
-        /// </value>
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        /// <exception cref = "ECapeNoImpl">ECapeNoImpl</exception>
-        /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-        [System.ComponentModel.TypeConverter(typeof(SelectedReportConverter))]
-        [System.ComponentModel.DescriptionAttribute("Name of the report generated by the unit.")]
-        [System.ComponentModel.CategoryAttribute("ICapeUnitReport")]
-        virtual public String selectedReport
-        {
-            get
-            {
-                return m_selecetdReport;
-            }
-            set
-            {
-                m_selecetdReport = value;
-            }
-        }
+        message = "Unit is valid.";
+        MValidationMessage = message;
+        args = new UnitOperationValidatedEventArgs(ComponentName, message, _mValStatus, CapeValidationStatus.CAPE_INVALID);
+        _mValStatus = CapeValidationStatus.CAPE_VALID;
+        OnUnitOperationValidated(args);
+        return true;
+    }
 
-        /// <summary>
-        ///	Produces the active report for the unit operation.
-        /// </summary>
-        /// <remarks>
-        ///	Produce the designated report. If no value has been set, it produces the default report.
-        /// </remarks>
-        /// <returns>String containing the text for the currently selected report.</returns>
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        /// <exception cref = "ECapeNoImpl">ECapeNoImpl</exception>
-        virtual public String ProduceReport()
-        {
-            String retVal = String.Empty;
-            String validMessage = String.Empty;
-            bool valid = this.Validate(ref validMessage);
-            CapeValidationStatus status = this.ValStatus;
-            retVal = String.Concat(retVal, "Unit Operation: ", this.ComponentName, Environment.NewLine);
-            retVal = String.Concat(retVal, "   Description: ", this.ComponentDescription, Environment.NewLine, Environment.NewLine);
-            retVal = String.Concat(retVal, "Validation Status: ", this.ValStatus.ToString(), Environment.NewLine);
-            retVal = String.Concat(retVal, "                   ", validMessage, Environment.NewLine, Environment.NewLine);
-            retVal = String.Concat(retVal, "Parameters: ", Environment.NewLine);
+    /// <summary>获取单元操作的可能报告列表。</summary>
+    /// <remarks>获取单元操作的可能报告列表。</remarks>
+    /// <value>该单元操作的可能报告列表。</value>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    /// <exception cref="ECapeNoImpl">ECapeNoImpl</exception>
+    [Category("ICapeUnitReport")]
+    [Description("Reports available for the unit.")]
+    public virtual System.Collections.Generic.List<string> Reports => _mReports;
 
-            for (int i = 0; i < this.Parameters.Count; i++)
+    /// <summary>获取并设置单元操作的当前活动报告。</summary>
+    /// <remarks>获取并设置单元操作的当前活动报告。</remarks>
+    /// <value>当前单元操作的活跃报告。</value>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    /// <exception cref="ECapeNoImpl">ECapeNoImpl</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为未定义。</exception>
+    [TypeConverter(typeof(SelectedReportConverter))]
+    [Description("Name of the report generated by the unit.")]
+    [Category("ICapeUnitReport")]
+    public virtual string selectedReport
+    {
+        get => _mSelecetdReport;
+        set => _mSelecetdReport = value;
+    }
+
+    /// <summary>生成该单元操作的活动报告。</summary>
+    /// <remarks>生成指定的报告。如果未设置值，则生成默认报告。</remarks>
+    /// <returns>包含当前选定报告文本的字符串。</returns>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    /// <exception cref="ECapeNoImpl">ECapeNoImpl</exception>
+    public virtual string ProduceReport()
+    {
+        var retVal = string.Empty;
+        var validMessage = string.Empty;
+        var valid = Validate(ref validMessage);
+        var status = ValStatus;
+        retVal = string.Concat(retVal, "Unit Operation: ", ComponentName, Environment.NewLine);
+        retVal = string.Concat(retVal, "Description: ", ComponentDescription, Environment.NewLine, Environment.NewLine);
+        retVal = string.Concat(retVal, "Validation Status: ", ValStatus.ToString(), Environment.NewLine);
+        retVal = string.Concat(retVal, " ", validMessage, Environment.NewLine, Environment.NewLine);
+        retVal = string.Concat(retVal, "Parameters: ", Environment.NewLine);
+
+        for (var i = 0; i < Parameters.Count; i++)
+        {
+            var pParam = Parameters[i];
+            var pParamId = (CapeIdentification)pParam;
+            retVal = string.Concat(retVal, "Parameter", i.ToString(), ": ", pParamId.ComponentName, Environment.NewLine);
+            retVal = string.Concat(retVal, "Description: ", pParamId.ComponentDescription, Environment.NewLine);
+            var pSpec = (ICapeParameterSpec)pParam.Specification;
+            retVal = string.Concat(retVal, "Type: ", pSpec.Type.ToString(), Environment.NewLine);
+            valid = pParam.Validate(validMessage);
+            retVal = string.Concat(retVal, "Validation Status: ", pParam.ValStatus.ToString(), Environment.NewLine);
+            retVal = string.Concat(retVal, " ", validMessage, Environment.NewLine);
+            switch (pSpec.Type)
             {
-                ICapeParameter p_Param = (ICapeParameter)this.Parameters[i];
-                CapeIdentification p_ParamId = (CapeIdentification)p_Param;
-                retVal = String.Concat(retVal, "     Parameter ", i.ToString(), ": ", p_ParamId.ComponentName, Environment.NewLine);
-                retVal = String.Concat(retVal, "     Desription: ", p_ParamId.ComponentDescription, Environment.NewLine);
-                ICapeParameterSpec p_Spec = (ICapeParameterSpec)p_Param.Specification;
-                retVal = String.Concat(retVal, "     Type: ", p_Spec.Type.ToString(), Environment.NewLine);
-                valid = p_Param.Validate(validMessage);
-                retVal = String.Concat(retVal, "     Validation Status: ", p_Param.ValStatus.ToString(), Environment.NewLine);
-                retVal = String.Concat(retVal, "          ", validMessage, Environment.NewLine);
-                if (p_Spec.Type == CapeParamType.CAPE_ARRAY)
+                case CapeParamType.CAPE_ARRAY:
                 {
-                    retVal = String.Concat(retVal, "     Values:", Environment.NewLine);
-                    Object[] values;
-                    if (p_Param.value is Object[])
+                    retVal = string.Concat(retVal, " Values: ", Environment.NewLine);
+                    if (pParam.value is object[] pParamValue)
                     {
-                        values = (Object[])p_Param.value;
-                        for (int j = 0; j < values.Length; j++)
+                        foreach (var pT in pParamValue)
                         {
-                            ICapeParameter p_ParamArrayElement;
-                            if (values[j] is ICapeParameter)
+                            if (pT is ICapeParameter pParamArrayElement)
                             {
-                                p_ParamArrayElement = (ICapeParameter)values[j];
-                                retVal = String.Concat(retVal, String.Concat("          ", p_ParamArrayElement.value.ToString(), Environment.NewLine));
+                                retVal = string.Concat(retVal, string.Concat(" ", pParamArrayElement.value.ToString(), Environment.NewLine));
                             }
                             else
                             {
-                                retVal = String.Concat(retVal, String.Concat("          ", values[j].ToString(), Environment.NewLine));
+                                retVal = string.Concat(retVal, string.Concat(" ", pT.ToString(), Environment.NewLine));
                             }
                         }
                     }
-                }
-                if (p_Spec.Type == CapeParamType.CAPE_REAL)
-                {
-                    ICapeRealParameterSpecCOM p_Real = (ICapeRealParameterSpecCOM)p_Spec;
-                    RealParameter p_RealParam;
-                    if (p_Param is RealParameter)
-                    {
-                        p_RealParam = (RealParameter)p_Param;
-                        retVal = String.Concat(retVal, "     Value: ", p_RealParam.DimensionedValue.ToString(), Environment.NewLine);
-                        retVal = String.Concat(retVal, "     Dimensionality: ", p_RealParam.Unit, Environment.NewLine);
-                    }
-                    else
-                    {
-                        retVal = String.Concat(retVal, "     Value: ", p_Param.value.ToString(), Environment.NewLine);
-                        retVal = String.Concat(retVal, "     Dimensionality: ", p_Spec.Dimensionality.ToString(), Environment.NewLine);
-                    }
-                    retVal = String.Concat(retVal, "     Default Value: ", p_Real.DefaultValue, Environment.NewLine);
-                    retVal = String.Concat(retVal, "     Lower Bound: ", p_Real.LowerBound, Environment.NewLine);
-                    retVal = String.Concat(retVal, "     Upper Bound: ", p_Real.UpperBound, Environment.NewLine);
-                }
-                if (p_Spec.Type == CapeParamType.CAPE_INT)
-                {
-                    retVal = String.Concat(retVal, "     Value: ", p_Param.value.ToString(), Environment.NewLine);
-                    ICapeIntegerParameterSpec p_IntParam = (ICapeIntegerParameterSpec)p_Spec;
-                    retVal = String.Concat(retVal, "     Default Value: ", p_IntParam.DefaultValue, Environment.NewLine);
-                    retVal = String.Concat(retVal, "     Lower Bound: ", p_IntParam.LowerBound, Environment.NewLine);
-                    retVal = String.Concat(retVal, "     Upper Bound: ", p_IntParam.UpperBound, Environment.NewLine);
-                }
-                if (p_Spec.Type == CapeParamType.CAPE_BOOLEAN)
-                {
-                    retVal = String.Concat(retVal, "     Value: ", p_Param.value.ToString(), Environment.NewLine);
-                    ICapeBooleanParameterSpec p_Bool = (ICapeBooleanParameterSpec)p_Spec;
-                    retVal = String.Concat(retVal, "     Default Value: ", p_Bool.DefaultValue, Environment.NewLine);
-                }
-                if (p_Spec.Type == CapeParamType.CAPE_OPTION)
-                {
-                    retVal = String.Concat(retVal, "     Value: ", p_Param.value.ToString(), Environment.NewLine);
-                    ICapeOptionParameterSpec p_Opt = (ICapeOptionParameterSpec)p_Spec;
-                    retVal = String.Concat(retVal, "     Default Value: ", p_Opt.DefaultValue, Environment.NewLine);
-                    if (p_Opt.RestrictedToList)
-                    {
-                        retVal = String.Concat(retVal, "     Restricted to List: TRUE", Environment.NewLine);
-                    }
-                    else
-                    {
-                        retVal = String.Concat(retVal, "     Restricted to List: FALSE", Environment.NewLine);
-                    }
-                    retVal = String.Concat(retVal, "     Option List Values: ", Environment.NewLine);
-                    String[] options = (String[])p_Opt.OptionList;
-                    for (int j = 0; j < options.Length; j++)
-                    {
-                        retVal = String.Concat(retVal, "          Option[", j, "]: ", options[j], Environment.NewLine);
-                    }
-                }
 
-                retVal = String.Concat(retVal, Environment.NewLine);
-            }
-            retVal = String.Concat(retVal, Environment.NewLine, "Ports: ", Environment.NewLine);
-            for (int i = 0; i < this.Ports.Count; i++)
-            {
-                ICapeUnitPort p_Port = (ICapeUnitPort)m_Ports[i];
-                CapeIdentification p_PortId = (CapeIdentification)p_Port;
-                retVal = String.Concat(retVal, "     Port ", i.ToString(), ": ", p_PortId.ComponentName, Environment.NewLine);
-                retVal = String.Concat(retVal, "     Desription:  ", p_PortId.ComponentDescription, Environment.NewLine);
-                ICapeIdentification p_PortConnectedObjectId = (ICapeIdentification)p_Port.connectedObject;
-                retVal = String.Concat(retVal, "     Port Type: ", p_Port.portType.ToString(), Environment.NewLine);
-                retVal = String.Concat(retVal, "     Port Direction: ", p_Port.direction.ToString(), Environment.NewLine);
-                if (p_PortConnectedObjectId != null)
-                {
-                    retVal = String.Concat(retVal, "     Connected Object:  ", p_PortConnectedObjectId.ComponentName, Environment.NewLine);
+                    break;
                 }
-                else
+                case CapeParamType.CAPE_REAL:
                 {
-                    retVal = String.Concat(retVal, "     No Connected Object", Environment.NewLine);
+                    var pReal = (ICapeRealParameterSpecCOM)pSpec;
+                    if (pParam is RealParameter pRealParam)
+                    {
+                        retVal = string.Concat(retVal, "Value: ", pRealParam.DimensionedValue.ToString(CultureInfo.CurrentCulture), Environment.NewLine);
+                        retVal = string.Concat(retVal, "Dimensionality: ", pRealParam.Unit, Environment.NewLine);
+                    }
+                    else
+                    {
+                        retVal = string.Concat(retVal, "Value: ", pParam.value.ToString(), Environment.NewLine);
+                        retVal = string.Concat(retVal, "Dimensionality: ", pSpec.Dimensionality.ToString(), Environment.NewLine);
+                    }
+                    retVal = string.Concat(retVal, "Default Value: ", pReal.DefaultValue, Environment.NewLine);
+                    retVal = string.Concat(retVal, "Lower Bound: ", pReal.LowerBound, Environment.NewLine);
+                    retVal = string.Concat(retVal, "Upper Bound: ", pReal.UpperBound, Environment.NewLine);
+                    break;
                 }
-                retVal = String.Concat(retVal, Environment.NewLine);
+                case CapeParamType.CAPE_INT:
+                {
+                    retVal = string.Concat(retVal, "Value: ", pParam.value.ToString(), Environment.NewLine);
+                    var pIntParam = (ICapeIntegerParameterSpec)pSpec;
+                    retVal = string.Concat(retVal, "Default Value: ", pIntParam.DefaultValue, Environment.NewLine);
+                    retVal = string.Concat(retVal, "Lower Bound: ", pIntParam.LowerBound, Environment.NewLine);
+                    retVal = string.Concat(retVal, "Upper Bound: ", pIntParam.UpperBound, Environment.NewLine);
+                    break;
+                }
+                case CapeParamType.CAPE_BOOLEAN:
+                {
+                    retVal = string.Concat(retVal, "Value: ", pParam.value.ToString(), Environment.NewLine);
+                    var pBool = (ICapeBooleanParameterSpec)pSpec;
+                    retVal = string.Concat(retVal, "Default Value: ", pBool.DefaultValue, Environment.NewLine);
+                    break;
+                }
+                case CapeParamType.CAPE_OPTION:
+                {
+                    retVal = string.Concat(retVal, "Value: ", pParam.value.ToString(), Environment.NewLine);
+                    var pOpt = (ICapeOptionParameterSpec)pSpec;
+                    retVal = string.Concat(retVal, "Default Value: ", pOpt.DefaultValue, Environment.NewLine);
+                    retVal = string.Concat(retVal, pOpt.RestrictedToList 
+                        ? "Restricted to List: TRUE" 
+                        : "Restricted to List: FALSE", Environment.NewLine);
+                    retVal = string.Concat(retVal, "Option List Values: ", Environment.NewLine);
+                    var options = pOpt.OptionList;
+                    for (var j = 0; j < options.Length; j++)
+                    {
+                        retVal = string.Concat(retVal, "Option[", j, "]: ", options[j], Environment.NewLine);
+                    }
+
+                    break;
+                }
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
-            return retVal;
+
+            retVal = string.Concat(retVal, Environment.NewLine);
         }
-    };
-}
+        retVal = string.Concat(retVal, Environment.NewLine, "Ports: ", Environment.NewLine);
+        for (var i = 0; i < Ports.Count; i++)
+        {
+            var pPort = Ports[i];
+            var pPortId = (CapeIdentification)pPort;
+            retVal = string.Concat(retVal, "Port", i.ToString(), ": ", pPortId.ComponentName, Environment.NewLine);
+            retVal = string.Concat(retVal, "Description: ", pPortId.ComponentDescription, Environment.NewLine);
+            var pPortConnectedObjectId = (ICapeIdentification)pPort.connectedObject;
+            retVal = string.Concat(retVal, "Port Type: ", pPort.portType.ToString(), Environment.NewLine);
+            retVal = string.Concat(retVal, "Port Direction: ", pPort.direction.ToString(), Environment.NewLine);
+            retVal = pPortConnectedObjectId != null 
+                ? string.Concat(retVal, "Connected Object: ", pPortConnectedObjectId.ComponentName, Environment.NewLine) 
+                : string.Concat(retVal, "No Connected Object.", Environment.NewLine);
+            retVal = string.Concat(retVal, Environment.NewLine);
+        }
+        return retVal;
+    }
+};
