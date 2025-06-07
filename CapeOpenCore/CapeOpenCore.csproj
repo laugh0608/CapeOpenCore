@@ -52,5 +52,15 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CapeOpenCore.Class\CapeOpenCore.Class.csproj">
+      <Project>{6a4ffd66-0444-4842-bd5b-b733cc8b039a}</Project>
+      <Name>CapeOpenCore.Class</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CapeOpenCore.Test\CapeOpenCore.Test.csproj">
+      <Project>{3e56242a-04f5-467a-bc09-43e88cbc586b}</Project>
+      <Name>CapeOpenCore.Test</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

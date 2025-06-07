@@ -603,7 +603,7 @@ public abstract class CapeUnitBase : CapeObjectBase, ICapeUnit, ICapeUnitCOM, IC
             {
                 case CapeParamType.CAPE_ARRAY:
                 {
-                    retVal = string.Concat(retVal, " Values: ", Environment.NewLine);
+                    retVal = string.Concat(retVal, "Values: ", Environment.NewLine);
                     if (pParam.value is object[] pParamValue)
                     {
                         foreach (var pT in pParamValue)
