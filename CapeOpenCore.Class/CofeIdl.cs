@@ -1,4 +1,11 @@
-﻿using System;
+﻿/*
+ * 原作者：wbarret1 (https://github.com/wbarret1/CapeOpen)
+ * 重构 & 翻译：DaBaiLuoBo
+ * 帮助社区：CEPD@BBS (https://bbs.imbhj.com)
+ * 重构时间：2025.06.07
+ */
+
+using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 
