@@ -38,8 +38,8 @@ internal class SelectedReportConverter : StringConverter
 [Serializable, ComVisible(true)]
 [ComSourceInterfaces(typeof(IUnitOperationValidatedEventArgs))]
 [ClassInterface(ClassInterfaceType.None)]
-public abstract class CapeUnitBase : CapeObjectBase, ICapeUnit, ICapeUnitCOM, ICapeUnitReport,
-    ICapeUnitReportCOM  // IPersist, IPersistStream, IPersistStreamInit
+public abstract class CapeUnitBase : CapeObjectBase, ICapeUnit, ICapeUnitCOM, ICapeUnitReport, ICapeUnitReportCOM
+// IPersist, IPersistStream, IPersistStreamInit
 {
     private CapeValidationStatus _mValStatus;
     // private bool m_dirty;
@@ -695,4 +695,4 @@ public abstract class CapeUnitBase : CapeObjectBase, ICapeUnit, ICapeUnitCOM, IC
         }
         return retVal;
     }
-};
+}

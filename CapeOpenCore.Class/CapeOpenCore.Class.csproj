@@ -62,7 +62,7 @@
     <Compile Include="CapeOpenUI\WARalgorithm.Designer.cs" />
     <Compile Include="CapeThermoSystem.cs" />
     <Compile Include="CapeUnitBase.cs" />
-    <Compile Include="COFEidl.cs" />
+    <Compile Include="CofeIdl.cs" />
     <Compile Include="COGuids.cs" />
     <Compile Include="COMMaterialObjectWrapper.cs" />
     <Compile Include="CommonIDL.cs" />

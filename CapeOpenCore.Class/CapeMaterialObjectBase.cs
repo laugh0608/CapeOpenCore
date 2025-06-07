@@ -10,9 +10,10 @@ using System.Runtime.InteropServices;
 
 namespace CapeOpenCore.Class;
 
+// 此接口已弃用。
 // [Serializable]
 // [ComVisible(true)]
-// //[ComSourceInterfaces(typeof(ICapeThermoMaterialObjectCOM))]
+// [ComSourceInterfaces(typeof(ICapeThermoMaterialObjectCOM))]
 // [ClassInterface(ClassInterfaceType.None)]
 // public abstract class CapeMaterialObjectBase: CapeObjectBase, ICapeThermoMaterialObject, ICapeThermoMaterialObjectCOM
 // {
