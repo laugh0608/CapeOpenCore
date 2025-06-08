@@ -64,7 +64,8 @@
     <Compile Include="CapeUnitBase.cs" />
     <Compile Include="CofeIdl.cs" />
     <Compile Include="COGuids.cs" />
-    <Compile Include="COMMaterialObjectWrapper.cs" />
+    <Compile Include="ComMaterialObjWrapper01.cs" />
+    <Compile Include="ComMaterialObjWrapper02.cs" />
     <Compile Include="CommonIDL.cs" />
     <Compile Include="CoseIDL.cs" />
     <Compile Include="Dimensions.cs" />
