@@ -13,7 +13,7 @@ namespace CapeOpenCore.Class;
 
 /// <summary>用于将基于 .NET 的对象暴露给基于 COM 的程序管理器（PMC）的包装类。</summary>
 /// <remarks><para>这个类允许基于 COM 的遗留 PMC 访问基于 .NET 的物流对象。
-/// 这个包装器将使用基于 .NET 的热力学接口的材料对象暴露给基于 COM 的 PMC。基于 COM 的 PMC 可以通过 CAPE-OPEN 接口的 COM 版本调用物流对象。</para>
+/// 这个包装器将使用基于 .NET 的热力学接口的物流对象暴露给基于 COM 的 PMC。基于 COM 的 PMC 可以通过 CAPE-OPEN 接口的 COM 版本调用物流对象。</para>
 /// <para>这个类由 <see cref="UnitPortWrapper"/> 类用于将端口连接的流股暴露给由 <see cref="UnitOperationWrapper"/> 类包装的基于 COM 的遗留单元操作。
 /// 这个包装器处理在热力学接口的 .NET 版本中使用的强类型数组和 COM 版本中使用的 VARIANT 数据类型之间的转换。</para></remarks>
 [Serializable, ComVisible(true)]
@@ -36,7 +36,7 @@ partial class COMMaterialObjectWrapper : CapeObjectBase, ICapeThermoMaterialObje
     private bool _thermo11;
 
     /// <summary>创建 MaterialObjectWrapper 类的实例。</summary>
-    /// <remarks>此方法由 <see cref="ICapeUnitPortCOM.connectedObject"/> 方法调用，以将基于 .NET 的材料对象暴露给基于 COM 的遗留 PMC。</remarks>
+    /// <remarks>此方法由 <see cref="ICapeUnitPortCOM.connectedObject"/> 方法调用，以将基于 .NET 的物流对象暴露给基于 COM 的遗留 PMC。</remarks>
     /// <param name="materialObject">The material Object to be wrapped.</param>
     public COMMaterialObjectWrapper(object materialObject)
     {
@@ -145,7 +145,7 @@ partial class COMMaterialObjectWrapper : CapeObjectBase, ICapeThermoMaterialObje
 
     /// <summary>获取一些纯组分的常数值。</summary>
     /// <remarks>从属性包中获取组件常量。请参阅备注以获取更多信息。</remarks>
-    /// <returns>组件常量值从属性包返回，用于材料对象中的所有组件。它是一个包含1维对象数组的对象。如果我们调用 P 为请求的属性数，C 为请求的组件数，
+    /// <returns>组件常量值从属性包返回，用于物流对象中的所有组件。它是一个包含1维对象数组的对象。如果我们调用 P 为请求的属性数，C 为请求的组件数，
     /// 则数组将包含 C*P 个对象。C 的第一个（从位置 0 到 C-1）将是第一个请求的属性值（每个组件一个对象）。
     /// 之后（从位置 C 到 2*C-1）将是第二个请求的属性常量的值，依此类推。</returns>
     /// <param name="props">组件常量列表。</param>
@@ -428,7 +428,7 @@ partial class COMMaterialObjectWrapper : CapeObjectBase, ICapeThermoMaterialObje
     
     /// <summary>清除所有存储的物理特性值。</summary>
     /// <remarks><para>ClearAllProps 删除所有使用 SetSinglePhaseProp、SetTwoPhaseProp 或 SetOverallProp 方法设置的已存储的物理特性。
-    /// 这意味着，在使用 Set 方法之一存储新值之前，任何后续的物理特性检索调用都会引发异常。ClearAllProps 不会删除材料的配置信息，即化合物和相态的列表。</para>
+    /// 这意味着，在使用 Set 方法之一存储新值之前，任何后续的物理特性检索调用都会引发异常。ClearAllProps 不会删除物流的配置信息，即化合物和相态的列表。</para>
     /// <para>使用 ClearAllProps 方法会创建一个与最初创建时状态相同的物流对象。它是使用 CreateMaterial 方法的替代方案，但预计它在操作系统资源上的开销较小。</para></remarks>
     /// <exception cref="ECapeNoImpl">即使由于与 CAPE-OPEN 标准的兼容性原因可以调用此方法，该操作“不”被实现。也就是说，该操作存在，但当前实现不支持。</exception>
     /// <exception cref="ECapeUnknown">当为此操作指定的其他错误不合适时，应抛出的错误。</exception>
@@ -480,8 +480,8 @@ partial class COMMaterialObjectWrapper : CapeObjectBase, ICapeThermoMaterialObje
     /// <param name="property">请求值的物理属性的字符串标识符。这必须是可用于整个混合物的单相物理属性或衍生物之一。</param>
     /// <param name="basis">一个字符串，指示结果的基础。有效设置是：“Mass”表示单位质量的物理属性或“Mole”表示摩尔属性。使用“UNDEFINED”作为物理属性的占位符，其基础不适用。</param>
     /// <exception cref="ECapeNoImpl">即使由于与 CAPE-OPEN 标准的兼容性原因可以调用此方法，但操作 GetOverallProp “未”实现。也就是说，操作存在，但当前实现不支持。</exception>
-    /// <exception cref="ECapeThrmPropertyNotAvailable">所需的物理属性无法从材料对象获取，可能是由于请求的基础。当在调用 CreateMaterial 或 ClearAllProps 方法后未设置物理属性值时，将引发此异常。</exception>
-    /// <exception cref="ECapeInvalidArgument">当传递的参数值无效时使用，例如属性值为UNDEFINED。</exception>
+    /// <exception cref="ECapeThrmPropertyNotAvailable">所需的物理属性无法从物流对象获取，可能是由于请求的基础。当在调用 CreateMaterial 或 ClearAllProps 方法后未设置物理属性值时，将引发此异常。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递的参数值无效时使用，例如属性值为 UNDEFINED。</exception>
     /// <exception cref="ECapeFailedInitialisation">先决条件无效。必要的初始化操作未执行或执行失败。</exception>
     /// <exception cref="ECapeUnknown">当为此操作指定的其他错误不合适时，应抛出的错误。</exception>
     void ICapeThermoMaterialCOM.GetOverallProp(string property, string basis, ref object results)
@@ -491,29 +491,15 @@ partial class COMMaterialObjectWrapper : CapeObjectBase, ICapeThermoMaterialObje
         results = temp;
     }
 
-    /// <summary>Retrieves temperature, pressure and composition for the overall mixture.</summary>
-    /// <remarks><para>
-    ///This method is provided to make it easier for developers to make efficient 
-    /// use of the CAPEOPEN interfaces. It returns the most frequently requested 
-    /// information from a Material Object in a single call.</para>
-    /// <para>
-    /// There is no choice of basis in this method. The composition is always 
-    /// returned as mole fractions.</para></remarks>
-    /// <param name="temperature">A reference to a double Temperature (in K)</param>
-    /// <param name="pressure">A reference to a double Pressure (in Pa)</param>
-    /// <param name="composition">A reference to an array of doubles containing 
-    /// the  Composition (mole fractions)</param>
-    /// <exception cref="ECapeNoImpl">The operation GetOverallProp is “not” 
-    /// implemented even if this method can be called for reasons of compatibility 
-    /// with the CAPE-OPEN standards. That is to say that the operation exists but 
-    /// it is not supported by the current implementation.</exception>
-    /// <exception cref="ECapeThrmPropertyNotAvailable">The Physical Property 
-    /// required is not available from the Material Object, possibly for the basis 
-    /// requested. This exception is raised when a Physical Property value has not 
-    /// been set following a call to the CreateMaterial or ClearAllProps methods.
-    /// </exception>
-    /// <exception cref="ECapeFailedInitialisation">The pre-requisites are not 
-    /// valid. The necessary initialisation has not been performed or has failed.</exception>
+    /// <summary>读取整个混合物的温度、压力和成分。</summary>
+    /// <remarks><para>提供此方法是为了使开发人员能够更轻松地高效使用 CAPE-OPEN 接口。它可以在单次调用中返回物流对象中最常请求的信息。</para>
+    /// <para>这种方法没有选择基准。结果总是以摩尔分数的形式返回。</para></remarks>
+    /// <param name="temperature">双温度（单位：K）。</param>
+    /// <param name="pressure">参考双倍压力（单位 Pa）。</param>
+    /// <param name="composition">对包含成分（摩尔分数）的 double 数组的引用</param>
+    /// <exception cref="ECapeNoImpl">即使由于与 CAPE-OPEN 标准的兼容性原因可以调用此方法，但操作 GetOverallProp“未”实现。也就是说，操作存在，但当前实现不支持。</exception>
+    /// <exception cref="ECapeThrmPropertyNotAvailable">所需的物理属性无法从物流对象获取，可能是由于请求的基础。当在调用 CreateMaterial 或 ClearAllProps 方法后未设置物理属性值时，将引发此异常。</exception>
+    /// <exception cref="ECapeFailedInitialisation">前提条件无效。未执行必要的初始化或初始化失败。</exception>
     /// <exception cref="ECapeUnknown">当为此操作指定的其他错误不合适时，应抛出的错误。</exception>
     void ICapeThermoMaterialCOM.GetOverallTPFraction(ref  double temperature, ref  double pressure, ref  object composition)
     {
@@ -522,80 +508,36 @@ partial class COMMaterialObjectWrapper : CapeObjectBase, ICapeThermoMaterialObje
         composition = temp;
     }
 
-    /// <summary>Returns Phase labels for the Phases that are currently present in the 
-    /// Material Object.</summary>
-    /// <remarks><para>This method is intended to work in conjunction with the SetPresentPhases 
-    /// method. Together these methods provide a means of communication between a 
-    /// PME (or another client) and an Equilibrium Calculator (or other component 
-    /// that implements the ICapeThermoEquilibriumRoutine interface). The following 
-    /// sequence of operations is envisaged.</para>
-    /// <para>1. Prior to requesting an Equilibrium Calculation, a PME will use the 
-    /// SetPresentPhases method to define a list of Phases that may be considered in 
-    /// the Equilibrium Calculation. Typically, this is necessary because an 
-    /// Equilibrium Calculator may be capable of handling a large number of Phases 
-    /// but for a particular application, it may be known that only certain Phases 
-    /// will be involved. For example, if the complete Phase list contains Phases 
-    /// with the following labels (with the obvious interpretation): vapour, 
-    /// hydrocarbonLiquid and aqueousLiquid and it is required to model a liquid 
-    /// decanter, the present Phases might be set to hydrocarbonLiquid and 
-    /// aqueousLiquid.</para>
-    /// <para>2. The GetPresentPhases method is then used by the CalcEquilibrium 
-    /// method of the ICapeThermoEquilibriumRoutine interface to obtain the list 
-    /// of Phase labels corresponding to the Phases that may be present at 
-    /// equilibrium.</para>
-    /// <para>3. The Equilibrium Calculation determines which Phases actually 
-    /// co-exist at equilibrium. This list of Phases may be a sub-set of the Phases 
-    /// considered because some Phases may not be present at the prevailing 
-    /// conditions. For example, if the amount of water is sufficiently small the 
-    /// aqueousLiquid Phase in the above example may not exist because all the water 
-    /// dissolves in the hydrocarbonLiquid Phase.</para>
-    /// <para>4. The CalcEquilibrium method uses the SetPresentPhases method to indicate 
-    /// the Phases present following the equilibrium calculation (and sets the phase 
-    /// properties).</para>
-    /// <para>5. The PME uses the GetPresentPhases method to find out the Phases present 
-    /// following the calculation and it can then use the GetSinglePhaseProp or 
-    /// GetTPFraction methods to get the Phase properties.</para>
-    /// <para>To indicate that a Phase is ‘present’ in a Material Object (or other 
-    /// component that implements the ICapeThermoMaterial interface) it must be 
-    /// specified by the SetPresentPhases method of the ICapeThermoMaterial 
-    /// interface. Even if a Phase is present, it does not imply that any Physical 
-    /// Properties are actually set unless the phaseStatus is Cape_AtEquilibrium 
-    /// or Cape_Estimates (see below). </para>
-    /// <para>If no Phases are present, UNDEFINED should be returned for both the 
-    /// phaseLabels and phaseStatus arguments.</para>
-    /// <para>The phaseStatus argument contains as many entries as there are Phase 
-    /// labels. The valid settings are listed in the following table:</para>
-    /// <para>Cape_UnknownPhaseStatus - This is the normal setting when a Phase is
-    /// specified as being available for an Equilibrium Calculation.</para>
-    /// <para>Cape_AtEquilibrium - The Phase has been set as present as a result of 
-    /// an Equilibrium Calculation.</para>
-    /// <para> Cape_Estimates - Estimates of the equilibrium state have been set in 
-    /// the Material Object.</para>
-    /// <para>All the Phases with a status of Cape_AtEquilibrium have values of 
-    /// temperature, pressure, composition and Phase fraction set that correspond 
-    /// to an equilibrium state, i.e. equal temperature, pressure and fugacities of 
-    /// each Compound. Phases with a Cape_Estimates status have values of temperature,
-    /// pressure, composition and Phase fraction set in the Material Object. These 
-    /// values are available for use by an Equilibrium Calculator component to 
-    /// initialise an Equilibrium Calculation. The stored values are available but 
-    /// there is no guarantee that they will be used.</para>
-    /// <para>
-    /// Using the ClearAllProps method results in a Material Object that is in 
-    /// the same state as when it was first created. It is an alternative to using 
-    /// the CreateMaterial method but it is expected to have a smaller overhead in 
-    /// operating system resources.</para></remarks>
-    /// <param name="phaseLabels">A reference to a String array that contains the 
-    /// list of Phase labels (identifiers – names) for the Phases present in the 
-    /// Material Object. The Phase labels in the Material Object must be a
-    /// subset of the labels returned by the GetPhaseList method of the 
-    /// ICapeThermoPhases interface.</param>
-    /// <param name="phaseStatus">A CapeArrayEnumeration which is an array of 
-    /// Phase status flags corresponding to each of the Phase labels. 
-    /// See description below.</param>
-    /// <exception cref="ECapeNoImpl">The operation is “not” 
-    /// implemented even if this method can be called for reasons of compatibility 
-    /// with the CAPE-OPEN standards. That is to say that the operation exists but 
-    /// it is not supported by the current implementation</exception>
+    /// <summary>返回当前物流对象中存在的相态标签。物流对象中当前存在的相态标签。</summary>
+    /// <remarks><para>此方法旨在与 SetPresentPhases 方法一起使用。这些方法共同为 PME（或其他客户端）与 Equilibrium Calculator
+    /// （或其他实现 ICapeThermoEquilibriumRoutine 接口的组件）之间提供通信手段。设想的操作序列如下。</para>
+    /// <para>1. 在请求平衡计算之前，PME 将使用 SetPresentPhases 方法定义可能在平衡计算中考虑的相态列表。通常，这是必要的，
+    /// 因为平衡计算器可能能够处理大量的相态，但对于特定应用，可能已知仅涉及某些相态。例如，如果完整的相态列表包含具有以下
+    /// 标签的相态（具有明显的解释）：蒸汽、烃液体和水液体，并且需要建模一个液体倾析器，则当前相态可能设置为烃液体和水液体。</para>
+    /// <para>2. 然后，ICapeThermoEquilibriumRoutine 接口的 CalcEquilibrium 方法使用 GetPresentPhases 方法
+    /// 来获取可能处于平衡状态的相的相标列表。</para>
+    /// <para>3. 平衡计算（Equilibrium Calculation）确定哪些相位在平衡状态下实际共存。这个相列表可能是所考虑的相的子集，
+    /// 因为有些相在当时的条件下可能并不存在。例如，如果水量足够少，上例中的水液相就可能不存在，因为所有的水都溶解在碳氢化合物液相中。</para>
+    /// <para>4. CalcEquilibrium 方法使用 SetPresentPhases 方法显示平衡计算后存在的相位（并设置相属性）。</para>
+    /// <para>5. PME 使用 GetPresentPhases 方法找出计算后存在的相位，然后使用 GetSinglePhaseProp 或 GetTPFraction 方法获得相位属性。</para>
+    /// <para>要在物流对象（或实现 ICapeThermoMaterial 接口的其他组件）中表示 “存在”相，必须通过 ICapeThermoMaterial 接口
+    /// 的 SetPresentPhases 方法来指定。即使 “相”存在，也并不意味着任何 “物理性质”已实际设置，除非 “相状态”（phaseStatus）
+    /// 为 “平衡开普”（Cape_AtEquilibrium）或 “估计开普”（Cape_Estimates）（见下文）。</para>
+    /// <para>如果不存在任何相态，则 phaseLabels 和 phaseStatus 参数都应返回 UNDEFINED。</para>
+    /// <para>phaseStatus 参数包含的条目数量与相位标签的数量相同。下表列出了有效的设置：</para>
+    /// <para>Cape_UnknownPhaseStatus - 当指定一个相位可用于平衡计算时，这是正常设置。</para>
+    /// <para>Cape_AtEquilibrium - 由于平衡计算的结果，该相态被设置为存在。</para>
+    /// <para> Cape_Estimates - 平衡状态的估计值已在 “物流对象”中设定。</para>
+    /// <para>所有状态为 “Cape_AtEquilibrium（平衡开普）”的物相，其温度、压力、成分和相分数的设定值都与平衡态相对应，
+    /// 即每种化合物的温度、压力和逸散度相等。具有 Cape_Estimates 状态的相在 “物流对象”中设置了温度、压力、成分和相分数值。
+    /// 平衡计算器组件可以使用这些值来初始化平衡计算。存储的值是可用的，但不能保证一定会被使用。</para>
+    /// <para>使用 ClearAllProps 方法生成的材质对象与最初创建时的状态相同。它是使用 CreateMaterial 方法的替代方法，
+    /// 但预计对操作系统资源的开销较小。</para></remarks>
+    /// <param name="phaseLabels">指向字符串数组的引用，该数组包含 “物流对象”中存在的相位标签（标识符-名称）列表。
+    /// 物流对象中的相位标签必须是 ICapeThermoPhases 接口的 GetPhaseList 方法所返回标签的子集。</param>
+    /// <param name="phaseStatus">CapeArrayEnumeration 是与每个相态标签相对应的相态状态标志数组。参见下面的说明。</param>
+    /// <exception cref="ECapeNoImpl">出于与 CAPE-OPEN 标准兼容的考虑，即使可以调用该方法，该操作也 “未”执行。
+    /// 也就是说，该操作是存在的，但目前的实现方式不支持它。</exception>
     /// <exception cref="ECapeUnknown">当为此操作指定的其他错误不合适时，应抛出的错误。</exception>
     void ICapeThermoMaterialCOM.GetPresentPhases(ref  object phaseLabels, ref  object phaseStatus)
     {
@@ -613,62 +555,29 @@ partial class COMMaterialObjectWrapper : CapeObjectBase, ICapeThermoMaterialObje
         phaseStatus = temp3;
     }
 
-    /// <summary>Retrieves single-phase non-constant Physical Property values for a mixture.</summary>
-    /// <remarks><para>The results argument returned by GetSinglePhaseProp is either a 
-    /// CapeArrayDouble that contains one or more numerical values, e.g. temperature, 
-    /// or a CapeInterface that may be used to retrieve single-phase Physical 
-    /// Properties described by a more complex data structure, e.g. distributed 
-    /// properties.</para>
-    /// <para>Although the result of some calls to GetSinglePhaseProp may be a 
-    /// single numerical value, the return type for numerical values is 
-    /// CapeArrayDouble and in such a case the method must return an array even if 
-    /// it contains only a single element.</para>
-    /// <para>A Phase is ‘present’ in a Material if its identifier is returned by 
-    /// the GetPresentPhases method. An exception is raised by the GetSinglePhaseProp 
-    /// method if the Phase specified is not present. Even if a Phase is present, 
-    /// this does not mean that any Physical Properties are available.</para>
-    /// <para>The Physical Property values returned by GetSinglePhaseProp refer to 
-    /// a single Phase. These values may be set by the SetSinglePhaseProp method, 
-    /// which may be called directly, or by other methods such as the CalcSinglePhaseProp 
-    /// method of the ICapeThermoPropertyRoutine interface or the CalcEquilibrium 
-    /// method of the ICapeThermoEquilibriumRoutine interface. Note: Physical 
-    /// Properties that depend on more than one Phase, for example surface tension 
-    /// or K-values, are returned by the GetTwoPhaseProp method.</para>
-    /// <para>It is expected that this method will normally be able to provide 
-    /// Physical Property values on any basis, i.e. it should be able to convert 
-    /// values from the basis on which they are stored to the basis requested. This 
-    /// operation will not always be possible. For example, if the molecular weight 
-    /// is not known for one or more Compounds, it is not possible to convert from 
-    /// mass fractions or mass flows to mole fractions or molar flows.</para></remarks>
-    /// <param name="property">CapeString The identifier of the Physical Property 
-    /// for which values are requested. This must be one of the single-phase Physical 
-    /// Properties or derivatives. The standard identifiers are listed in sections 
-    /// 7.5.5 and 7.6.</param>
-    /// <param name="phaseLabel">CapeString Phase label of the Phase for which 
-    /// the Physical Property is required. The Phase label must be one of the 
-    ///identifiers returned by the GetPresentPhases method of this interface.</param>
-    /// <param name="basis">CapeString Basis of the results. Valid settings are: 
-    /// “Mass” for Physical Properties per unit mass or “Mole” for molar properties. 
-    /// Use UNDEFINED as a placeholder for a Physical Property for which basis does 
-    /// not apply. See section 7.5.5 for details.</param>
-    /// <param name="results">CapeVariant Results vector (CapeArrayDouble) 
-    /// containing Physical Property value(s) in SI units or CapeInterface (see 
-    /// notes).	</param>
-    /// <exception cref="ECapeNoImpl">The operation is “not” 
-    /// implemented even if this method can be called for reasons of compatibility 
-    /// with the CAPE-OPEN standards. That is to say that the operation exists but 
-    /// it is not supported by the current implementation</exception>
-    /// <exception cref="ECapeThrmPropertyNotAvailable">The property required is 
-    /// not available from the Material Object possibly for the Phase label or 
-    /// basis requested. This exception is raised when a property value has not been 
-    /// set following a call to the CreateMaterial or the value has been erased by 
-    /// a call to the ClearAllProps methods.</exception>
-    /// <exception cref="ECapeInvalidArgument">To be used when an invalid argument 
-    /// value was passed: for example UNDEFINED for property, or an unrecognised 
-    /// identifier for phaseLabel.</exception>
-    /// <exception cref="ECapeFailedInitialisation">The pre-requisites are not 
-    /// valid. The necessary initialisation has not been performed, or has failed. 
-    /// This exception is returned if the Phase specified does not exist.</exception>
+    /// <summary>读取混合物的单相非恒定物理属性值。</summary>
+    /// <remarks><para>GetSinglePhaseProp 返回的结果参数既可以是一个包含一个或多个数值（如温度）的 CapeArrayDouble，
+    /// 也可以是一个 CapeInterface，用于检索由更复杂的数据结构（如分布式属性）描述的单相物理性质。</para>
+    /// <para>虽然对 GetSinglePhaseProp 的某些调用结果可能是单个数值，但数值的返回类型是 CapeArrayDouble，
+    /// 在这种情况下，该方法必须返回一个数组，即使它只包含一个元素。</para>
+    /// <para>如果 GetPresentPhases方法返回了一个相位的标识符，则该相位 “存在”于物流对象中。
+    /// 如果指定的相不存在，则 GetSinglePhaseProp 方法会引发异常。即使相存在，也并不意味着任何物理性质都可用。</para>
+    /// <para>GetSinglePhaseProp 返回的物理属性值指的是单个相位。这些值可通过直接调用的 SetSinglePhaseProp 方法
+    /// 或其他方法（如 ICapeThermoPropertyRoutine 接口的 CalcSinglePhaseProp 方法或 ICapeThermoEquilibriumRoutine 接口
+    /// 的 CalcEquilibrium 方法）设置。注：取决于一个以上相的物理性质（如表面张力或 K 值）将通过 GetTwoPhaseProp 方法返回。</para>
+    /// <para>预计该方法通常能够提供任何基础上的物理属性值，也就是说，它应该能够将值从其存储的基 础上转换为所要求的基础上。
+    /// 这种操作并不总是可行的。例如，如果不知道一种或多种化合物的分子量，就无法将质量分数或质量流转换为摩尔分数或摩尔流。</para></remarks>
+    /// <param name="property">CapeString 物理属性的标识符。必须是单相物理性质或其衍生物之一。</param>
+    /// <param name="phaseLabel">CapeString 物理属性所对应的相态标签。相位标签必须是本接口的 GetPresentPhases 方法返回的标识符之一。</param>
+    /// <param name="basis">CapeString 结果依据。对于单位质量的物理性质，有效设置为 “质量”；对于摩尔性质，有效设置为 “摩尔”。
+    /// 对于不适用基础的物理性质，请使用 UNDEFINED 作为占位符。</param>
+    /// <param name="results">CapeVariant 结果向量（CapeArrayDouble），包含以 SI 单位或 CapeInterface（见注释）表示的物理属性值。</param>
+    /// <exception cref="ECapeNoImpl">出于与 CAPE-OPEN 标准的兼容性考虑，即使可以调用该方法，也 “未 ”执行该操作。也就是说，该操作是存在的，但目前的实现方式不支持它。</exception>
+    /// <exception cref="ECapeThrmPropertyNotAvailable">物流对象中可能没有所要求的相位标签或基础的所需属性。
+    /// 当调用 CreateMaterial（创建流股）方法后未设置属性值，或调用 ClearAllProps（清除所有属性）方法后
+    /// 删除了属性值时，就会出现此异常。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递的参数值无效时使用：例如，属性为 UNDEFINED，或 phaseLabel 为未识别的标识符。</exception>
+    /// <exception cref="ECapeFailedInitialisation">前提条件无效。未执行必要的初始化或初始化失败。如果指定的相态不存在，则返回该异常。</exception>
     /// <exception cref="ECapeUnknown">当为此操作指定的其他错误不合适时，应抛出的错误。</exception>
     void ICapeThermoMaterialCOM.GetSinglePhaseProp(string property, string phaseLabel, string basis, ref  object results)
     {
@@ -677,36 +586,21 @@ partial class COMMaterialObjectWrapper : CapeObjectBase, ICapeThermoMaterialObje
         results = temp;
     }
 
-    /// <summary>Retrieves temperature, pressure and composition for a Phase.</summary>
-    /// <remarks><para>This method is provided to make it easier for developers to make efficient 
-    /// use of the CAPEOPEN interfaces. It returns the most frequently requested 
-    /// information from a Material Object in a single call.</para>
-    /// <para>There is no choice of basis in this method. The composition is always 
-    /// returned as mole fractions.</para>
-    /// <para>To get the equivalent information for the overall mixture the 
-    /// GetOverallTPFraction method of the ICapeThermoMaterial interface should be 
-    /// used.</para></remarks>
-    /// <returns>No return.</returns>
-    /// <param name="phaseLabel">Phase label of the Phase for which the property 
-    /// is required. The Phase label must be one of the identifiers returned by the 
-    /// GetPresentPhases method of this interface.</param>
-    /// <param name="temperature">Temperature (in K)</param>
-    /// <param name="pressure">Pressure (in Pa)</param>
-    /// <param name="composition">Composition (mole fractions)</param>
-    /// <exception cref="ECapeNoImpl">The operation GetTPFraction is “not” 
-    /// implemented even if this method can be called for reasons of compatibility 
-    /// with the CAPE-OPEN standards. That is to say that the operation exists but 
-    /// it is not supported by the current implementation.</exception>
-    /// <exception cref="ECapeThrmPropertyNotAvailable">One of the properties is 
-    /// not available from the Material Object. This exception is raised when a 
-    /// property value has not been set following a call to the CreateMaterial or 
-    /// the value has been erased by a call to the ClearAllProps methods.</exception>
-    /// <exception cref="ECapeInvalidArgument">To be used when an invalid argument 
-    /// value was passed: for example UNDEFINED for property, or an unrecognised 
-    /// identifier for phaseLabel.</exception>
-    /// <exception cref="ECapeFailedInitialisation">The pre-requisites are not 
-    /// valid. The necessary initialisation has not been performed, or has failed. 
-    /// This exception is returned if the Phase specified does not exist.</exception>
+    /// <summary>读取相位的温度、压力和成分。</summary>
+    /// <remarks><para>提供该方法是为了方便开发人员有效使用 CAPE-OPEN 接口。只需一次调用，它就能返回物流对象最常请求的信息。</para>
+    /// <para>该方法不选择基数。成分总是以摩尔分数的形式返回。</para>
+    /// <para>要获得整体混合物的等效信息，应使用 ICapeThermoMaterial 接口的 GetOverallTPFraction 方法。</para></remarks>
+    /// <returns>不返回任何参数。</returns>
+    /// <param name="phaseLabel">需要使用该属性的相态的相态标签。相位标签必须是本接口的 GetPresentPhases 方法返回的标识符之一。</param>
+    /// <param name="temperature">温度，单位 K。</param>
+    /// <param name="pressure">压力，单位 Pa。</param>
+    /// <param name="composition">组分组成，摩尔分数。</param>
+    /// <exception cref="ECapeNoImpl">即使出于与 CAPE-OPEN 标准兼容的原因可以调用此方法，也可以调用 GetTPFraction
+    /// 作 GetTPFraction。也就是说，该作存在，但当前实现不支持它。</exception>
+    /// <exception cref="ECapeThrmPropertyNotAvailable">其中一个属性无法从物流对象中获取。当调用 CreateMaterial 方法后
+    /// 属性值未被设置，或通过调用 ClearAllProps 方法清除了属性值时，将引发此异常。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递的参数值无效时使用：例如，属性值为 UNDEFINED，或 phaseLabel 的标识符无法识别。</exception>
+    /// <exception cref="ECapeFailedInitialisation">前提条件无效。必要的初始化未执行或执行失败。如果指定的相态不存在，则会返回此异常。</exception>
     /// <exception cref="ECapeUnknown">当为此操作指定的其他错误不合适时，应抛出的错误。</exception>
     void ICapeThermoMaterialCOM.GetTPFraction(string phaseLabel, ref  double temperature, ref  double pressure, ref  object composition)
     {
@@ -715,76 +609,33 @@ partial class COMMaterialObjectWrapper : CapeObjectBase, ICapeThermoMaterialObje
         composition = temp;
     }
 
-    /// <summary>Retrieves two-phase non-constant Physical Property values for a mixture.</summary>
-    /// <remarks><para>
-    ///The results argument returned by GetTwoPhaseProp is either a CapeArrayDouble 
-    /// that contains one or more numerical values, e.g. kvalues, or a CapeInterface 
-    /// that may be used to retrieve 2-phase Physical Properties described by a more 
-    /// complex data structure, e.g.distributed Physical Properties.
-    ///</para>
-    /// <para>Although the result of some calls to GetTwoPhaseProp may be a single 
-    /// numerical value, the return type for numerical values is CapeArrayDouble and 
-    /// in such a case the method must return an array even if it contains only a 
-    /// single element.
-    ///</para>
-    /// <para>A Phase is ‘present’ in a Material if its identifier is returned by 
-    /// the GetPresentPhases method. An exception is raised by the GetTwoPhaseProp 
-    /// method if any of the Phases specified is not present. Even if all Phases are 
-    /// present, this does not mean that any Physical Properties are available.
-    ///</para>
-    /// <para>The Physical Property values returned by GetTwoPhaseProp depend on two 
-    /// Phases, for example surface tension or K-values. These values may be set by 
-    /// the SetTwoPhaseProp method that may be called directly, or by other methods 
-    /// such as the CalcTwoPhaseProp method of the ICapeThermoPropertyRoutine 
-    /// interface, or the CalcEquilibrium method of the ICapeThermoEquilibriumRoutine 
-    /// interface. Note: Physical Properties that depend on a single Phase are 
-    /// returned by the GetSinglePhaseProp method.
-    ///</para>
-    /// <para>It is expected that this method will normally be able to provide 
-    /// Physical Property values on any basis, i.e. it should be able to convert 
-    /// values from the basis on which they are stored to the basis requested. This 
-    /// operation will not always be possible. For example, if the molecular weight 
-    /// is not known for one or more Compounds, it is not possible to convert between 
-    /// a mass basis and a molar basis.
-    ///</para>
-    /// <para>If a composition derivative is requested this means that the 
-    /// derivatives are returned for both Phases in the order in which the Phase 
-    /// labels are specified. The number of values returned for a composition 
-    /// derivative will depend on the dimensionality of the property. For example,
-    /// if there are N Compounds then the results vector for the surface tension 
-    /// derivative will contain N composition derivative values for the first Phase, 
-    /// followed by N composition derivative values for the second Phase. For K-value 
-    /// derivative there will be N2 derivative values for the first phase followed by 
-    /// N2 values for the second phase in the order defined in 7.6.2. 
-    ///</para></remarks>
-    /// <param name="property">The identifier of the property for which values are
-    /// requested. This must be one of the two-phase Physical Properties or Physical 
-    /// Property derivatives listed in sections 7.5.6 and 7.6.</param>
-    /// <param name="phaseLabels">List of Phase labels of the Phases for which the
-    /// property is required. The Phase labels must be two of the identifiers 
-    /// returned by the GetPhaseList method of the Material Object.</param>
-    /// <param name="basis">Basis of the results. Valid settings are: “Mass” for
-    /// Physical Properties per unit mass or “Mole” for molar properties. Use 
-    /// UNDEFINED as a placeholder for a Physical Property for which basis does not 
-    /// apply. See section 7.5.5 for details.</param>
-    /// <param name="results">Results vector (CapeArrayDouble) containing property
-    /// value(s) in SI units or CapeInterface (see notes).</param>
-    /// <exception cref="ECapeNoImpl">The operation is “not” implemented even if 
-    /// this method can be called for reasons of compatibility with the CAPE-OPEN 
-    /// standards. That is to say that the operation exists, but it is not supported 
-    /// by the current implementation. This could be the case if two-phase non-constant 
-    /// Physical Properties are not required by the PME and so there is no particular 
-    /// need to implement this method.</exception>
-    /// <exception cref="ECapeThrmPropertyNotAvailable">The property required is 
-    /// not available from the Material Object possibly for the Phases or basis 
-    /// requested.</exception>
-    /// <exception cref="ECapeFailedInitialisation">The pre-requisites are not 
-    /// valid. This exception is raised when a call to the SetTwoPhaseProp method 
-    /// has not been performed, or has failed, or when one or more of the Phases 
-    /// referenced does not exist.</exception>
-    /// <exception cref="ECapeInvalidArgument">To be used when an invalid argument 
-    /// value was passed: for example, UNDEFINED for property, or an unrecognised 
-    /// identifier in phaseLabels.</exception>
+    /// <summary>获取混合物的两相非恒定物理属性值。</summary>
+    /// <remarks><para>GetTwoPhaseProp 函数返回的结果参数要么是一个包含一个或多个数值（例如值）的 CapeArrayDouble 数组，
+    /// 要么是一个 CapeInterface 接口，该接口可用于检索由更复杂的数据结构（例如分布式物理属性）描述的两相物理属性。</para>
+    /// <para>虽然一些调用 GetTwoPhaseProp 的结果可能是单个数值，但是数值的返回类型是 CapeArrayDouble，
+    /// 在这种情况下，方法必须返回一个数组，即使它只包含一个元素。</para>
+    /// <para>如果一个相态的标识符是由 GetPresentPhases 方法返回的，那么这个相态就是“present”在物流对象中。
+    /// 如果指定的任何相态不存在，则由 GetTwoPhaseProp 方法引发异常。即使所有翔太都存在，这并不意味着任何物理性质都是可用的。</para>
+    /// <para>GetTwoPhaseProp 方法返回的物理性质值取决于两个相，例如表面张力或 K 值。这些值可以通过直接调用
+    /// 的 SetTwoPhaseProp 方法设置，也可以通过其他方法设置，例如 ICapeThermoPropertyRoutine 接口中的
+    /// CalcTwoPhaseProp 方法，或 ICapeThermoEquilibriumRoutine 接口中的 CalcEquilibrium 方法。
+    /// 注意：依赖于单一相的物理属性由 GetSinglePhaseProp 方法返回。</para>
+    /// <para>预计该方法通常能够提供任何基准下的物理性质值，即应能够将存储基准下的值转换为请求的基准。
+    /// 此操作并非总是可行。例如，如果一个或多个化合物的分子量未知，则无法在质量基准和摩尔基准之间进行转换。</para>
+    /// <para>如果请求组合导数，这意味着将按照指定相态标签的顺序返回两个相态的导数。组合导数返回的值数量将取决于属性的维数。
+    /// 例如，如果存在 N 种化合物，则表面张力导数的结果向量将包含 N 种组合导数值的第一相态，然后是 N 种组合导数值的第二相态。
+    /// 对于 K 值导数，将按照文档中定义的方式，第一相态有 N2 个导数值，然后是第二相态有 N2 个值。</para></remarks>
+    /// <param name="property">请求值的属性标识符。此标识符必须是文档中列出的两相态物理属性或物理属性衍生项之一。</param>
+    /// <param name="phaseLabels">需要该属性的相态的相态标签列表。相态标签必须是物流对象的 GetPhaseList 方法返回的标识符中的两个。</param>
+    /// <param name="basis">结果的基础。有效设置为：“质量”用于单位质量的物理性质，或“摩尔”用于摩尔性质。
+    /// 对于不适用基础的物理性质，使用“未定义”作为占位符。详情请参阅文档。</param>
+    /// <param name="results">结果向量（CapeArrayDouble）包含以国际单位制（SI）为单位的属性值，或 CapeInterface（参见注释）。</param>
+    /// <exception cref="ECapeNoImpl">即使出于与 CAPE-OPEN 标准兼容性的考虑可以调用此方法，该操作仍“未”实现。
+    /// 也就是说，该操作存在，但当前实现不支持该操作。如果 PME 不需要两相非恒定物理属性，则可能无需实现此方法。</exception>
+    /// <exception cref="ECapeThrmPropertyNotAvailable">所需的属性可能无法从物流对象中获取，可能是由于所请求的相态或基础设置。</exception>
+    /// <exception cref="ECapeFailedInitialisation">先决条件无效。当调用 SetTwoPhaseProp 方法时未执行该操作，或操作失败，
+    /// 或所引用的一个或多个相态不存在时，将引发此异常。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递了无效的参数值时使用：例如，属性为 UNDEFINED，或 phaseLabels 中包含未识别的标识符。</exception>
     /// <exception cref="ECapeUnknown">当为此操作指定的其他错误不合适时，应抛出的错误。</exception>
     void ICapeThermoMaterialCOM.GetTwoPhaseProp(string property, object phaseLabels, string basis, ref  object results)
     {
@@ -793,100 +644,53 @@ partial class COMMaterialObjectWrapper : CapeObjectBase, ICapeThermoMaterialObje
         results = temp;
     }
 
-    /// <summary>Sets non-constant property values for the overall mixture.</summary>
-    /// <remarks><para>The property values set by SetOverallProp refer to the overall mixture. 
-    /// These values are retrieved by calling the GetOverallProp method. Overall 
-    /// mixture properties are not calculated by components that implement the 
-    /// ICapeThermoMaterial interface. The property values are only used as input 
-    /// specifications for the CalcEquilibrium method of a component that implements 
-    /// the ICapeThermoEquilibriumRoutine interface.</para>
-    /// <para>Although some properties set by calls to SetOverallProp will have a 
-    /// single value, the type of argument values is CapeArrayDouble and the method 
-    /// must always be called with values as an array even if it contains only a 
-    /// single element.</para></remarks>
-    /// <param name ="property"> CapeString The identifier of the property for which 
-    /// values are set. This must be one of the single-phase properties or derivatives 
-    /// that can be stored for the overall mixture. The standard identifiers are 
-    /// listed in sections 7.5.5 and 7.6.</param>
-    /// <param name="basis">Basis of the results. Valid settings are: “Mass” for
-    /// Physical Properties per unit mass or “Mole” for molar properties. Use 
-    /// UNDEFINED as a placeholder for a Physical Property for which basis does not 
-    /// apply. See section 7.5.5 for details.</param>
-    /// <param name="values">Values to set for the property.</param>
-    /// <exception cref="ECapeNoImpl">The operation is “not” implemented even if 
-    /// this method can be called for reasons of compatibility with the CAPE-OPEN 
-    /// standards. That is to say that the operation exists, but it is not supported 
-    /// by the current implementation. This method may not be required if the PME 
-    /// does not deal with any single-phase property.</exception>
-    /// <exception cref="ECapeInvalidArgument">To be used when an invalid argument 
-    /// value was passed, that is a value that does not belong to the valid list 
-    /// described above, for example UNDEFINED for property.</exception>
-    /// <exception cref="ECapeOutOfBounds">One or more of the entries in the 
-    /// values argument is outside of the range of values accepted by the Material 
-    /// Object.</exception>
-    /// <exception cref="ECapeUnknown">The error to be raised when other error(s), 
-    /// specified for the SetSinglePhaseProp operation, are not suitable.</exception>
+    /// <summary>为整个混合物设置非恒定的属性值。</summary>
+    /// <remarks><para>SetOverallProp 方法设置的属性值指的是整体混合物的属性。这些属性值可通过调用 GetOverallProp 方法获取。
+    /// 整体混合物的属性值并非由实现 ICapeThermoMaterial 接口的组件计算得出。这些属性值仅作为
+    /// 实现 ICapeThermoEquilibriumRoutine 接口的组件中 CalcEquilibrium 方法的输入参数使用。</para>
+    /// <para>尽管通过调用 SetOverallProp 设置的一些属性将具有单一值，但参数值的类型为 CapeArrayDouble，
+    /// 且该方法必须始终以数组形式调用，即使该数组仅包含一个元素。</para></remarks>
+    /// <param name ="property">CapeString 用于设置值的属性标识符。此标识符必须是可用于整体混合物的
+    /// 单相属性或其衍生属性之一。标准标识符在第文档中列出。</param>
+    /// <param name="basis">结果的基础。有效设置为：“质量”用于单位质量的物理性质，或“摩尔”用于摩尔性质。
+    /// 对于不适用基础的物理性质，使用“未定义”作为占位符。</param>
+    /// <param name="values">为该属性设置的值。</param>
+    /// <exception cref="ECapeNoImpl">即使出于与 CAPE-OPEN 标准兼容性的考虑，该方法可以被调用，但该操作“并未”实现。
+    /// 也就是说，该操作确实存在，但当前实现不支持该操作。如果 PME 不处理任何单相属性，则可能不需要该方法。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递的参数值无效时使用，即该值不属于上述有效值列表，例如属性为 UNDEFINED 时。</exception>
+    /// <exception cref="ECapeOutOfBounds">值参数中的一个或多个条目超出了物流对象接受的值范围。</exception>
+    /// <exception cref="ECapeUnknown">当为 SetSinglePhaseProp 操作指定的其他错误不合适时，应抛出的错误。</exception>
     void ICapeThermoMaterialCOM.SetOverallProp(string property, string basis, object values)
     {
         _pIMatObj.SetOverallProp(property, basis, (double[])values);
     }
 
-    /// <summary>Allows the PME or the Property Package to specify the list of Phases that 
-    /// are currently present.</summary>
-    /// <remarks><para>SetPresentPhases may be used:</para>
-    /// <para>• to restrict an Equilibrium Calculation (using the CalcEquilibrium 
-    /// method of a component that implements the ICapeThermoEquilibriumRoutine 
-    /// interface) to a subset of the Phases supported by the Property Package 
-    /// component;</para>
-    /// <para>• when the component that implements the ICapeThermoEquilibriumRoutine 
-    /// interface needs to specify which Phases are present in a Material Object 
-    /// after an Equilibrium Calculation has been performed.</para>
-    /// <para>If a Phase in the list is already present, its Physical Properties are 
-    /// unchanged by the action of this method. Any Phases not in the list when 
-    /// SetPresentPhases is called are removed from the Material Object. This means 
-    /// that any Physical Property values that may have been stored on the removed 
-    /// Phases are no longer available (i.e. a call to GetSinglePhaseProp or 
-    /// GetTwoPhaseProp including this Phase will return an exception). A call to 
-    /// the GetPresentPhases method of the Material Object will return the same list 
-    /// as specified by SetPresentPhases.</para>
-    /// <para>The phaseStatus argument must contain as many entries as there are 
-    /// Phase labels. The valid settings are listed in the following table:</para>
-    /// <para>Cape_UnknownPhaseStatus - This is the normal setting when a Phase is 
-    /// specified as being available for an Equilibrium Calculation.</para>
-    /// <para>Cape_AtEquilibrium - The Phase has been set as present as a result of 
-    /// an Equilibrium Calculation.</para>
-    /// <para>Cape_Estimates - Estimates of the equilibrium state have been set in 
-    /// the Material Object.</para>
-    /// <para>All the Phases with a status of Cape_AtEquilibrium must have 
-    /// properties that correspond to an equilibrium state, i.e. equal temperature, 
-    /// pressure and fugacities of each Compound (this does not imply that the 
-    /// fugacities are set as a result of the Equilibrium Calculation). The
-    /// Cape_AtEquilibrium status should be set by the CalcEquilibrium method of a 
-    /// component that implements the ICapeThermoEquilibriumRoutine interface 
-    /// following a successful Equilibrium Calculation. If the temperature, pressure 
-    /// or composition of an equilibrium Phase is changed, the Material Object 
-    /// implementation is responsible for resetting the status of the Phase to 
-    /// Cape_UnknownPhaseStatus. Other property values stored for that Phase should 
-    /// not be affected.</para>
-    /// <para>Phases with an Estimates status must have values of temperature, 
-    ///pressure, composition and phase fraction set in the Material Object. These 
-    /// values are available for use by an Equilibrium Calculator component to 
-    /// initialise an Equilibrium Calculation. The stored values are available but 
-    /// there is no guarantee that they will be used.</para></remarks>
-    /// <param name="phaseLabels"> CapeArrayString The list of Phase labels for 
-    /// the Phases present. The Phase labels in the Material Object must be a
-    /// subset of the labels returned by the GetPhaseList method of the 
-    /// ICapeThermoPhases interface.</param>
-    /// <param name="phaseStatus">Array of Phase status flags corresponding to 
-    /// each of the Phase labels. See description below.</param>
-    /// <exception cref="ECapeNoImpl">The operation is “not” implemented even if 
-    /// this method can be called for reasons of compatibility with the CAPE-OPEN 
-    /// standards. That is to say that the operation exists, but it is not supported 
-    /// by the current implementation.</exception>
-    /// <exception cref="ECapeInvalidArgument">To be used when an invalid argument 
-    /// value was passed, that is a value that does not belong to the valid list 
-    /// described above, for example if phaseLabels contains UNDEFINED or 
-    /// phaseStatus contains a value that is not in the above table.</exception>
+    /// <summary>允许 PME 或属性包指定当前存在的相态列表。</summary>
+    /// <remarks><para>SetPresentPhases 可能用于：</para>
+    /// <para>1. 将平衡计算（使用实现 ICapeThermoEquilibriumRoutine 接口的组件的 CalcEquilibrium 方法）
+    /// 限制在属性包组件支持的相的子集中；</para>
+    /// <para>2. 当实现 ICapeThermoEquilibriumRoutine 接口的组件需要在进行平衡计算后指定物流对象中存在的相时。</para>
+    /// <para>如果列表中的某个相已经存在，则其物理属性不会因该方法的操作而改变。调用 SetPresentPhases 时不在列表中的相位
+    /// 将从物流对象中删除。这意味着被删除的相位上可能存储的任何物理属性值将不再可用（即调用包含该相位的
+    /// GetSinglePhaseProp 或 GetTwoPhaseProp 时将返回异常）。调用物流对象的 GetPresentPhases 方法将返回
+    /// 与 SetPresentPhases 所指定的相同列表。</para>
+    /// <para>phaseStatus 参数包含的条目数必须与相位标签数相同。下表列出了有效的设置：</para>
+    /// <para>Cape_UnknownPhaseStatus - 当指定一个相位可用于平衡计算时，这是正常设置。</para>
+    /// <para>Cape_AtEquilibrium - 由于平衡计算的结果，该相态被设置为存在。</para>
+    /// <para>Cape_Estimates - 平衡状态的估计值已在 “物流对象 ”中设定。</para>
+    /// <para>所有状态为 Cape_AtEquilibrium 的相态必须具有与平衡状态相对应的属性，即每个化合物的温度、压力和逸度
+    /// 相等（这并不意味着逸度是平衡计算的结果）。Cape_AtEquilibrium 状态应该由实现 ICapeThermoEquilibriumRoutine
+    /// 接口的组件的 CalcEquilibrium 方法设置，该方法在成功进行平衡计算后设置。如果平衡相的温度、压力或组成发生变化，
+    /// 则物流对象的实现负责将该相的状态重置为 Cape_UnknownPhaseStatus。存储该相的其他属性值不应受到影响。</para>
+    /// <para>具有“估算”状态的相必须在物流对象中设置温度、压力、成分和相分数的值。这些值可供平衡计算器组件使用，
+    /// 以初始化平衡计算。存储的值可用，但不能保证会被使用。</para></remarks>
+    /// <param name="phaseLabels">CapeArrayString 当前相态的标签列表。物流对象中的相态标签必须是 ICapeThermoPhases
+    /// 接口的 GetPhaseList 方法返回的标签的子集。</param>
+    /// <param name="phaseStatus">与每个相态标签相对应的相态状态标志数组。参见下面的说明。</param>
+    /// <exception cref="ECapeNoImpl">即使由于与 CAPE-OPEN 标准兼容的原因可以调用此方法，该操作“不”被实现。也就是说，
+    /// 操作存在，但当前实现不支持。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，即不属于上述有效列表的值，例如如果
+    /// phaseLabels 包含 UNDEFINED 或 phaseStatus 包含不在上述表格中的值。</exception>
     /// <exception cref="ECapeUnknown">当为此操作指定的其他错误不合适时，应抛出的错误。</exception>
     void ICapeThermoMaterialCOM.SetPresentPhases(object phaseLabels, object phaseStatus)
     {
@@ -901,217 +705,113 @@ partial class COMMaterialObjectWrapper : CapeObjectBase, ICapeThermoMaterialObje
         _pIMatObj.SetPresentPhases((string[])phaseLabels, statuses);
     }
 
-    /// <summary>Sets single-phase non-constant property values for a mixture.</summary>
-    /// <remarks><para>The values argument of SetSinglePhaseProp is either a CapeArrayDouble 
-    /// that contains one or more numerical values to be set for a property, e.g. 
-    /// temperature, or a CapeInterface that may be used to set single-phase 
-    /// properties described by a more complex data structure, e.g. distributed 
-    /// properties.</para>
-    /// <para>Although some properties set by calls to SetSinglePhaseProp will have a 
-    /// single numerical value, the type of the values argument for numerical values 
-    /// is CapeArrayDouble and in such a case the method must be called with values 
-    /// containing an array even if it contains only a single element.</para>
-    /// <para>The property values set by SetSinglePhaseProp refer to a single Phase. 
-    /// Properties that depend on more than one Phase, for example surface tension or 
-    /// K-values, are set by the SetTwoPhaseProp method of the Material Object.</para>
-    /// <para>Before SetSinglePhaseProp can be used, the phase referenced must have 
-    /// been created using the SetPresentPhases method.</para></remarks>
-    /// <param name="prop">The identifier of the property for which values are 
-    /// set. This must be one of the single-phase properties or derivatives. The 
-    /// standard identifiers are listed in sections 7.5.5 and 7.6.</param>
-    /// <param name="phaseLabel">Phase label of the Phase for which the property is 
-    /// set. The phase label must be one of the strings returned by the 
-    /// GetPresentPhases method of this interface.</param>
-    /// <param name="basis">Basis of the results. Valid settings are: “Mass” for
-    /// Physical Properties per unit mass or “Mole” for molar properties. Use 
-    /// UNDEFINED as a placeholder for a Physical Property for which basis does not 
-    /// apply. See section 7.5.5 for details.</param>
-    /// <param name="values">Values to set for the property (CapeArrayDouble) or
-    /// CapeInterface (see notes). </param>
-    /// <exception cref="ECapeNoImpl">The operation is “not” implemented even if 
-    /// this method can be called for reasons of compatibility with the CAPE-OPEN 
-    /// standards. That is to say that the operation exists but it is not supported by
-    /// the current implementation. This method may not be required if the PME does 
-    /// not deal with any single-phase properties.</exception>
-    /// <exception cref="ECapeInvalidArgument">To be used when an invalid argument 
-    /// value was passed, that is a value that does not belong to the valid list 
-    /// described above, for example UNDEFINED for property.</exception> 
-    /// <exception cref="ECapeOutOfBounds">One or more of the entries in the 
-    /// values argument is outside of the range of values accepted by the Material 
-    /// Object.</exception> 
-    /// <exception cref="ECapeFailedInitialisation">The pre-requisites are not 
-    /// valid. The phase referenced has not been created using SetPresentPhases.</exception>
-    /// <exception cref="ECapeUnknown">The error to be raised when other error(s), 
-    /// specified for the SetSinglePhaseProp operation, are not suitable.</exception>
+    /// <summary>设置混合物的单相非恒定属性值。</summary>
+    /// <remarks><para>SetSinglePhaseProp 的值参数可以是一个 CapeArrayDouble（包含一个或多个要设置的属性数值，如温度），
+    /// 也可以是一个 CapeInterface（可用于设置由更复杂数据结构描述的单相属性，如分布式属性）。</para>
+    /// <para>虽然通过调用 SetSinglePhaseProp 设置的某些属性只有一个数值，但数值参数的类型是 CapeArrayDouble，在这种情况下，
+    /// 即使只包含一个元素，也必须使用包含数组的值调用该方法。</para>
+    /// <para>通过 SetSinglePhaseProp 设置的属性值指的是单个相。取决于多个相的属性，如表面张力或 K 值，
+    /// 则通过物流对象的 SetTwoPhaseProp 方法来设置。</para>
+    /// <para>在使用 SetSinglePhaseProp 之前，必须先使用 SetPresentPhases 方法创建所引用的相位。</para></remarks>
+    /// <param name="prop">设置值的属性的标识符。这必须是单相属性或导数的标识符之一。标准标识符在文档中列出。</param>
+    /// <param name="phaseLabel">设置该属性的相位的相位标签。相位标签必须是本接口的 GetPresentPhases 方法返回的字符串之一。</param>
+    /// <param name="basis">结果的基础。有效设置为：“质量”用于单位质量的物理性质，或“摩尔”用于摩尔性质。对于不适用基础的物理性质，使用“未定义”作为占位符。</param>
+    /// <param name="values">为属性（CapeArrayDouble）或 CapeInterface 设置的值（参见注释）。</param>
+    /// <exception cref="ECapeNoImpl">即使由于与 CAPE-OPEN 标准的兼容性原因可以调用此方法，该操作“不”被实现。
+    /// 也就是说，操作存在，但当前实现不支持。如果PME不处理任何单相属性，则可能不需要此方法。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递的参数值无效时使用，即参数值不属于上述有效列表，例如属性的 UNDEFINED。</exception> 
+    /// <exception cref="ECapeOutOfBounds">值参数中的一个或多个条目超出了物流对象可接受的值范围。</exception> 
+    /// <exception cref="ECapeFailedInitialisation">前提条件无效。未使用 SetPresentPhases 创建所引用的相态。</exception>
+    /// <exception cref="ECapeUnknown">当为 SetSinglePhaseProp 操作指定的其他错误不合适时，应抛出的错误。</exception>
     void ICapeThermoMaterialCOM.SetSinglePhaseProp(string prop, string phaseLabel, string basis, object values)
     {
         _pIMatObj.SetSinglePhaseProp(prop, phaseLabel, basis, (double[])values);
     }
 
-    /// <summary>Sets two-phase non-constant property values for a mixture.</summary>
-    /// <remarks><para>The values argument of SetTwoPhaseProp is either a CapeArrayDouble that 
-    /// contains one or more numerical values to be set for a property, e.g. kvalues, 
-    /// or a CapeInterface that may be used to set two-phase properties described by 
-    /// a more complex data structure, e.g. distributed properties.</para>
-    /// <para>Although some properties set by calls to SetTwoPhaseProp will have a 
-    /// single numerical value, the type of the values argument for numerical values 
-    /// is CapeArrayDouble and in such a case the method must be called with the 
-    /// values argument containing an array even if it contains only a single element.</para>
-    /// <para>The Physical Property values set by SetTwoPhaseProp depend on two 
-    /// Phases, for example surface tension or K-values. Properties that depend on a 
-    /// single Phase are set by the SetSinglePhaseProp method.</para>
-    /// <para>If a Physical Property with composition derivative is specified, the 
-    /// derivative values will be set for both Phases in the order in which the Phase 
-    /// labels are specified. The number of values returned for a composition 
-    /// derivative will depend on the property. For example, if there are N Compounds 
-    /// then the values vector for the surface tension derivative will contain N 
-    /// composition derivative values for the first Phase, followed by N composition 
-    /// derivative values for the second Phase. For K-values there will be N2 
-    /// derivative values for the first phase followed by N2 values for the second 
-    /// phase in the order defined in 7.6.2.</para>
-    /// <para>Before SetTwoPhaseProp can be used, all the Phases referenced must have 
-    /// been created using the SetPresentPhases method</para></remarks>
-    /// <param name="property">The property for which values are set in the 
-    /// Material Object. This must be one of the two-phase properties or derivatives 
-    /// included in sections 7.5.6 and 7.6.</param>
-    /// <param name="phaseLabels">Phase labels of the Phases for 
-    /// which the property is set. The Phase labels must be two of the identifiers 
-    /// returned by the GetPhaseList method of the ICapeThermoPhases interface.</param>
-    /// <param name="basis">Basis of the results. Valid settings are: “Mass” for
-    /// Physical Properties per unit mass or “Mole” for molar properties. Use 
-    /// UNDEFINED as a placeholder for a Physical Property for which basis does not 
-    /// apply. See section 7.5.5 for details.</param>
-    /// <param name="values">Value(s) to set for the property (CapeArrayDouble) or
-    /// CapeInterface (see notes).</param>
-    /// <exception cref="ECapeNoImpl">The operation is “not” implemented even if 
-    /// this method can be called for reasons of compatibility with the CAPE-OPEN 
-    /// standards. That is to say that the operation exists but it is not supported by
-    /// the current implementation. This method may not be required if the PME does 
-    /// not deal with any single-phase properties.</exception>
-    /// <exception cref="ECapeInvalidArgument">To be used when an invalid argument 
-    /// value was passed, that is a value that does not belong to the valid list 
-    /// described above, for example UNDEFINED for property.</exception> 
-    /// <exception cref="ECapeOutOfBounds">One or more of the entries in the 
-    /// values argument is outside of the range of values accepted by the Material 
-    /// Object.</exception> 
-    /// <exception cref="ECapeFailedInitialisation">The pre-requisites are not 
-    /// valid. The phase referenced has not been created using SetPresentPhases.</exception>
-    /// <exception cref="ECapeUnknown">The error to be raised when other error(s), 
-    /// specified for the SetSinglePhaseProp operation, are not suitable.</exception>
+    /// <summary>为混合物设置两相非恒定属性值。</summary>
+    /// <remarks><para>SetTwoPhaseProp 的值参数可以是一个 CapeArrayDouble（包含一个或多个要为属性设置的数值，如 k 值），
+    /// 也可以是一个 CapeInterface（可用于设置由更复杂数据结构描述的两相属性，如分布式属性）。</para>
+    /// <para>虽然通过调用 SetTwoPhaseProp 设置的某些属性只有一个数值，但数值参数的类型是 CapeArrayDouble，
+    /// 在这种情况下，调用该方法时必须使用包含数组的数值参数，即使数组只包含一个元素。</para>
+    /// <para>SetTwoPhaseProp 设置的物理属性值取决于两个相，例如表面张力或 K 值。
+    /// 取决于单相的属性值可通过 SetSinglePhaseProp 方法设置。</para>
+    /// <para>如果指定了具有成分导数的物理属性，则将按照指定相标签的顺序为两个相设置导数值。返回的成分导数值数量取决于属性。
+    /// 例如，如果有 N 个化合物，那么表面张力导数的值向量将包含第一相的 N 个成分导数值，然后是第二相的 N 个成分导数值。
+    /// 对于 K 值，将按照文档中定义的顺序为第一相提供 N2 个导数值，然后为第二相提供 N2 个导数值。</para>
+    /// <para>在使用 SetTwoPhaseProp 之前，必须已使用 SetPresentPhases 方法创建了所有引用的相态。</para></remarks>
+    /// <param name="property">在 “物流对象 ”中设置值的属性。它必须是第 7.5.6 和 7.6 节中包含的两相属性或衍生物之一。</param>
+    /// <param name="phaseLabels">设置该属性的相位标签。相位标签必须是 ICapeThermoPhases 接口的
+    /// GetPhaseList 方法返回的两个标识符。</param>
+    /// <param name="basis">结果的基础。有效设置为：“质量”用于单位质量的物理性质，或“摩尔”用于摩尔性质。对于不适用基础的物理性质，使用“未定义”作为占位符。</param>
+    /// <param name="values">要为属性（CapeArrayDouble）或 CapeInterface 设置的值（见注释）。</param>
+    /// <exception cref="ECapeNoImpl">出于与 CAPE-OPEN 标准的兼容性考虑，即使可以调用该方法，也 “未 ”执行该操作。
+    /// 也就是说，该操作是存在的，但目前的实现不支持它。如果 PME 不处理任何单相属性，则可能不需要此方法。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递的参数值无效时使用，即参数值不属于上述有效列表，例如属性的 UNDEFINED。</exception> 
+    /// <exception cref="ECapeOutOfBounds">值参数中的一个或多个条目超出了物流对象可接受的值范围。</exception> 
+    /// <exception cref="ECapeFailedInitialisation">前提条件无效。未使用 SetPresentPhases 创建所引用的相态。</exception>
+    /// <exception cref="ECapeUnknown">当为 SetSinglePhaseProp 操作指定的其他错误不合适时，应抛出的错误。</exception>
     void ICapeThermoMaterialCOM.SetTwoPhaseProp(string property, object phaseLabels, string basis, object values)
     {
         _pIMatObj.SetTwoPhaseProp(property, (string[])phaseLabels, basis, (double[])values);
     }
 
-    /// <summary>Returns the values of constant Physical Properties for the specified Compounds.</summary>
-    /// <remarks><para>The GetConstPropList method can be used in order to check 
-    /// which constant Physical Properties are available.</para>
-    /// <para>If the number of requested Physical Properties is P and the number of 
-    /// Compounds is C, the propvals array will contain C*P variants. The first C 
-    /// variants will be the values for the first requested Physical Property (one 
-    /// variant for each Compound) followed by C values of constants for the second 
-    /// Physical Property, and so on. The actual type of values returned (Double, 
-    /// String, etc.) depends on the Physical Property as specified in section 7.5.2.</para>
-    /// <para>Physical Properties are returned in a fixed set of units as specified 
-    /// in section 7.5.2.</para>
-    /// <para>If the compIds argument is set to UNDEFINED this is a request to return 
-    /// property values for all compounds in the component that implements the 
-    /// ICapeThermoCompounds interface with the compound order the same as that 
-    /// returned by the GetCompoundList method. For example, if the interface is 
-    /// implemented by a Property Package component the property request with compIds 
-    /// set to UNDEFINED means all compounds in the Property Package rather than all 
-    /// compounds in the Material Object passed to the Property package.</para>
-    /// <para>If any Physical Property is not available for one or more Compounds, 
-    /// then undefined values must be returned for those combinations and an 
-    /// ECapeThrmPropertyNotAvailable exception must be raised. If the exception is 
-    /// raised, the client should check all the values returned to determine which 
-    /// is undefined.</para></remarks>
-    /// <param name="props">The list of Physical Property identifiers. Valid
-    /// identifiers for constant Physical Properties are listed in
-    /// section 7.5.2.</param>
-    /// <param name="compIds">List of Compound identifiers for which constants are 
-    /// to be retrieved. Set compIds = UNDEFINED to denote all Compounds in the 
-    /// component that implements the ICapeThermoCompounds interface.</param>
-    /// <returns>Values of constants for the specified Compounds.</returns>
-    /// <exception cref="ECapeNoImpl">The operation GetCompoundConstant is “not” 
-    /// implemented even if this method can be called for reasons of compatibility 
-    /// with the CAPE-OPEN standards. That is to say that the operation exists, but 
-    /// it is not supported by the current implementation. This exception should be 
-    /// raised if no compounds or no properties are supported.</exception>
-    /// <exception cref="ECapeThrmPropertyNotAvailable">At least one item in the 
-    /// list of Physical Properties is not available for a particular Compound. This 
-    /// exception is meant to be treated as a warning rather than as an error.</exception>
-    /// <exception cref="ECapeLimitedImpl">One or more Physical Properties are not 
-    /// supported by the component that implements this interface. This exception 
-    /// should also be raised if any element of the props argument is not recognised 
-    /// since the list of Physical Properties in section 7.5.2 is not intended to be 
-    /// exhaustive and an unrecognised Physical Property identifier may be valid. If
-    /// no Physical Properties at all are supported ECapeNoImpl should be raised 
-    /// (see above).</exception>
-    /// <exception cref="ECapeInvalidArgument">To be used when an invalid argument 
-    /// value is passed, for example, an unrecognised Compound identifier or 
-    /// UNDEFINED for the prop's argument.</exception>
-    /// <exception cref="ECapeUnknown">The error to be raised when other error(s), 
-    /// specified for the operation, are not suitable.</exception>
-    /// <exception cref="ECapeBadInvOrder">The error to be raised if the 
-    /// Property Package required the SetMaterial method to be called before calling 
-    /// the GetCompoundConstant method. The error would not be raised when the 
-    /// GetCompoundConstant method is implemented by a Material Object.</exception>
+    /// <summary>返回指定化合物的恒定物理性质值。</summary>
+    /// <remarks><para>使用 GetConstPropList 方法可以检查哪些常量物理属性可用。</para>
+    /// <para>如果请求的物理属性数为 P，化合物数为 C，则 propvals 数组将包含 C*P 变体。第一个 C 变量将是第一个
+    /// 请求的物理属性值（每个化合物一个变量），然后是第二个物理属性的 C 常量值，以此类推。
+    /// 返回值的实际类型（双、字符串等）取决于第 7.5.2 节规定的物理属性。</para>
+    /// <para>根据第 7.5.2 节的规定，物理性质将以一组固定的单位返回。</para>
+    /// <para>如果 compIds 参数设置为 UNDEFINED，则请求返回实现 ICapeThermoCompounds 接口的组件中所有化合物的属性值，
+    /// 化合物顺序与 GetCompoundList 方法返回的顺序相同。例如，如果属性包组件实现了该接口，将 compIds 设置
+    /// 为 UNDEFINED 的属性请求表示属性包中的所有化合物，而不是传递给属性包的物流对象中的所有化合物。</para>
+    /// <para>如果一个或多个化合物的任何物理属性不可用，则必须返回这些组合的未定义值，并引发 ECapeThrmPropertyNotAvailable
+    /// 异常。如果出现异常，客户端应检查返回的所有值，以确定哪个值是未定义的。</para></remarks>
+    /// <param name="props">物理属性标识符列表。常量物理属性的有效标识符列于第 7.5.2 节。</param>
+    /// <param name="compIds">要检索常量的化合物标识符列表。设置 compIds = UNDEFINED 表示
+    /// 组件中实现 ICapeThermoCompounds 接口的所有化合物。</param>
+    /// <returns>指定化合物的常量值。</returns>
+    /// <exception cref="ECapeNoImpl">由于与 CAPE-OPEN 标准兼容的原因，即使可以调用 GetCompoundConstant 方法，
+    /// 但仍 “未 ”执行 GetCompoundConstant 操作。也就是说，该操作是存在的，但当前的实现并不支持。
+    /// 如果不支持化合物或属性，则应引发此异常。</exception>
+    /// <exception cref="ECapeThrmPropertyNotAvailable">物理性质列表中至少有一项不可用于特定化合物。此异常应视为警告而非错误。</exception>
+    /// <exception cref="ECapeLimitedImpl">实现此接口的组件不支持一个或多个物理属性。由于第 7.5.2 节中的物理属性列表
+    /// 并非详尽无遗，而且未被识别的物理属性标识符可能是有效的，因此如果道具参数中的任何元素未被识别，也应引发此异常。
+    /// 如果不支持任何物理属性，则应引发 ECapeNoImpl 异常（见上文）。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递的参数值无效时使用，例如未识别的复合标识符或道具参数的 UNDEFINED。</exception>
+    /// <exception cref="ECapeUnknown">当为操作指定的其他错误不合适时将引发的错误。</exception>
+    /// <exception cref="ECapeBadInvOrder">如果属性包要求在调用 GetCompoundConstant 方法之前调用 SetMaterial 方法，
+    /// 则会引发错误。如果 GetCompoundConstant 方法是由材质对象实现的，则不会出现该错误。</exception>
     object ICapeThermoCompoundsCOM.GetCompoundConstant(object props, object compIds)
     {
         return _pICompounds.GetCompoundConstant((string[])props, (string[])compIds);
     }
 
-    /// <summary>Returns the list of all Compounds. This includes the Compound 
-    /// identifiers recognised and extra information that can be used to further 
-    /// identify the Compounds.</summary>
-    /// <remarks><para>If any item cannot be returned then the value should be set 
-    /// to UNDEFINED. The same information can also be extracted using the 
-    /// GetCompoundConstant method. The equivalences between GetCompoundList 
-    /// arguments and Compound constant Physical Properties, as specified in section 
-    /// 7.5.2, is as follows:</para>
-    /// <para>compIds - No equivalence. compIds is an artefact, which is assigned by 
-    /// the component that implements the GetCompoundList method. This string will 
-    /// normally contain a unique Compound identifier such as "benzene". It must be 
-    /// used in all the arguments which are named “compIds” in the methods of the
-    ///ICapeThermoCompounds and ICapeThermoMaterial interfaces.</para>
+    /// <summary>返回所有化合物的列表。其中包括已识别的化合物标识符和可用于进一步识别化合物的额外信息。</summary>
+    /// <remarks><para>如果无法返回任何项目，则应将其值设为 UNDEFINED。同样的信息也可以通过 GetCompoundConstant 方法
+    /// 提取。根据第 7.5.2 节的规定，GetCompoundList 参数与化合物常数物理性质之间的等价关系如下：</para>
+    /// <para>compIds - compIds 是一个人工制品，由实现 GetCompoundList 方法的组件分配。该字符串通常包含一个唯一
+    /// 的化合物标识符，如 “苯”。它必须用于 ICapeThermoCompounds 和 ICapeThermoMaterial 接口方法中所有名为 “compIds ”的参数。</para>
     /// <para>Formulae - chemicalFormula</para>
     /// <para>names - iupacName</para>
     /// <para>boilTemps - normalBoilingPoint</para>
     /// <para>molwts - molecularWeight</para>
     /// <para>casnos casRegistryNumber</para>
-    /// <para>When the ICapeThermoCompounds interface is implemented by a Material 
-    /// Object, the list of Compounds returned is fixed when the Material Object is 
-    /// configured.</para>
-    /// <para>For a Property Package component, the Property Package will normally 
-    /// contain a limited set of Compounds selected for a particular application, 
-    /// rather than all possible Compounds that could be available to a proprietary 
-    /// Properties System.</para>
-    /// <para>In order to identify the Compounds of a Property Package, the PME, or 
-    /// other client, will use the casnos argument rather than the compIds. This is 
-    /// because different PMEs may give different names to the same Compounds and the
-    /// casnos is (almost always) unique. If the casnos is not available (e.g. for 
-    /// petroleum fractions), or not unique, the other pieces of information returned 
-    /// by GetCompoundList can be used to distinguish the Compounds. It should be 
-    /// noted, however, that for communication with a Property Package a client must 
-    /// use the Compound identifiers returned in the compIds argument.</para></remarks>
-    /// <param name="compIds">List of Compound identifiers</param>
-    /// <param name="formulae">List of Compound formulae</param>
-    /// <param name="names">List of Compound names.</param>
-    /// <param name="boilTemps">List of boiling point temperatures.</param>
-    /// <param name="molwts">List of molecular weights.</param>
-    /// <param name="casnos">List of Chemical Abstract Service (CAS) Registry
-    /// numbers.</param>
-    /// <exception cref="ECapeNoImpl">The operation GetCompoundList is “not” 
-    /// implemented even if this method can be called for reasons of compatibility
-    /// with the CAPE-OPEN standards. That is to say that the operation exists, but 
-    /// it is not supported by the current implementation.</exception>
-    /// <exception cref="ECapeUnknown">The error to be raised when other error(s), 
-    /// specified for the GetCompoundList operation, are not suitable.</exception>
-    /// <exception cref="ECapeBadInvOrder">The error to be raised if the Property 
-    /// Package required the SetMaterial method to be called before calling the 
-    /// GetCompoundList method. The error would not be raised when the 
-    /// GetCompoundList method is implemented by a Material Object.</exception>
+    /// <para>当 ICapeThermoCompounds 接口由物流对象实现时，返回的化合物列表在配置物流对象时是固定的。</para>
+    /// <para>对于 “属性包 ”组件，“属性包 ”通常只包含为特定应用选择的有限化合物，而不是专有 “属性 系统 ”可能使用的所有化合物。</para>
+    /// <para>为了识别属性包的化合物，PME 或其他客户端将使用 casnos 参数，而不是 compIds。这是因为不同的 PME 可能会给相同
+    /// 的化合物起不同的名字，而 casnos（几乎总是）唯一的。如果 casnos 不可用（如石油馏分）或不唯一，则可使用 GetCompoundList
+    /// 返回的其他信息来区分化合物。但需要注意的是，在与属性包通信时，客户端必须使用在 compIds 参数中返回的化合物标识符。</para></remarks>
+    /// <param name="compIds">化合物标识符列表。</param>
+    /// <param name="formulae">化合物分子（通式）式表。</param>
+    /// <param name="names">组分名称列表。</param>
+    /// <param name="boilTemps">沸点温度列表。</param>
+    /// <param name="molwts">分子摩尔质量列表。</param>
+    /// <param name="casnos">化学文摘社 (CAS) 登记号列表。</param>
+    /// <exception cref="ECapeNoImpl">出于与 CAPE-OPEN 标准兼容的原因，即使可以调用 GetCompoundList 方法，
+    /// 该操作也 “未 ”实现。也就是说，该操作是存在的，但当前的实现并不支持它。</exception>
+    /// <exception cref="ECapeUnknown">当为 GetCompoundList 操作指定的其他错误不合适时，将引发的错误。</exception>
+    /// <exception cref="ECapeBadInvOrder">如果属性包要求在调用 GetCompoundList 方法之前调用 SetMaterial 方法，
+    /// 则会引发错误。如果 GetCompoundList 方法是由材质对象实现的，则不会出现该错误。</exception>
     void ICapeThermoCompoundsCOM.GetCompoundList(ref  object compIds, ref  object formulae, ref  object names, ref  object boilTemps, ref  object molwts, ref  object casnos)
     {
         string[] temp1 = null;
@@ -1129,30 +829,18 @@ partial class COMMaterialObjectWrapper : CapeObjectBase, ICapeThermoMaterialObje
         casnos = temp6;
     }
 
-    /// <summary>Returns the list of supported constant Physical Properties.</summary>
-    /// <returns>List of identifiers for all supported constant Physical Properties. 
-    /// The standard constant property identifiers are listed in section 7.5.2.</returns>
-    /// <remarks><para>MGetConstPropList returns identifiers for all the constant Physical 
-    /// Properties that can be retrieved by the GetCompoundConstant method. If no 
-    /// properties are supported, UNDEFINED should be returned. The CAPE-OPEN 
-    /// standards do not define a minimum list of Physical Properties to be made 
-    /// available by a software component that implements the ICapeThermoCompounds 
-    /// interface.</para>
-    /// <para>A component that implements the ICapeThermoCompounds interface may 
-    /// return constant Physical Property identifiers which do not belong to the 
-    /// list defined in section 7.5.2.</para>
-    /// <para>However, these proprietary identifiers may not be understood by most 
-    /// of the clients of this component.</para></remarks>
-    /// <exception cref="ECapeNoImpl">The operation GetConstPropList is “not” 
-    /// implemented even if this method can be called for reasons of compatibility 
-    /// with the CAPE-OPEN standards. That is to say that the operation exists, but 
-    /// it is not supported by the current implementation.</exception>
-    /// <exception cref="ECapeUnknown">The error to be raised when other error(s), 
-    /// specified for the Get-ConstPropList operation, are not suitable.</exception>
-    /// <exception cref="ECapeBadInvOrder">The error to be raised if the 
-    /// Property Package required the SetMaterial method to be called before calling 
-    /// the GetConstPropList method. The error would not be raised when the 
-    /// GetConstPropList method is implemented by a Material Object.</exception>
+    /// <summary>返回支持的常量物理属性列表。</summary>
+    /// <returns>所有支持的常量物理属性标识符列表。标准常量属性标识符列于第 7.5.2 节。</returns>
+    /// <remarks><para>MGetConstPropList 返回可通过 GetCompoundConstant 方法检索的所有常量物理属性的标识符。
+    /// 如果不支持任何属性，则应返回 UNDEFINED。CAPE-OPEN 标准没有定义实现 ICapeThermoCompounds 接口的软件组件
+    /// 必须提供的最小物理性质列表。</para>
+    /// <para>实现 ICapeThermoCompounds 接口的组件可返回不属于第 7.5.2 节所定义列表的常量物理性质标识符。</para>
+    /// <para>然而，该组件的大多数客户可能无法理解这些专有标识符。</para></remarks>
+    /// <exception cref="ECapeNoImpl">出于与 CAPE-OPEN 标准兼容的考虑，即使可以调用 GetConstPropList 方法，
+    /// 该操作也 “未 ”实现。也就是说，该操作是存在的，但当前的实现并不支持。</exception>
+    /// <exception cref="ECapeUnknown">当为 Get-ConstPropList 操作指定的其他错误不合适时将引发的错误。</exception>
+    /// <exception cref="ECapeBadInvOrder">如果属性包要求在调用 GetConstPropList 方法之前调用 SetMaterial 方法，
+    /// 则会引发错误。如果 GetConstPropList 方法是由 Material Object 实现的，则不会出现该错误。</exception>
     object ICapeThermoCompoundsCOM.GetConstPropList()
     {
         return _pICompounds.GetConstPropList();
