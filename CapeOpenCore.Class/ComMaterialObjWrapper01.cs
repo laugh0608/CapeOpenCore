@@ -757,7 +757,7 @@ partial class COMMaterialObjectWrapper : CapeObjectBase, ICapeThermoMaterialObje
 
     /// <summary>返回指定化合物的恒定物理性质值。</summary>
     /// <remarks><para>使用 GetConstPropList 方法可以检查哪些常量物理属性可用。</para>
-    /// <para>如果请求的物理属性数为 P，化合物数为 C，则 propvals 数组将包含 C*P 变体。第一个 C 变量将是第一个
+    /// <para>如果请求的物理属性数为 P，化合物数为 C，则 propVals 数组将包含 C*P 变体。第一个 C 变量将是第一个
     /// 请求的物理属性值（每个化合物一个变量），然后是第二个物理属性的 C 常量值，以此类推。
     /// 返回值的实际类型（双、字符串等）取决于第 7.5.2 节规定的物理属性。</para>
     /// <para>根据第 7.5.2 节的规定，物理性质将以一组固定的单位返回。</para>
@@ -866,12 +866,12 @@ partial class COMMaterialObjectWrapper : CapeObjectBase, ICapeThermoMaterialObje
     /// ICapeThermoCompounds 接口的所有化合物。</param>
     /// <param name="propVals">指定化合物的属性值。</param>
     /// <remarks><para>可以使用 GetPDependentPropList 方法来检查哪些物理属性可用。</para>
-    /// <para>如果请求的物理属性数为 P，化合物数为 C，则 propvals 数组将包含 C*P 值。第一个 C 将是第一个物理属性的值，
+    /// <para>如果请求的物理属性数为 P，化合物数为 C，则 propVals 数组将包含 C*P 值。第一个 C 将是第一个物理属性的值，
     /// 然后是第二个物理属性的 C 值，以此类推。</para>
     /// <para>根据第 7.5.4 节的规定，物理性质将以一组固定的单位返回。</para>
     /// <para>如果 compIds 参数设置为 UNDEFINED，则请求返回实现 ICapeThermoCompounds 接口的组件中所有化合物的属性值，
     /// 化合物顺序与 GetCompoundList 方法返回的顺序相同。例如，如果属性包组件实现了该接口，将 compIds 设置为 UNDEFINED
-    /// 的属性请求表示属性包中的所有化合物，而不是传递给属性包的材料对象中的所有化合物。</para>
+    /// 的属性请求表示属性包中的所有化合物，而不是传递给属性包的物流对象中的所有化合物。</para>
     /// <para>如果一个或多个化合物的任何物理属性不可用，则必须返回这些组合的未定义值 m，并引发
     /// ECapeThrmPropertyNotAvailable 异常。如果出现异常，客户端应检查返回的所有值，以确定哪个值是未定义的。</para></remarks>
     /// <exception cref="ECapeNoImpl">出于与 CAPE-OPEN 标准的兼容性考虑，即使可以调用该方法，也 “未 ”执行该操作。
@@ -917,12 +917,12 @@ partial class COMMaterialObjectWrapper : CapeObjectBase, ICapeThermoMaterialObje
     /// ICapeThermoCompounds 接口的所有化合物。</param>
     /// <param name="propVals">指定化合物的物理属性值。</param>
     /// <remarks><para>可以使用 GetTDependentPropList 方法来检查哪些物理属性可用。</para>
-    /// <para>如果请求的物理属性数为 P，化合物数为 C，则 propvals 数组将包含 C*P 值。第一个 C 将是第一个物理属性的值，
+    /// <para>如果请求的物理属性数为 P，化合物数为 C，则 propVals 数组将包含 C*P 值。第一个 C 将是第一个物理属性的值，
     /// 然后是第二个物理属性的 C 值，以此类推。</para>
     /// <para>根据第 7.5.3 节的规定，属性以一组固定的单位返回。</para>
     /// <para>如果 compIds 参数设置为 UNDEFINED，则请求返回实现 ICapeThermoCompounds 接口的组件中所有化合物的属性值，
     /// 化合物顺序与 GetCompoundList 方法返回的顺序相同。例如，如果属性包组件实现了该接口，将 compIds 设置为 UNDEFINED
-    /// 的属性请求表示属性包中的所有化合物，而不是传递给属性包的材料对象中的所有化合物。</para>
+    /// 的属性请求表示属性包中的所有化合物，而不是传递给属性包的物流对象中的所有化合物。</para>
     /// <para>如果一个或多个化合物的任何物理属性不可用，则必须返回这些组合的未定义值，并引发 ECapeThrmPropertyNotAvailable
     /// 异常。如果出现异常，客户端应检查返回的所有值，以确定哪个值是未定义的。</para></remarks>
     /// <exception cref="ECapeNoImpl">出于与 CAPE-OPEN 标准的兼容性考虑，即使可以调用该方法，也 “未 ”执行该操作。
@@ -963,9 +963,9 @@ partial class COMMaterialObjectWrapper : CapeObjectBase, ICapeThermoMaterialObje
         return _pICompounds.GetTDependentPropList();
     }
 
-    /// <summary>返回阶段数。</summary>
-    /// <returns>支持的阶段数。</returns>
-    /// <remarks>此方法返回的阶段数必须等于此接口的 GetPhaseList 方法返回的阶段标签数。它必须是零或正数。</remarks>
+    /// <summary>返回相态数。</summary>
+    /// <returns>支持的相态数。</returns>
+    /// <remarks>此方法返回的相态数必须等于此接口的 GetPhaseList 方法返回的相态标签数。它必须是零或正数。</remarks>
     /// <exception cref="ECapeNoImpl">出于与 CAPE-OPEN 标准的兼容性考虑，即使可以调用该方法，也 “未 ”执行该操作。
     /// 也就是说，该操作是存在的，但目前的实现方式不支持它。</exception>
     /// <exception cref="ECapeUnknown">当为操作指定的其他错误不合适时将引发的错误。</exception>
@@ -974,14 +974,14 @@ partial class COMMaterialObjectWrapper : CapeObjectBase, ICapeThermoMaterialObje
         return _pIPhases.GetNumPhases();
     }
 
-    /// <summary>返回与阶段相关的属性信息，以便了解阶段标签背后的信息。</summary>
+    /// <summary>返回与相态相关的属性信息，以便了解相态标签背后的信息。</summary>
     /// <param name ="phaseLabel">一个（单一）相位标签。必须是 GetPhaseList 方法返回的值之一。</param>
-    /// <param name ="phaseAttribute">下表中的阶段属性标识符之一。</param>
-    /// <returns>与阶段属性标识符相对应的值--见下表。</returns>
+    /// <param name ="phaseAttribute">下表中的相态属性标识符之一。</param>
+    /// <returns>与相态属性标识符相对应的值--见下表。</returns>
     /// <remarks><para>获取相位信息（GetPhaseInfo）的目的是允许 PME 或其他客户端使用任意标签识别相位。PME 或其他客户
     /// 端在将流数据映射到 “材质对象 ”或导入 “属性包 ”时需要使用该功能。如果客户端无法识别相位，可以要求用户根据这些属性
     /// 的值提供映射。</para>
-    /// <para>下表定义了支持的阶段属性列表，例如，支持气相、有机液相和水相的属性包组件可能会返回以下信息：</para>
+    /// <para>下表定义了支持的相态属性列表，例如，支持气相、有机液相和水相的属性包组件可能会返回以下信息：</para>
     /// <para>Phase label, Gas, Organic, Aqueous</para>
     /// <para>StateOfAggregation, Vapor, Liquid, Liquid</para>
     /// <para>KeyCompoundId, UNDEFINED, UNDEFINED, Water</para>
@@ -998,18 +998,18 @@ partial class COMMaterialObjectWrapper : CapeObjectBase, ICapeThermoMaterialObje
         return _pIPhases.GetPhaseInfo(phaseLabel, phaseAttribute);
     }
 
-    /// <summary>返回支持的所有阶段的阶段标签和其他重要描述信息。</summary>
-    /// <param name="phaseLabels">所支持阶段的阶段标签列表。阶段标签可以是任何字符串，但每个阶段必须有一个唯一的标签。
-    /// 如果由于某种原因不支持任何阶段，则应返回 phaseLabels 的未定义值。相位标签的数量也必须等于 GetNumPhases 方法
+    /// <summary>返回支持的所有相态的相态标签和其他重要描述信息。</summary>
+    /// <param name="phaseLabels">所支持相态的相态标签列表。相态标签可以是任何字符串，但每个相态必须有一个唯一的标签。
+    /// 如果由于某种原因不支持任何相态，则应返回 phaseLabels 的未定义值。相位标签的数量也必须等于 GetNumPhases 方法
     /// 返回的相位数量。</param>
-    /// <param name="stateOfAggregation">与每个阶段相关的物理聚合状态。必须是以下字符串之一： “Vapor”、“Liquid”、
-    /// “Solid” 或 “Unknown”。每个阶段必须有一个单一的聚合状态。该值不得未定义，但可设置为 “Unknown”。</param>
-    /// <param name="keyCompoundId">阶段的关键化合物。它必须是化合物标识符（由 GetCompoundList 返回），
+    /// <param name="stateOfAggregation">与每个相态相关的物理聚合状态。必须是以下字符串之一： “Vapor”、“Liquid”、
+    /// “Solid” 或 “Unknown”。每个相态必须有一个单一的聚合状态。该值不得未定义，但可设置为 “Unknown”。</param>
+    /// <param name="keyCompoundId">相态的关键化合物。它必须是化合物标识符（由 GetCompoundList 返回），
     /// 也可以是未定义的，在这种情况下会返回一个未定义值。关键化合物表示相中预计存在的高浓度化合物，例如水相中的水。
     /// 每个相只能有一个关键化合物。</param>
     /// <remarks><para>通过相位标签，可以在 ICapeThermoPhases 接口和其他 CAPE-OPEN 接口的方法中唯一识别相位。
     /// 聚合状态和关键化合物为 PME 或其他客户端提供了一种方法，使其能够根据相位的物理特性来解释相位标签的含义。</para>
-    /// <para>该方法返回的所有数组必须具有相同的长度，即等于阶段标签的数量。</para>
+    /// <para>该方法返回的所有数组必须具有相同的长度，即等于相态标签的数量。</para>
     /// <para>要获取相位的更多信息，请使用 GetPhaseInfo 方法。</para></remarks>
     /// <exception cref="ECapeNoImpl">出于与 CAPE-OPEN 标准的兼容性考虑，即使可以调用该方法，也 “未 ”执行该操作。
     /// 也就是说，该操作是存在的，但目前的实现方式不支持它。</exception>

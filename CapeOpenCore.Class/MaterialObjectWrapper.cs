@@ -17,6 +17,7 @@ namespace CapeOpenCore.Class
     /// that they will be used.
     /// </remarks>
     [Serializable]
+    [Flags]
     public enum CapeFugacityFlag
     {
         /// <summary>
