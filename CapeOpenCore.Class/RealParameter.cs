@@ -365,8 +365,8 @@ namespace CapeOpenCore.Class
                 {
                     if (units[i] == desiredUnit)
                     {
-                        Factor1 = CDimensions.ConverionsTimes(desiredUnit);
-                        Factor2 = CDimensions.ConverionsPlus(desiredUnit);
+                        Factor1 = CDimensions.ConversionTimes(desiredUnit);
+                        Factor2 = CDimensions.ConversionPlus(desiredUnit);
                         bUnitExisting = true;
                         break;
                     }
@@ -409,8 +409,8 @@ namespace CapeOpenCore.Class
                 {
                     if (units[i] == unit)
                     {
-                        Factor1 = CDimensions.ConverionsTimes(unit);
-                        Factor2 = CDimensions.ConverionsPlus(unit);
+                        Factor1 = CDimensions.ConversionTimes(unit);
+                        Factor2 = CDimensions.ConversionPlus(unit);
                         bUnitExisting = true;
                         break;
                     }
@@ -705,8 +705,8 @@ namespace CapeOpenCore.Class
                 {
                     if (units[i] == this.Unit)
                     {
-                        Factor1 = CDimensions.ConverionsTimes(this.Unit);
-                        Factor2 = CDimensions.ConverionsPlus(this.Unit);
+                        Factor1 = CDimensions.ConversionTimes(this.Unit);
+                        Factor2 = CDimensions.ConversionPlus(this.Unit);
                         bUnitExisting = true;
                         break;
                     }
@@ -750,8 +750,8 @@ namespace CapeOpenCore.Class
                 {
                     if (units[i] == this.Unit)
                     {
-                        Factor1 = CDimensions.ConverionsTimes(this.Unit);
-                        Factor2 = CDimensions.ConverionsPlus(this.Unit);
+                        Factor1 = CDimensions.ConversionTimes(this.Unit);
+                        Factor2 = CDimensions.ConversionPlus(this.Unit);
                         bUnitExisting = true;
                         break;
                     }
@@ -885,8 +885,8 @@ namespace CapeOpenCore.Class
                 {
                     if (units[i] == this.Unit)
                     {
-                        Factor1 = CDimensions.ConverionsTimes(this.Unit);
-                        Factor2 = CDimensions.ConverionsPlus(this.Unit);
+                        Factor1 = CDimensions.ConversionTimes(this.Unit);
+                        Factor2 = CDimensions.ConversionPlus(this.Unit);
                         bUnitExisting = true;
                         break;
                     }
@@ -1227,8 +1227,8 @@ namespace CapeOpenCore.Class
                 {
                     if (units[i] == desiredUnit)
                     {
-                        Factor1 = CDimensions.ConverionsTimes(desiredUnit);
-                        Factor2 = CDimensions.ConverionsPlus(desiredUnit);
+                        Factor1 = CDimensions.ConversionTimes(desiredUnit);
+                        Factor2 = CDimensions.ConversionPlus(desiredUnit);
                         bUnitExisting = true;
                         break;
                     }
@@ -1271,8 +1271,8 @@ namespace CapeOpenCore.Class
                 {
                     if (units[i] == unit)
                     {
-                        Factor1 = CDimensions.ConverionsTimes(unit);
-                        Factor2 = CDimensions.ConverionsPlus(unit);
+                        Factor1 = CDimensions.ConversionTimes(unit);
+                        Factor2 = CDimensions.ConversionPlus(unit);
                         bUnitExisting = true;
                         break;
                     }
@@ -1315,8 +1315,8 @@ namespace CapeOpenCore.Class
                 {
                     if (units[i] == unit)
                     {
-                        Factor1 = CDimensions.ConverionsTimes(unit);
-                        Factor2 = CDimensions.ConverionsPlus(unit);
+                        Factor1 = CDimensions.ConversionTimes(unit);
+                        Factor2 = CDimensions.ConversionPlus(unit);
                         bUnitExisting = true;
                         break;
                     }

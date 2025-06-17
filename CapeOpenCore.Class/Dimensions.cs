@@ -267,11 +267,11 @@ internal static class CDimensions
 
     /// <summary>一种转换系数，用于将测量值乘以该系数，以便将单位转换为其国际单位制等价物。</summary>
     /// <remarks>对于单位类别，会将单位进行 SI 等效换算。进行单位换算时，首先将存储
-    /// 在 <see cref="ConverionsPlus"/> 中的任何偏移量加到该单位的值上，然后将该总和乘以该单位
-    /// 的 <see cref="ConverionsTimes"/> 值，以获取以SI单位表示的测量值。</remarks>
+    /// 在 <see cref="ConversionPlus"/> 中的任何偏移量加到该单位的值上，然后将该总和乘以该单位
+    /// 的 <see cref="ConversionTimes"/> 值，以获取以SI单位表示的测量值。</remarks>
     /// <param name="unit">用于获取转换因子的单位。</param>
     /// <returns>转换因子的乘法部分。</returns>
-    public static double ConverionsTimes(string unit)
+    public static double ConversionTimes(string unit)
     {
         double retVal = 0;
         var found = false;
@@ -288,22 +288,20 @@ internal static class CDimensions
 
     /// <summary>用于将测量值转换为其国际单位制（SI）等效值的偏移因子。</summary>
     /// <remarks>对于单位类别，会将单位进行 SI 等效换算。进行单位换算时，首先将存储
-    /// 在 <see cref="ConverionsPlus"/> 中的任何偏移量加到该单位的值上，然后将该总和乘以该单位
-    /// 的 <see cref="ConverionsTimes"/> 值，以获取以 SI 单位表示的测量值。</remarks>
+    /// 在 <see cref="ConversionPlus"/> 中的任何偏移量加到该单位的值上，然后将该总和乘以该单位
+    /// 的 <see cref="ConversionTimes"/> 值，以获取以 SI 单位表示的测量值。</remarks>
     /// <param name="unit">用于获取转换因子的单位。</param>
     /// <returns>转换因子的加成部分。</returns>
-    public static double ConverionsPlus(string unit)
+    public static double ConversionPlus(string unit)
     {
         double retVal = 0;
         var found = false;
-        for (var i = 0; i < units.Count; i++)
+        foreach (var pT in units)
         {
-            var current = (unit)units[i];
-            if (current.Name == unit)
-            {
-                retVal = current.ConversionPlus;
-                found = true;
-            }
+            var current = (unit)pT;
+            if (current.Name != unit) continue;
+            retVal = current.ConversionPlus;
+            found = true;
         }
         if (!found) throw new CapeBadArgumentException(string.Concat("Unit: ", unit, " was not found"), 1);
         return retVal;
@@ -374,18 +372,17 @@ internal static class CDimensions
         return retVal;
     }
 
-    /// <summary>Returns all units matching the unit category.</summary>
-    /// <remarks>A unit category represents a specific combination of dimsionality values. Examples would be 
-    /// pressure or temperature. This method would return all units that are in the category, such as Celius,
-    /// Kelvin, Farehnheit, and Rankine for temperature.</remarks>
-    /// <param name="category">The catgeory of the desired units.</param>
-    /// <returns>All units that represent the categoery.</returns>
+    /// <summary>返回所有符合该单位类别的单位。</summary>
+    /// <remarks>一个单元类别表示特定组合下的维度值。例如可以是压力或温度。该方法将返回属于该类别的所有单位，
+    /// 如温度的摄氏、开尔文、Fahrenheit 和 Rankine。</remarks>
+    /// <param name="category">所需单元的类别。</param>
+    /// <returns>所有代表该类别的单元。</returns>
     public static string[] UnitsMatchingCategory(string category)
     {
         var unitNames = new ArrayList();
-        for (var i = 0; i < units.Count; i++)
+        foreach (var pT in units)
         {
-            var current = (unit)units[i];
+            var current = (unit)pT;
             if (current.Category == category)
             {
                 unitNames.Add(current.Name);
@@ -399,19 +396,18 @@ internal static class CDimensions
         return retVal;
     }
 
-    /// <summary>Returns the SI unit associated with the unit.</summary>
-    /// <remarks>A unit category represents a specific combination of dimsionality values. Examples would be 
-    /// pressure or temperature. This method would return the SI unit for the category, such as Kelvin (K) for 
-    /// temperature or Pascal (N/m^2) for pressure..</remarks>
-    /// <param name="Unit">The unit to get the SI unit of.</param>
-    /// <returns>The SI unit that corresponds to the unit.</returns>
+    /// <summary>返回与该单位关联的国际单位制（SI）单位。</summary>
+    /// <remarks>一个单元类别表示特定组合下的维度值。例如可以是压力或温度。该方法将返回该类别的国际单位制表示，
+    /// 如温度为开尔文（K），压力为帕斯卡（N/m²）。</remarks>
+    /// <param name="Unit">获取 SI 单位的单位。</param>
+    /// <returns>与该单位对应的国际单位制（SI）单位。</returns>
     public static string FindSIUnit(string Unit)
     {
         var retVal = string.Empty;
         var category = UnitCategory(Unit);
-        for (var i = 0; i < unitCategories.Count; i++)
+        foreach (var pT in unitCategories)
         {
-            var current = (unitCategory)unitCategories[i];
+            var current = (unitCategory)pT;
             if (current.Name == category)
             {
                 retVal = current.SI_Unit;
@@ -420,37 +416,33 @@ internal static class CDimensions
         return retVal;
     }
 
-    /// <summary>The dimensioality of the unit of measure.</summary>
-    /// <remarks>
-    /// <para>参数的维度代表该参数的物理维度轴。预计该维数必须至少涵盖 6 个基本轴：
+    /// <summary>测量单位的维度。</summary>
+    /// <remarks><para>参数的维度代表该参数的物理维度轴。预计该维数必须至少涵盖 6 个基本轴：
     /// 长度 length、质量 mass、时间 time、角度angle、温度 temperature 和 电荷 charge。</para>
     /// <para>一种可能的实现方式可以是一个固定长度的数组向量，
     /// 其中包含每个基本 SI 单位的指数，遵循 SI 手册（来自 https://www.bipm.fr ）的指示。</para>
     /// <para>So if we agree on order &lt;m kg s A K,&gt; ... velocity would be &lt;1,0,-1,0,0,0&gt;:
     /// that is m1 * s-1 =m/s.</para>
     /// <para>我们已建议 CO 科学委员会采用国际单位制（SI）基本单位加上带有特殊符号的 SI 导出
-    /// 单位（以提高易用性并允许定义角度）。</para>
-    /// </remarks>
-    /// <param name="unit">The unit to get the dimensionality of.</param>
-    /// <returns>The dimenality of the unit.</returns>
+    /// 单位（以提高易用性并允许定义角度）。</para></remarks>
+    /// <param name="unit">用于确定维度的单元。</param>
+    /// <returns>该单元的维数。</returns>
     public static double[] Dimensionality(string unit)
     {
         var category = UnitCategory(unit);
-        double[] retVal = { 0, 0, 0, 0, 0, 0, 0, 0 };
-        for (var i = 0; i < unitCategories.Count; i++)
+        double[] retVal = [0, 0, 0, 0, 0, 0, 0, 0];
+        foreach (var pT in unitCategories)
         {
-            var current = (unitCategory)unitCategories[i];
-            if (current.Name == category)
-            {
-                retVal[0] = current.Length;
-                retVal[1] = current.Mass;
-                retVal[2] = current.Time;
-                retVal[3] = current.ElectricalCurrent;
-                retVal[4] = current.Temperature;
-                retVal[5] = current.AmountOfSubstance;
-                retVal[6] = current.Luminous;
-                retVal[7] = current.Currency;
-            }
+            var current = (unitCategory)pT;
+            if (current.Name != category) continue;
+            retVal[0] = current.Length;
+            retVal[1] = current.Mass;
+            retVal[2] = current.Time;
+            retVal[3] = current.ElectricalCurrent;
+            retVal[4] = current.Temperature;
+            retVal[5] = current.AmountOfSubstance;
+            retVal[6] = current.Luminous;
+            retVal[7] = current.Currency;
         }
         return retVal;
     }
