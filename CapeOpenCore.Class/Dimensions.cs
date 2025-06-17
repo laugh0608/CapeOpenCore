@@ -103,7 +103,7 @@ struct unitCategory
 }
 
 /// <summary>表示对 CAPE-OPEN 维度和实值参数的度量单位的支持 Static 类。</summary>
-/// <remarks>该类支持使用 CAPE-OPEN 维数，并能在实值参数之间进行SI单位和常用度量单位的转换。</remarks>
+/// <remarks>该类支持使用 CAPE-OPEN 维数，并能在实值参数之间进行 SI 单位和常用度量单位的转换。</remarks>
 internal static class CDimensions
 {
     static ArrayList units;
@@ -268,7 +268,7 @@ internal static class CDimensions
     /// <summary>一种转换系数，用于将测量值乘以该系数，以便将单位转换为其国际单位制等价物。</summary>
     /// <remarks>对于单位类别，会将单位进行 SI 等效换算。进行单位换算时，首先将存储
     /// 在 <see cref="ConversionPlus"/> 中的任何偏移量加到该单位的值上，然后将该总和乘以该单位
-    /// 的 <see cref="ConversionTimes"/> 值，以获取以SI单位表示的测量值。</remarks>
+    /// 的 <see cref="ConversionTimes"/> 值，以获取以 SI 单位表示的测量值。</remarks>
     /// <param name="unit">用于获取转换因子的单位。</param>
     /// <returns>转换因子的乘法部分。</returns>
     public static double ConversionTimes(string unit)
