@@ -69,7 +69,7 @@
     <Compile Include="CommonIdl.cs" />
     <Compile Include="CoseIDL.cs" />
     <Compile Include="Dimensions.cs" />
-    <Compile Include="ErrorIDL.cs" />
+    <Compile Include="ErrorIdl.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="IntegerParameter.cs" />
     <Compile Include="MaterialObjectWrapper.cs" />
