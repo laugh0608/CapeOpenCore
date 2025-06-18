@@ -70,7 +70,8 @@
     <Compile Include="CoseIDL.cs" />
     <Compile Include="Dimensions.cs" />
     <Compile Include="ErrorIdl.cs" />
-    <Compile Include="Exceptions.cs" />
+    <Compile Include="Exceptions01.cs" />
+    <Compile Include="Exceptions02.cs" />
     <Compile Include="IntegerParameter.cs" />
     <Compile Include="MaterialObjectWrapper.cs" />
     <Compile Include="MaterialObjectWrapper10.cs" />

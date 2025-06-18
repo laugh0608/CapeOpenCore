@@ -272,7 +272,7 @@ public interface ECapeBadArgument
 }
 
 // ECapeInvalidArgument interface
-/// <summary>传递的参数值无效。例如，所传递的阶段名称并不属于 CO 阶段列表。</summary>
+/// <summary>传递的参数值无效。例如，所传递的相态名称并不属于 CO 相态列表。</summary>
 /// <remarks>该操作的参数值无效。参数值在操作签名中的位置。第一个参数位于位置 1。</remarks>
 [ComImport, ComVisible(false)]
 [Guid(COGuids.ECapeInvalidArgument_IID)]
@@ -434,7 +434,7 @@ public interface ECapePersistenceSystemError;
 public interface ECapePersistenceOverflow;
 
 /// <summary>一个异常，表示请求的热力学属性不可用。</summary>
-/// <remarks>请求的属性中至少有一个项目无法返回。这可能是因为该属性无法在指定的条件下或在指定的阶段中进行计算。
+/// <remarks>请求的属性中至少有一个项目无法返回。这可能是因为该属性无法在指定的条件下或在指定的相态中进行计算。
 /// 如果该属性计算功能尚未实现，则应返回 <see cref="ECapeLimitedImpl"/>。</remarks>
 [ComImport,ComVisible(false)]
 [Guid("678C09B6-7D66-11D2-A67D-00105A42887F")]
