@@ -421,7 +421,7 @@ public class CapeBadArgumentException : CapeDataException, ECapeBadArgument, ECa
     /// <remarks> 这个构造函数在反序列化过程中被调用，用于重构通过流传输的异常对象。有关详细信息，请参阅 XML 和 SOAP 序列化。</remarks>
     /// <param name="info">存储序列化对象数据的对象。</param>
     /// <param name="context">关于源或目的地的上下文信息。</param>
-    /// <param name="position">操作签名中参数值的位置。第一个参数的位置为1。</param>
+    /// <param name="position">操作签名中参数值的位置。第一个参数的位置为 1。</param>
     public CapeBadArgumentException(SerializationInfo info, StreamingContext context, int position)
         : base(info, context)
     {
@@ -462,11 +462,6 @@ public class CapeBadArgumentException : CapeDataException, ECapeBadArgument, ECa
 [ClassInterface(ClassInterfaceType.None)]
 public abstract class CapeBoundariesException : CapeUserException, ECapeBoundaries
 {
-    private double _mLower;
-    private double _mUpper;
-    private double _mValue;
-    private string _mType;
-
     /// <summary>初始化此异常的描述、接口名称和名称字段。</summary>
     /// <remarks><para>设置 HResult、接口名称和异常名称的值。</para></remarks>
     /// <param name="pLowerBound">下限的值。</param>
@@ -475,385 +470,370 @@ public abstract class CapeBoundariesException : CapeUserException, ECapeBoundari
     /// <param name="pType">值的类型/性质。该值可能代表热力学性质、数据库中的表数量、内存容量等。</param>
     protected void SetBoundaries(double pLowerBound, double pUpperBound, double pValue, string pType)
     {
-        _mLower = pLowerBound;
-        _mUpper = pUpperBound;
-        _mValue = pValue;
-        _mType = pType;
+        lowerBound = pLowerBound;
+        upperBound = pUpperBound;
+        value = pValue;
+        type = pType;
     }
 
     /// <summary>初始化 CapeBoundariesException 类的新的实例，
     /// 该实例包含导致此异常的参数的下限、上限、值、类型和位置。</summary>
     /// <remarks>这个构造函数会将新实例的“Message”属性初始化为系统提供的描述错误的信息，
     /// 例如“发生了一个应用程序错误”。这条信息会考虑到当前的系统文化。</remarks>
-    /// <param name="LowerBound">下限的值。</param>
-    /// <param name="UpperBound">上限的值。</param>
+    /// <param name="lowerBound">下限的值。</param>
+    /// <param name="upperBound">上限的值。</param>
     /// <param name="value">导致错误的当前值。</param>
     /// <param name="type">值的类型/性质。该值可能代表热力学性质、数据库中的表数量、内存容量等。</param>
-    protected CapeBoundariesException(double LowerBound, double UpperBound, double value, string type)
+    protected CapeBoundariesException(double lowerBound, double upperBound, double value, string type)
     {
-        SetBoundaries(LowerBound, UpperBound, value, type);
+        SetBoundaries(lowerBound, upperBound, value, type);
     }
     
-    /// <summary>Initializes a new instance of the CapeBoundariesException class with a specified error message, the lower bound, upper bound, value, type, and position of the parameter that is the cause of this exception. </summary>
+    /// <summary>初始化 CapeBoundariesException 类的实例，并指定错误消息、下限、上限、值、类型以及引发此异常的参数的位置。</summary>
     /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
     /// <para>此消息考虑了当前的系统文化。</para></remarks>
     /// <param name="message">一条描述错误的消息。</param>
-    /// <param name="LowerBound">下限的值。</param>
-    /// <param name="UpperBound">上限的值。</param>
+    /// <param name="lowerBound">下限的值。</param>
+    /// <param name="upperBound">上限的值。</param>
     /// <param name="value">导致错误的当前值。</param>
     /// <param name="type">值的类型/性质。该值可能代表热力学性质、数据库中的表数量、内存容量等。</param>
-    public CapeBoundariesException(string message, double LowerBound, double UpperBound, double value, string type)
-        : base(message)
+    protected CapeBoundariesException(string message, 
+        double lowerBound, double upperBound, double value, string type) : base(message)
     {
-        SetBoundaries(LowerBound, UpperBound, value, type);
+        SetBoundaries(lowerBound, upperBound, value, type);
     }
-    /// <summary>Initializes a new instance of the CapeBoundariesException class with serialized data, the lower bound, upper bound, value, type, and position of the parameter that is the cause of this exception. </summary>
+    
+    /// <summary>初始化 CapeBoundariesException 类的新的实例，使用序列化数据、下限、上限、值、类型和导致此异常的参数的位置。</summary>
     /// <remarks> 这个构造函数在反序列化过程中被调用，用于重构通过流传输的异常对象。有关详细信息，请参阅 XML 和 SOAP 序列化。</remarks>
     /// <param name="info">存储序列化对象数据的对象。</param>
     /// <param name="context">关于源或目的地的上下文信息。</param>
-    /// <param name="LowerBound">下限的值。</param>
-    /// <param name="UpperBound">上限的值。</param>
+    /// <param name="lowerBound">下限的值。</param>
+    /// <param name="upperBound">上限的值。</param>
     /// <param name="value">导致错误的当前值。</param>
     /// <param name="type">值的类型/性质。该值可能代表热力学性质、数据库中的表数量、内存容量等。</param>
-    public CapeBoundariesException(SerializationInfo info, StreamingContext context, double LowerBound, double UpperBound, double value, string type)
-        : base(info, context)
+    protected CapeBoundariesException(SerializationInfo info, StreamingContext context, 
+        double lowerBound, double upperBound, double value, string type) : base(info, context)
     {
-        SetBoundaries(LowerBound, UpperBound, value, type);
+        SetBoundaries(lowerBound, upperBound, value, type);
     }
-    /// <summary>Initializes a new instance of the CapeBoundariesException class with a specified error message, the lower bound, upper bound, value, type and position of the parameter, and a reference to the inner exception that is the cause of this exception.</summary>
+    
+    /// <summary>初始化 CapeBoundariesException 类的新的实例，
+    /// 指定错误消息、下限、上限、参数的值、类型和位置，以及导致此异常的内部异常的引用。</summary>
     /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
-    /// <para>由于先前的异常直接导致的异常，应在内层异常属性中包含对先前异常的引用。内层异常属性返回传递给构造函数的相同值，或者如果内层异常属性没有向构造函数提供内层异常值，则返回 null 引用。</para></remarks>
+    /// <para>由于先前的异常直接导致的异常，应在内层异常属性中包含对先前异常的引用。内层异常属性返回传递给构造函数的相同值，
+    /// 或者如果内层异常属性没有向构造函数提供内层异常值，则返回 null 引用。</para></remarks>
     /// <param name="message">错误消息字符串。</param>
     /// <param name="inner">内部异常引用。</param>
-    /// <param name="LowerBound">下限的值。</param>
-    /// <param name="UpperBound">上限的值。</param>
+    /// <param name="lowerBound">下限的值。</param>
+    /// <param name="upperBound">上限的值。</param>
     /// <param name="value">导致错误的当前值。</param>
     /// <param name="type">值的类型/性质。该值可能代表热力学性质、数据库中的表数量、内存容量等。</param>
-    public CapeBoundariesException(string message, Exception inner, double LowerBound, double UpperBound, double value, string type)
-        : base(message, inner)
+    protected CapeBoundariesException(string message, Exception inner, 
+        double lowerBound, double upperBound, double value, string type) : base(message, inner)
     {
-        SetBoundaries(LowerBound, UpperBound, value, type);
+        SetBoundaries(lowerBound, upperBound, value, type);
     }
 
     /// <summary>下限的值。</summary>
-    /// <remarks><para>This provides the user with the acceptable lower bounds of the argument.</para></remarks>
-    /// <value>The lower bound for the argument.</value>
-    public double lowerBound
-    {
-        get
-        {
-            return _mLower;
-        }
-    }
+    /// <remarks>这为用户提供了参数的可接受下限。</remarks>
+    /// <value>参数的下限。</value>
+    public double lowerBound { get; private set; }
 
     /// <summary>上限的值。</summary>
-    /// <remarks><para>This provides the user with the acceptable upper bounds of the argument.</para></remarks>
-    /// <value>The upper bound for the argument.</value>
-    public double upperBound
-    {
-        get
-        {
-            return _mUpper;
-        }
-    }
+    /// <remarks>这为用户提供了参数的可接受上限。</remarks>
+    /// <value>参数的上限。</value>
+    public double upperBound { get; private set; }
 
     /// <summary>导致错误的当前值。</summary>
-    /// <remarks><para>This provides the user with the value that caused the error condition.</para></remarks>
-    /// <value>The value that resulted in the error condition.</value>
-    public double value
-    {
-        get
-        {
-            return _mValue;
-        }
-    }
+    /// <remarks>这为用户提供了导致错误条件的原因。</remarks>
+    /// <value>导致错误条件出现的值。</value>
+    public double value { get; private set; }
 
-    /// <summary>The type/nature of the value. </summary>
-    /// <remarks>The value could represent a thermodynamic property, a number of tables in a database, a quantity of memory, ..."</remarks>
-    /// <value>A string that indicates the anture or type of the value required.</value>
-    public string type
-    {
-        get
-        {
-            return _mType;
-        }
-    }
+    /// <summary>值的类型/性质。</summary>
+    /// <remarks>该值可能代表热力学性质、数据库中的表数量、内存容量等。</remarks>
+    /// <value>一个字符串，用于指示所需值的属性或类型。</value>
+    public string type { get; private set; }
 }
 
-/// <summary>An argument value is outside of the bounds..</summary>
-/// <remarks><para>This class is derived from the <see href="CapeBoundariesException">CapeBoundariesException</see> class.
-/// It is used to indicate that one of the parameters is outside of its bounds.</para></remarks>
+/// <summary>参数值超出范围。</summary>
+/// <remarks>此类继承自 <see href="CapeBoundariesException"/> 类。它用于表示其中一个参数超出了其范围。</remarks>
 [Serializable]
-[Guid("4438458A-1659-48c2-9138-03AD8B4C38D8")]
 [ComVisible(true)]
+[Guid("4438458A-1659-48c2-9138-03AD8B4C38D8")]
 [ClassInterface(ClassInterfaceType.None)]
-public class CapeOutOfBoundsException : CapeBoundariesException,
-    ECapeOutOfBounds, ECapeBadArgument, ECapeBadArgument093, ECapeData
+public class CapeOutOfBoundsException : 
+    CapeBoundariesException, ECapeOutOfBounds, ECapeBadArgument, ECapeBadArgument093, ECapeData
 {
-    private int m_Position;
+    private int _mPosition;
 
-    /// <summary>The initialize method for all classes derived from CapeOutOfBoundsException need to include the
-    /// pertinent information related to the boundaries.</summary>
-    /// <remarks><para>This method is sealed so that classes that derive from CapeOutOfBoundsException include the required information about the position of the argument.</para></remarks>
+    /// <summary>所有从 CapeOutOfBoundsException 类派生的类的 initialize 方法，都需要包含与边界相关的相关信息。</summary>
+    /// <remarks>此方法为密封方法，因此从 CapeOutOfBoundsException 派生的类会包含关于参数位置的必要信息。</remarks>
     protected override void Initialize()
     {
-        HResult = unchecked((int)CapeErrorInterfaceHR.ECapeOutOfBoundsHR);
+        HResult = (int)CapeErrorInterfaceHR.ECapeOutOfBoundsHR;
         MInterfaceName = "ECapeOutOfBounds";
         MName = "CapeOutOfBoundsException";
     }
 
-    /// <summary>Initializes a new instance of the CapeOutOfBoundsException class with the position of the error. </summary>
+    /// <summary>初始化一个新的 CapeOutOfBoundsException 类实例，并指定错误的位置。</summary>
     /// <remarks>这个构造函数会将新实例的“Message”属性初始化为系统提供的描述错误的信息，例如“发生了一个应用程序错误”。这条信息会考虑到当前的系统文化。</remarks>
-    /// <param name="position">操作签名中参数值的位置。第一个参数的位置为1。</param>
-    /// <param name="LowerBound">下限的值。</param>
-    /// <param name="UpperBound">上限的值。</param>
+    /// <param name="position">操作签名中参数值的位置。第一个参数的位置为 1。</param>
+    /// <param name="lowerBound">下限的值。</param>
+    /// <param name="upperBound">上限的值。</param>
     /// <param name="value">导致错误的当前值。</param>
     /// <param name="type">值的类型/性质。该值可能代表热力学性质、数据库中的表数量、内存容量等。</param>
-    public CapeOutOfBoundsException(int position, double LowerBound, double UpperBound, double value, string type) :
-        base(LowerBound, UpperBound, value, type)
+    public CapeOutOfBoundsException(int position, double lowerBound, double upperBound, double value, string type) :
+        base(lowerBound, upperBound, value, type)
     {
-        m_Position = position;
+        _mPosition = position;
     }
-    /// <summary>Initializes a new instance of the CapeOutOfBoundsException class with a specified error message and the position of the error. </summary>. 
+    
+    /// <summary>初始化一个新的 CapeOutOfBoundsException 类实例，并指定错误消息和错误位置。</summary>. 
     /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
     /// <para>此消息考虑了当前的系统文化。</para></remarks>
     /// <param name="message">一条描述错误的消息。</param>
-    /// <param name="position">操作签名中参数值的位置。第一个参数的位置为1。</param>
-    /// <param name="LowerBound">下限的值。</param>
-    /// <param name="UpperBound">上限的值。</param>
+    /// <param name="position">操作签名中参数值的位置。第一个参数的位置为 1。</param>
+    /// <param name="lowerBound">下限的值。</param>
+    /// <param name="upperBound">上限的值。</param>
     /// <param name="value">导致错误的当前值。</param>
     /// <param name="type">值的类型/性质。该值可能代表热力学性质、数据库中的表数量、内存容量等。</param>
-    public CapeOutOfBoundsException(string message, int position, double LowerBound, double UpperBound, double value, string type) :
-        base(message, LowerBound, UpperBound, value, type)
+    public CapeOutOfBoundsException(string message, int position, double lowerBound, double upperBound, 
+        double value, string type) : base(message, lowerBound, upperBound, value, type)
     {
-        m_Position = position;
+        _mPosition = position;
     }
-    /// <summary>Initializes a new instance of the CapeOutOfBoundsException class with serialized data and the position of the error. </summary>.
+    
+    /// <summary>初始化一个新的 CapeOutOfBoundsException 类实例，使用序列化数据和错误位置。</summary>.
     /// <remarks> 这个构造函数在反序列化过程中被调用，用于重构通过流传输的异常对象。有关详细信息，请参阅 XML 和 SOAP 序列化。</remarks>
     /// <param name="info">存储序列化对象数据的对象。</param>
     /// <param name="context">关于源或目的地的上下文信息。</param>
-    /// <param name="position">操作签名中参数值的位置。第一个参数的位置为1。</param>
-    /// <param name="LowerBound">下限的值。</param>
-    /// <param name="UpperBound">上限的值。</param>
+    /// <param name="position">操作签名中参数值的位置。第一个参数的位置为 1。</param>
+    /// <param name="lowerBound">下限的值。</param>
+    /// <param name="upperBound">上限的值。</param>
     /// <param name="value">导致错误的当前值。</param>
     /// <param name="type">值的类型/性质。该值可能代表热力学性质、数据库中的表数量、内存容量等。</param>
-    public CapeOutOfBoundsException(SerializationInfo info, StreamingContext context, int position, double LowerBound, double UpperBound, double value, string type) :
-        base(info, context, LowerBound, UpperBound, value, type)
+    public CapeOutOfBoundsException(SerializationInfo info, StreamingContext context, 
+        int position, double lowerBound, double upperBound, double value, string type) :
+        base(info, context, lowerBound, upperBound, value, type)
     {
-        m_Position = position;
+        _mPosition = position;
     }
-    /// <summary>Initializes a new instance of the CapeOutOfBoundsException class with a specified error message and a reference to the inner exception that is the cause of this exception.</summary>
+    
+    /// <summary>初始化一个新的 CapeOutOfBoundsException 类实例，该实例带有指定的错误消息以及导致此异常的内部异常的引用。</summary>
     /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
-    /// <para>由于先前的异常直接导致的异常，应在内层异常属性中包含对先前异常的引用。内层异常属性返回传递给构造函数的相同值，或者如果内层异常属性没有向构造函数提供内层异常值，则返回 null 引用。</para></remarks>
+    /// <para>由于先前的异常直接导致的异常，应在内层异常属性中包含对先前异常的引用。内层异常属性返回传递给构造函数的相同值，
+    /// 或者如果内层异常属性没有向构造函数提供内层异常值，则返回 null 引用。</para></remarks>
     /// <param name="message">错误消息字符串。</param>
     /// <param name="inner">内部异常引用。</param>
-    /// <param name="position">操作签名中参数值的位置。第一个参数的位置为1。</param>
-    /// <param name="LowerBound">下限的值。</param>
-    /// <param name="UpperBound">上限的值。</param>
+    /// <param name="position">操作签名中参数值的位置。第一个参数的位置为 1。</param>
+    /// <param name="lowerBound">下限的值。</param>
+    /// <param name="upperBound">上限的值。</param>
     /// <param name="value">导致错误的当前值。</param>
     /// <param name="type">值的类型/性质。该值可能代表热力学性质、数据库中的表数量、内存容量等。</param>
-    public CapeOutOfBoundsException(string message, Exception inner, int position, double LowerBound, double UpperBound, double value, string type) :
-        base(message, inner, LowerBound, UpperBound, value, type)
+    public CapeOutOfBoundsException(string message, Exception inner, int position, double lowerBound, 
+        double upperBound, double value, string type) : 
+        base(message, inner, lowerBound, upperBound, value, type)
     {
-        m_Position = position;
+        _mPosition = position;
     }
 
-    /// <summary>操作签名中参数值的位置。第一个参数的位置为1。</summary>
+    /// <summary>操作签名中参数值的位置。第一个参数的位置为 1。</summary>
     /// <remarks>这提供了函数调用中无效参数在参数列表中的位置。</remarks>
-    /// <value>该论点的立场存在问题。第一个论点是 1。
-    /// </value>
-    public short position
-    {
-        get
-        {
-            return (short)m_Position;
-        }
-    }
+    /// <value>该论点的立场存在问题。第一个论点是 1。</value>
+    public short position => (short)_mPosition;
 
-    /// <summary>操作签名中参数值的位置。第一个参数的位置为1。</summary>
+    /// <summary>操作签名中参数值的位置。第一个参数的位置为 1。</summary>
     /// <remarks>这提供了函数调用中无效参数在参数列表中的位置。</remarks>
-    /// <value>该论点的立场存在问题。第一个论点是 1。
-    /// </value>
-    int ECapeBadArgument093.position
-    {
-        get
-        {
-            return m_Position;
-        }
-    }
+    /// <value>该论点的立场存在问题。第一个论点是 1。</value>
+    int ECapeBadArgument093.position => _mPosition;
 }
 
-/// <summary>The base class of the errors hierarchy related to calculations.</summary>
-/// <remarks>This class is used to indicate that an error occurred in the performance of a calculation. 
-/// Other calculation-related classes such as 
-/// <see href="CapeFailedInitialisationException">CapeOpen.CapeFailedInitialisationException</see>, 
-/// <see href="CapeOutOfResourcesException">CapeOpen.CapeOutOfResourcesException</see>, 
-/// <see href="CapeSolvingErrorException">CapeOpen.CapeSolvingErrorException</see>, 
-/// <see href="CapeBadInvOrderException">CapeOpen.CapeBadInvOrderException</see>, 
-/// <see href="CapeInvalidOperationException">CapeOpen.CapeInvalidOperationException</see>, 
-/// <see href="CapeNoMemoryException">CapeOpen.CapeNoMemoryException</see>, and 
-/// <see href="CapeTimeOutException">CapeOpen.CapeTimeOutException</see> 
-/// derive from this class.</remarks>
+/// <summary>与计算相关的错误层次结构的基类。</summary>
+/// <remarks>此类用于指示在进行计算时发生了错误。其他与计算相关的类，如 
+/// <see href="CapeFailedInitialisationException">CapeOpen.CapeFailedInitialisationException</see>、
+/// <see href="CapeOutOfResourcesException">CapeOpen.CapeOutOfResourcesException</see>、
+/// <see href="CapeSolvingErrorException">CapeOpen.CapeSolvingErrorException</see>、
+/// <see href="CapeBadInvOrderException">CapeOpen.CapeBadInvOrderException</see>、
+/// <see href="CapeInvalidOperationException">CapeOpen.CapeInvalidOperationException</see>、
+/// <see href="CapeNoMemoryException">CapeOpen.CapeNoMemoryException</see> 和 
+/// <see href="CapeTimeOutException">CapeOpen.CapeTimeOutException</see> 从该类派生。</remarks>
 [Serializable]
-[Guid("9D416BF5-B9E3-429a-B13A-222EE85A92A7")]
 [ComVisible(true)]
+[Guid("9D416BF5-B9E3-429a-B13A-222EE85A92A7")]
 [ClassInterface(ClassInterfaceType.None)]
 public class CapeComputationException : CapeUserException, ECapeComputation
 {
-    /// <summary>Initializes the description, interface name and name fields of this exception.</summary>
+    /// <summary>初始化此异常的描述、接口名称和名称字段。</summary>
     /// <remarks><para>设置 HResult、接口名称和异常名称的值。</para></remarks>
     protected override void Initialize()
     {
-        HResult = unchecked((int)CapeErrorInterfaceHR.ECapeComputationHR);
+        HResult = (int)CapeErrorInterfaceHR.ECapeComputationHR;
         MInterfaceName = "ECapeComputation";
         MName = "CapeComputationException";
     }
 
-    /// <summary>Initializes a new instance of the CapeComputationException class. </summary>
-    /// <remarks>这个构造函数会将新实例的“Message”属性初始化为系统提供的描述错误的信息，例如“发生了一个应用程序错误”。这条信息会考虑到当前的系统文化。</remarks>
-    public CapeComputationException()
-    { }
-    /// <summary>Initializes a new instance of the CapeComputationException class with a specified error message. </summary>
+    /// <summary>初始化 CapeComputationException 类的新的实例。</summary>
+    /// <remarks>这个构造函数会将新实例的“Message”属性初始化为系统提供的描述错误的信息，
+    /// 例如“发生了一个应用程序错误”。这条信息会考虑到当前的系统文化。</remarks>
+    public CapeComputationException() { }
+    
+    /// <summary>初始化一个新的 CapeComputationException 类实例，并指定错误消息。</summary>
     /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
     /// <para>此消息考虑了当前的系统文化。</para></remarks>
     /// <param name="message">一条描述错误的消息。</param>
     public CapeComputationException(string message) : base(message) { }
-    /// <summary>Initializes a new instance of the CapeComputationException class with serialized data.</summary>
+    
+    /// <summary>初始化 CapeComputationException 类的新的实例，并使用序列化数据。</summary>
     /// <remarks> 这个构造函数在反序列化过程中被调用，用于重构通过流传输的异常对象。有关详细信息，请参阅 XML 和 SOAP 序列化。</remarks>
     /// <param name="info">存储序列化对象数据的对象。</param>
     /// <param name="context">关于源或目的地的上下文信息。</param>
-    public CapeComputationException(SerializationInfo info, StreamingContext context) : base(info, context) { }
-    /// <summary>Initializes a new instance of the CapeComputationException class with a specified error message and a reference to the inner exception that is the cause of this exception.</summary>
+    public CapeComputationException(SerializationInfo info, StreamingContext context) 
+        : base(info, context) { }
+    
+    /// <summary>初始化一个新的 CapeComputationException 类实例，并指定错误消息以及导致此异常的内部异常的引用。</summary>
     /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
-    /// <para>由于先前的异常直接导致的异常，应在内层异常属性中包含对先前异常的引用。内层异常属性返回传递给构造函数的相同值，或者如果内层异常属性没有向构造函数提供内层异常值，则返回 null 引用。</para></remarks>
+    /// <para>由于先前的异常直接导致的异常，应在内层异常属性中包含对先前异常的引用。内层异常属性返回传递给构造函数的相同值，
+    /// 或者如果内层异常属性没有向构造函数提供内层异常值，则返回 null 引用。</para></remarks>
     /// <param name="message">错误消息字符串。</param>
     /// <param name="inner">内部异常引用。</param>
     public CapeComputationException(string message, Exception inner) : base(message, inner) { }
 }
 
-/// <summary>This exception is thrown when necessary initialisation has not been performed or has failed.</summary>
-/// <remarks>The pre-requisites operations are not valid. The necessary initialisation has not been performed or has failed.</remarks>
+/// <summary>当必要的初始化操作未执行或执行失败时，将抛出此异常。</summary>
+/// <remarks>先决条件操作无效。必要的初始化操作未执行或执行失败。</remarks>
 [Serializable]
-[Guid("E407595C-6D1C-4b8c-A29D-DB0BE73EFDDA")]
 [ComVisible(true)]
+[Guid("E407595C-6D1C-4b8c-A29D-DB0BE73EFDDA")]
 [ClassInterface(ClassInterfaceType.None)]
 public class CapeFailedInitialisationException : CapeComputationException, ECapeFailedInitialisation
 {
-    /// <summary>Initializes the description, interface name and name fields of this exception.</summary>
-    /// <remarks><para>设置 HResult、接口名称和异常名称的值。</para></remarks>
+    /// <summary>初始化此异常的描述、接口名称和名称字段。</summary>
+    /// <remarks>设置 HResult、接口名称和异常名称的值。</remarks>
     protected override void Initialize()
     {
-        HResult = unchecked((int)CapeErrorInterfaceHR.ECapeFailedInitialisationHR);
+        HResult = (int)CapeErrorInterfaceHR.ECapeFailedInitialisationHR;
         MInterfaceName = "ECapeFailedInitialisation";
         MName = "CapeFailedInitialisationException";
     }
 
-    /// <summary>Initializes a new instance of the CapeFailedInitialisationException class. </summary>
-    /// <remarks>这个构造函数会将新实例的“Message”属性初始化为系统提供的描述错误的信息，例如“发生了一个应用程序错误”。这条信息会考虑到当前的系统文化。</remarks>
-    public CapeFailedInitialisationException()
-    { }
-    /// <summary>Initializes a new instance of the CapeFailedInitialisationException class with a specified error message. </summary>
+    /// <summary>初始化 CapeFailedInitialisationException 类的新的实例。</summary>
+    /// <remarks>这个构造函数会将新实例的“Message”属性初始化为系统提供的描述错误的信息，
+    /// 例如“发生了一个应用程序错误”。这条信息会考虑到当前的系统文化。</remarks>
+    public CapeFailedInitialisationException() { }
+    
+    /// <summary>初始化一个新的 CapeFailedInitialisationException 类实例，并指定错误消息。</summary>
     /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
     /// <para>此消息考虑了当前的系统文化。</para></remarks>
     /// <param name="message">一条描述错误的消息。</param>
     public CapeFailedInitialisationException(string message) : base(message) { }
-    /// <summary>Initializes a new instance of the CapeFailedInitialisationException class with serialized data.</summary>
+    
+    /// <summary>初始化 CapeFailedInitialisationException 类的新的实例，并使用序列化数据。</summary>
     /// <remarks> 这个构造函数在反序列化过程中被调用，用于重构通过流传输的异常对象。有关详细信息，请参阅 XML 和 SOAP 序列化。</remarks>
     /// <param name="info">存储序列化对象数据的对象。</param>
     /// <param name="context">关于源或目的地的上下文信息。</param>
-    public CapeFailedInitialisationException(SerializationInfo info, StreamingContext context) : base(info, context) { }
-    /// <summary>Initializes a new instance of the CapeFailedInitialisationException class with a specified error message and a reference to the inner exception that is the cause of this exception.</summary>
+    public CapeFailedInitialisationException(SerializationInfo info, StreamingContext context) 
+        : base(info, context) { }
+    
+    /// <summary>初始化一个新的 CapeFailedInitialisationException 类实例，并指定错误消息以及导致此异常的内部异常的引用。</summary>
     /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
-    /// <para>由于先前的异常直接导致的异常，应在内层异常属性中包含对先前异常的引用。内层异常属性返回传递给构造函数的相同值，或者如果内层异常属性没有向构造函数提供内层异常值，则返回 null 引用。</para></remarks>
+    /// <para>由于先前的异常直接导致的异常，应在内层异常属性中包含对先前异常的引用。内层异常属性返回传递给构造函数的相同值，
+    /// 或者如果内层异常属性没有向构造函数提供内层异常值，则返回 null 引用。</para></remarks>
     /// <param name="message">错误消息字符串。</param>
     /// <param name="inner">内部异常引用。</param>
     public CapeFailedInitialisationException(string message, Exception inner) : base(message, inner) { }
 }
 
-/// <summary>The base class of the errors hierarchy related to the current implementation.</summary>
-/// <remarks>This class is used to indicate that an error occurred in the with the implementation of an object. 
-/// The implemenation-related classes such as 
-/// <see href="CapeNoImplException ">CapeOpen.CapeNoImplException </see> and 
-/// <see href="CapeLimitedImplException ">CapeOpen.CapeLimitedImplException </see>
-/// derive from this class.</remarks>
+/// <summary>与当前实现相关的错误层次结构的基类。</summary>
+/// <remarks>此类用于指示在某个对象的实现过程中发生了错误。与实现相关的类，如 
+/// <see href="CapeNoImplException ">CapeOpen.CapeNoImplException </see> 和 
+/// <see href="CapeLimitedImplException ">CapeOpen.CapeLimitedImplException </see> 从此类派生。</remarks>
 [Serializable]
-[Guid("7828A87E-582D-4947-9E8F-4F56725B6D75")]
 [ComVisible(true)]
+[Guid("7828A87E-582D-4947-9E8F-4F56725B6D75")]
 [ClassInterface(ClassInterfaceType.None)]
 public class CapeImplementationException : CapeUserException, ECapeImplementation
 {
-    /// <summary>Initializes the description, interface name and name fields of this exception.</summary>
+    /// <summary>初始化此异常的描述、接口名称和名称字段。</summary>
     /// <remarks><para>设置 HResult、接口名称和异常名称的值。</para></remarks>
     protected override void Initialize()
     {
-        HResult = unchecked((int)CapeErrorInterfaceHR.ECapeImplementationHR);
+        HResult = (int)CapeErrorInterfaceHR.ECapeImplementationHR;
         MInterfaceName = "ECapeImplementation";
         MName = "CapeImplementationException";
     }
 
-    /// <summary>Initializes a new instance of the CapeImplementationException class. </summary>
-    /// <remarks>这个构造函数会将新实例的“Message”属性初始化为系统提供的描述错误的信息，例如“发生了一个应用程序错误”。这条信息会考虑到当前的系统文化。</remarks>
-    public CapeImplementationException()
-    { }
-    /// <summary>Initializes a new instance of the CapeImplementationException class with a specified error message. </summary>
+    /// <summary>初始化 CapeImplementationException 类的新的实例。</summary>
+    /// <remarks>这个构造函数会将新实例的“Message”属性初始化为系统提供的描述错误的信息，
+    /// 例如“发生了一个应用程序错误”。这条信息会考虑到当前的系统文化。</remarks>
+    public CapeImplementationException() { }
+    
+    /// <summary>初始化一个新的 CapeImplementationException 类实例，并指定错误消息。</summary>
     /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
     /// <para>此消息考虑了当前的系统文化。</para></remarks>
     /// <param name="message">一条描述错误的消息。</param>
     public CapeImplementationException(string message) : base(message) { }
-    /// <summary>Initializes a new instance of the CapeImplementationException class with serialized data.</summary>
+    
+    /// <summary>初始化 CapeImplementationException 类的新的实例，并使用序列化数据。</summary>
     /// <remarks> 这个构造函数在反序列化过程中被调用，用于重构通过流传输的异常对象。有关详细信息，请参阅 XML 和 SOAP 序列化。</remarks>
     /// <param name="info">存储序列化对象数据的对象。</param>
     /// <param name="context">关于源或目的地的上下文信息。</param>
-    public CapeImplementationException(SerializationInfo info, StreamingContext context) : base(info, context) { }
-    /// <summary>Initializes a new instance of the CapeImplementationException class with a specified error message and a reference to the inner exception that is the cause of this exception.</summary>
+    public CapeImplementationException(SerializationInfo info, StreamingContext context) 
+        : base(info, context) { }
+    
+    /// <summary>初始化一个新的CapeImplementationException类实例，该实例带有指定的错误消息以及导致此异常的内部异常的引用。</summary>
     /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
-    /// <para>由于先前的异常直接导致的异常，应在内层异常属性中包含对先前异常的引用。内层异常属性返回传递给构造函数的相同值，或者如果内层异常属性没有向构造函数提供内层异常值，则返回 null 引用。</para></remarks>
+    /// <para>由于先前的异常直接导致的异常，应在内层异常属性中包含对先前异常的引用。内层异常属性返回传递给构造函数的相同值，
+    /// 或者如果内层异常属性没有向构造函数提供内层异常值，则返回 null 引用。</para></remarks>
     /// <param name="message">错误消息字符串。</param>
     /// <param name="inner">内部异常引用。</param>
     public CapeImplementationException(string message, Exception inner) : base(message, inner) { }
 }
 
-/// <summary>An invalid argument value was passed. For instance the passed name of 
-/// the phase does not belong to the CO Phase List.</summary>
-/// <remarks>An argument value of the operation is invalid. The position of the 
-/// argument value within the signature of the operation. First argument is as 
-/// position 1.</remarks>
+/// <summary>传递的参数值无效。例如，所传递的相态名称并不属于 CO 相态列表。</summary>
+/// <remarks>该操作的参数值无效。参数值在操作签名中的位置。第一个参数位于位置 1。</remarks>
 [Serializable]
-[Guid("B30127DA-8E69-4d15-BAB0-89132126BAC9")]
 [ComVisible(true)]
+[Guid("B30127DA-8E69-4d15-BAB0-89132126BAC9")]
 [ClassInterface(ClassInterfaceType.None)]
 public class CapeInvalidArgumentException : CapeBadArgumentException, ECapeInvalidArgument
 {
-    /// <summary>Initializes the description, interface name and name fields of this exception.</summary>
+    /// <summary>初始化此异常的描述、接口名称和名称字段。</summary>
     /// <remarks><para>设置 HResult、接口名称和异常名称的值。</para></remarks>
     protected override void Initialize()
     {
-        HResult = unchecked((int)CapeErrorInterfaceHR.ECapeInvalidArgumentHR);
+        HResult = (int)CapeErrorInterfaceHR.ECapeInvalidArgumentHR;
         MInterfaceName = "ECapeInvalidArgument";
         MName = "CapeInvalidArgumentException";
     }
 
-    /// <summary>Initializes a new instance of the CapeInvalidArgumentException class with the position of the error. </summary>
-    /// <remarks>这个构造函数会将新实例的“Message”属性初始化为系统提供的描述错误的信息，例如“发生了一个应用程序错误”。这条信息会考虑到当前的系统文化。</remarks>
-    /// <param name="position">操作签名中参数值的位置。第一个参数的位置为1。</param>
+    /// <summary>初始化 CapeInvalidArgumentException 类的新的实例，并指定错误的位置。</summary>
+    /// <remarks>这个构造函数会将新实例的“Message”属性初始化为系统提供的描述错误的信息，
+    /// 例如“发生了一个应用程序错误”。这条信息会考虑到当前的系统文化。</remarks>
+    /// <param name="position">操作签名中参数值的位置。第一个参数的位置为 1。</param>
     public CapeInvalidArgumentException(int position) : base(position) { }
-    /// <summary>Initializes a new instance of the CapeInvalidArgumentException class with a specified error message and the position of the error. </summary>. 
+    
+    /// <summary>初始化一个新的 CapeInvalidArgumentException 类实例，并指定错误消息和错误位置。</summary>. 
     /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
     /// <para>此消息考虑了当前的系统文化。</para></remarks>
     /// <param name="message">一条描述错误的消息。</param>
-    /// <param name="position">操作签名中参数值的位置。第一个参数的位置为1。</param>
+    /// <param name="position">操作签名中参数值的位置。第一个参数的位置为 1。</param>
     public CapeInvalidArgumentException(string message, int position) : base(message, position) { }
-    /// <summary>Initializes a new instance of the CapeInvalidArgumentException class with serialized data and the position of the error. </summary>.
+    
+    /// <summary>初始化一个新的 CapeInvalidArgumentException 类实例，使用序列化数据和错误位置。</summary>.
     /// <remarks> 这个构造函数在反序列化过程中被调用，用于重构通过流传输的异常对象。有关详细信息，请参阅 XML 和 SOAP 序列化。</remarks>
     /// <param name="info">存储序列化对象数据的对象。</param>
     /// <param name="context">关于源或目的地的上下文信息。</param>
-    /// <param name="position">操作签名中参数值的位置。第一个参数的位置为1。</param>
-    public CapeInvalidArgumentException(SerializationInfo info, StreamingContext context, int position) : base(info, context, position) { }
-    /// <summary>Initializes a new instance of the CapeInvalidArgumentException class with a specified error message and a reference to the inner exception that is the cause of this exception.</summary>
+    /// <param name="position">操作签名中参数值的位置。第一个参数的位置为 1。</param>
+    public CapeInvalidArgumentException(SerializationInfo info, StreamingContext context, int position) 
+        : base(info, context, position) { }
+    
+    /// <summary>初始化一个新的 CapeInvalidArgumentException 类实例，该实例带有指定的错误消息以及导致此异常的内部异常的引用。</summary>
     /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
-    /// <para>由于先前的异常直接导致的异常，应在内层异常属性中包含对先前异常的引用。内层异常属性返回传递给构造函数的相同值，或者如果内层异常属性没有向构造函数提供内层异常值，则返回 null 引用。</para></remarks>
+    /// <para>由于先前的异常直接导致的异常，应在内层异常属性中包含对先前异常的引用。内层异常属性返回传递给构造函数的相同值，
+    /// 或者如果内层异常属性没有向构造函数提供内层异常值，则返回 null 引用。</para></remarks>
     /// <param name="message">错误消息字符串。</param>
     /// <param name="inner">内部异常引用。</param>
-    /// <param name="position">操作签名中参数值的位置。第一个参数的位置为1。</param>
-    public CapeInvalidArgumentException(string message, Exception inner, int position) : base(message, inner, position) { }
+    /// <param name="position">操作签名中参数值的位置。第一个参数的位置为 1。</param>
+    public CapeInvalidArgumentException(string message, Exception inner, int position) 
+        : base(message, inner, position) { }
 }
