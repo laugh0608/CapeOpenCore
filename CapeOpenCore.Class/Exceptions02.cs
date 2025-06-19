@@ -2,163 +2,137 @@
  * 原作者：wbarret1 (https://github.com/wbarret1/CapeOpen)
  * 重构 & 翻译：DaBaiLuoBo
  * 帮助社区：CEPD@BBS (https://bbs.imbhj.com)
- * 重构时间：2025.06.18
+ * 重构时间：2025.06.19
  */
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
 
 namespace CapeOpenCore.Class;
 
-/// <summary>This operation is not valid in the current context.</summary>
-/// <remarks>This exception is thrown when an operation is attempted that is not valid in the current context.</remarks>
+/// <summary>此操作在当前上下文中无效。</summary>
+/// <remarks>当尝试执行在当前上下文中无效的操作时，将抛出此异常。</remarks>
 [Serializable]
-[Guid("C0B943FE-FB8F-46b6-A622-54D30027D18B")]
 [ComVisible(true)]
+[Guid("C0B943FE-FB8F-46b6-A622-54D30027D18B")]
 [ClassInterface(ClassInterfaceType.None)]
 public class CapeInvalidOperationException : CapeComputationException, ECapeInvalidOperation
 {
-    /// <summary>Initializes the description, interface name and name fields of this exception.</summary>
-    /// <remarks><para>Sets the values of the HResult, interface name and exception name.</para></remarks>
+    /// <summary>初始化此异常的描述、接口名称和名称字段。</summary>
+    /// <remarks>设置 HResult、接口名称和异常名称的值。</remarks>
     protected override void Initialize()
     {
-        HResult = unchecked((int)CapeErrorInterfaceHR.ECapeInvalidOperationHR);
+        HResult = (int)CapeErrorInterfaceHR.ECapeInvalidOperationHR;
         MInterfaceName = "ECapeInvalidOperation";
         MName = "CapeInvalidOperationException";
     }
-    /// <summary>Initializes a new instance of the CapeInvalidOperationException class. </summary>
-    /// <remarks>This constructor initializes the Message property of the new instance to a 
-    /// system-supplied message that describes the error, such as "An application 
-    /// error has occurred." This message takes into account the current system 
-    /// culture.</remarks>
-    public CapeInvalidOperationException() : base() { }
-    /// <summary>Initializes a new instance of the CapeInvalidOperationException class with a specified error message. </summary>
-    /// <remarks><para>The content of the message parameter is intended to be understood by 
-    /// humans. The caller of this constructor is required to ensure that this string 
-    /// has been localized for the current system culture.</para>
-    /// <para>This message takes into account the current system culture.</para></remarks>
-    /// <param name = "message">A message that describes the error.</param>
-    public CapeInvalidOperationException(String message) : base(message) { }
-    /// <summary>Initializes a new instance of the CapeInvalidOperationException class with serialized data.</summary>
-    /// <remarks> This constructor is called during deserialization to reconstitute the 
-    /// exception object transmitted over a stream. For more information, see XML and 
-    /// SOAP Serialization.</remarks>
-    /// <param name = "info">The object that holds the serialized object data.</param>
-    /// <param name = "context">The contextual information about the source or 
-    /// destination. </param>
-    public CapeInvalidOperationException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
-    /// <summary>Initializes a new instance of the CapeInvalidOperationException class with a specified error message and a reference to the inner exception that is the cause of this exception.</summary>
-    /// <remarks><para>The content of the message parameter is intended to be understood by 
-    /// humans. The caller of this constructor is required to ensure that this string 
-    /// has been localized for the current system culture.</para>
-    /// <para>An exception that is thrown as a direct result of a previous exception 
-    /// should include a erence to the previous exception in the InnerException 
-    /// property. The InnerException property returns the same value that is passed 
-    /// into the constructor, or a null erence if the InnerException property does 
-    /// not supply the inner exception value to the constructor.</para></remarks>
-    /// <param name = "message">The error message string.</param>
-    /// <param name = "inner">The inner exception erence.</param>
-    public CapeInvalidOperationException(String message, Exception inner) : base(message, inner) { }
-};
+    
+    /// <summary>初始化 CapeInvalidOperationException 类的新的实例。</summary>
+    /// <remarks>这个构造函数会将新实例的“Message”属性初始化为系统提供的描述错误的信息，
+    /// 例如“发生了一个应用程序错误”。这条信息会考虑到当前的系统文化。</remarks>
+    public CapeInvalidOperationException() { }
+    
+    /// <summary>初始化一个新的 CapeInvalidOperationException 类实例，并指定错误消息。</summary>
+    /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
+    /// <para>此消息考虑了当前的系统文化。</para></remarks>
+    /// <param name="message">一条描述错误的消息。</param>
+    public CapeInvalidOperationException(string message) : base(message) { }
+    
+    /// <summary>初始化 CapeInvalidOperationException 类的新的实例，使用序列化数据。</summary>
+    /// <remarks>这个构造函数在反序列化过程中被调用，用于重构通过流传输的异常对象。有关详细信息，请参阅 XML 和 SOAP 序列化。</remarks>
+    /// <param name="info">存储序列化对象数据的对象。</param>
+    /// <param name="context">有关源或目的地的上下文信息。</param>
+    public CapeInvalidOperationException(SerializationInfo info, StreamingContext context) 
+        : base(info, context) { }
+    
+    /// <summary>初始化一个新的 CapeInvalidOperationException 类实例，
+    /// 该实例带有指定的错误消息以及导致此异常的内部异常的引用。</summary>
+    /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
+    /// <para>由于先前的异常直接导致的异常，应在内层异常属性中包含对先前异常的引用。内层异常属性返回传递给构造函数的相同值，
+    /// 或者如果内层异常属性没有向构造函数提供内层异常值，则返回 null 引用。</para></remarks>
+    /// <param name="message">错误消息字符串。</param>
+    /// <param name="inner">内部异常引用。</param>
+    public CapeInvalidOperationException(string message, Exception inner) : base(message, inner) { }
+}
 
-/// <summary>The necessary pre-requisite operation has not been called prior to the operation request.</summary>
-/// <remarks>The specified prerequiste operation must be called prior to the operation throwing this exception.</remarks>
+/// <summary>在执行操作请求之前，未调用必要的先决条件操作。</summary>
+/// <remarks>指定的先决条件操作必须在引发此异常的操作之前被调用。</remarks>
 [Serializable]
-[Guid("07EAD8B4-4130-4ca6-94C1-E8EC4E9B23CB")]
 [ComVisible(true)]
+[Guid("07EAD8B4-4130-4ca6-94C1-E8EC4E9B23CB")]
 [ClassInterface(ClassInterfaceType.None)]
 public class CapeBadInvOrderException : CapeComputationException, ECapeBadInvOrder
 {
-    private String m_requestedOperation;
-
-    /// <summary>Initializes the description, interface name and name fields of this exception.</summary>
-    /// <remarks><para>Sets the values of the HResult, interface name and exception name.</para></remarks>
+    /// <summary>初始化此异常的描述、接口名称和名称字段。</summary>
+    /// <remarks>设置 HResult、接口名称和异常名称的值。</remarks>
     protected override void Initialize()
     {
-        HResult = unchecked((int)CapeErrorInterfaceHR.ECapeBadInvOrderHR);
+        HResult = (int)CapeErrorInterfaceHR.ECapeBadInvOrderHR;
         MInterfaceName = "ECapeBadInvOrder";
         MName = "CapeBadInvOrderException";
     }
-
-
-    /// <summary>Initializes a new instance of the CapeBadInvOrderException class with a specified error message and the name of the operation raising the exception. </summary>
-    /// <remarks><para>The content of the message parameter is intended to be understood by 
-    /// humans. The caller of this constructor is required to ensure that this string 
-    /// has been localized for the current system culture.</para>
-    /// <para>This message takes into account the current system culture.</para></remarks>
-    /// <param name = "operation">The necessary prerequisite operation.</param>
-    public CapeBadInvOrderException(String operation)
-        : base()
+    
+    /// <summary>初始化一个新的 CapeBadInvOrderException 类实例。</summary>
+    /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
+    /// <para>此消息考虑了当前的系统文化。</para></remarks>
+    /// <param name="operation">必要的先决条件操作。</param>
+    public CapeBadInvOrderException(string operation)
     {
-        m_requestedOperation = operation;
+        requestedOperation = operation;
     }
-    /// <summary>Initializes a new instance of the CapeBadInvOrderException class with a specified error message and the name of the operation raising the exception. </summary>
-    /// <remarks><para>The content of the message parameter is intended to be understood by 
-    /// humans. The caller of this constructor is required to ensure that this string 
-    /// has been localized for the current system culture.</para>
-    /// <para>This message takes into account the current system culture.</para></remarks>
-    /// <param name = "message">A message that describes the error.</param>
-    /// <param name = "operation">The necessary prerequisite operation.</param>
-    public CapeBadInvOrderException(String message, String operation)
-        : base(message)
+    
+    /// <summary>初始化一个新的 CapeBadInvOrderException 类实例，并指定错误消息和引发异常的操作名称。</summary>
+    /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
+    /// <para>此消息考虑了当前的系统文化。</para></remarks>
+    /// <param name="message">一条描述错误的消息。</param>
+    /// <param name="operation">必要的先决条件操作。</param>
+    public CapeBadInvOrderException(string message, string operation) : base(message)
     {
-        m_requestedOperation = operation;
+        requestedOperation = operation;
     }
-    /// <summary>Initializes a new instance of the CapeBadInvOrderException class with serialized data and the name of the operation raising the exception.</summary>
-    /// <remarks> This constructor is called during deserialization to reconstitute the 
-    /// exception object transmitted over a stream. For more information, see XML and 
-    /// SOAP Serialization.</remarks>
-    /// <param name = "info">The object that holds the serialized object data.</param>
-    /// <param name = "context">The contextual information about the source or 
-    /// destination. </param>
-    /// <param name = "operation">The necessary prerequisite operation.</param>
-    public CapeBadInvOrderException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context, String operation)
+    
+    /// <summary>初始化一个新的 CapeBadInvOrderException 类实例，使用序列化数据和引发异常的操作名称。</summary>
+    /// <remarks>这个构造函数在反序列化过程中被调用，用于重构通过流传输的异常对象。有关详细信息，请参阅 XML 和 SOAP 序列化。</remarks>
+    /// <param name="info">存储序列化对象数据的对象。</param>
+    /// <param name="context">有关源或目的地的上下文信息。</param>
+    /// <param name="operation">必要的先决条件操作。</param>
+    public CapeBadInvOrderException(SerializationInfo info, StreamingContext context, string operation)
         : base(info, context)
     {
-        m_requestedOperation = operation;
+        requestedOperation = operation;
     }
-    /// <summary>Initializes a new instance of the CapeBadInvOrderException class with a specified error message, a erence to the inner exception, and the name of the operation raising the exception that is the cause of this exception.</summary>
-    /// <remarks><para>The content of the message parameter is intended to be understood by 
-    /// humans. The caller of this constructor is required to ensure that this string 
-    /// has been localized for the current system culture.</para>
-    /// <para>An exception that is thrown as a direct result of a previous exception 
-    /// should include a erence to the previous exception in the InnerException 
-    /// property. The InnerException property returns the same value that is passed 
-    /// into the constructor, or a null erence if the InnerException property does 
-    /// not supply the inner exception value to the constructor.</para></remarks>
-    /// <param name = "message">The error message string.</param>
-    /// <param name = "inner">The inner exception erence.</param>
-    /// <param name = "operation">The necessary prerequisite operation.</param>
-    public CapeBadInvOrderException(String message, Exception inner, String operation)
+    /// <summary>初始化 CapeBadInvOrderException 类的新实例，同时传递指定的错误信息、
+    /// 内嵌异常的引用，以及引发此异常的操作用的名称。</summary>
+    /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
+    /// <para>由于先前的异常直接导致的异常，应在内层异常属性中包含对先前异常的引用。内层异常属性返回传递给构造函数的相同值，
+    /// 或者如果内层异常属性没有向构造函数提供内层异常值，则返回 null 引用。</para></remarks>
+    /// <param name="message">错误消息字符串。</param>
+    /// <param name="inner">内部异常引用。</param>
+    /// <param name="operation">必要的先决条件操作。</param>
+    public CapeBadInvOrderException(string message, Exception inner, string operation)
         : base(message, inner)
     {
-        m_requestedOperation = operation;
+        requestedOperation = operation;
     }
 
-    /// <summary>The necessary prerequisite operation.</summary>
-    /// <remarks><para>The prerquisite operation must be called prior to calling the current operation.</para></remarks>
-    /// <value>The name of the necessary prerequisite operation.
-    /// </value>
-    public String requestedOperation
-    {
-        get
-        {
-            return m_requestedOperation;
-        }
-    }
-};
+    /// <summary>必要的先决条件操作。</summary>
+    /// <remarks>在调用当前操作之前，必须先调用先决条件操作。</remarks>
+    /// <value>必要先决条件操作的名称。</value>
+    public string requestedOperation { get; }
+}
 
-/// <summary>An operation can not be completed because the licence agreement is not respected.</summary>
+/// <summary>由于未遵守许可协议，该操作无法完成。</summary>
 /// <remarks>Of course, this type of error could also appear outside the CO scope. In this case, 
 /// the error does not belong to the CO error handling. It is specific to the platform.</remarks>
 [Serializable]
-[Guid("CF4C55E9-6B0A-4248-9A33-B8134EA393F6")]
 [ComVisible(true)]
+[Guid("CF4C55E9-6B0A-4248-9A33-B8134EA393F6")]
 [ClassInterface(ClassInterfaceType.None)]
 public class CapeLicenceErrorException : CapeDataException, ECapeLicenceError
 {
-    /// <summary>Initializes the description, interface name and name fields of this exception.</summary>
-    /// <remarks><para>Sets the values of the HResult, interface name and exception name.</para></remarks>
+    /// <summary>初始化此异常的描述、接口名称和名称字段。</summary>
+    /// <remarks>设置 HResult、接口名称和异常名称的值。</remarks>
     protected override void Initialize()
     {
         HResult = unchecked((int)CapeErrorInterfaceHR.ECapeLicenceErrorHR);
@@ -167,39 +141,26 @@ public class CapeLicenceErrorException : CapeDataException, ECapeLicenceError
     }
 
     /// <summary>Initializes a new instance of the CapeLicenceErrorException class. </summary>
-    /// <remarks>This constructor initializes the Message property of the new instance to a 
-    /// system-supplied message that describes the error, such as "An application 
-    /// error has occurred." This message takes into account the current system 
-    /// culture.</remarks>
-    public CapeLicenceErrorException() : base() { }
+    /// <remarks>这个构造函数会将新实例的“Message”属性初始化为系统提供的描述错误的信息，例如“发生了一个应用程序错误”。这条信息会考虑到当前的系统文化。</remarks>
+    public CapeLicenceErrorException()
+    { }
     /// <summary>Initializes a new instance of the CapeLicenceErrorException class with a specified error message. </summary>
-    /// <remarks><para>The content of the message parameter is intended to be understood by 
-    /// humans. The caller of this constructor is required to ensure that this string 
-    /// has been localized for the current system culture.</para>
-    /// <para>This message takes into account the current system culture.</para></remarks>
-    /// <param name = "message">A message that describes the error.</param>
-    public CapeLicenceErrorException(String message) : base(message) { }
+    /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
+    /// <para>此消息考虑了当前的系统文化。</para></remarks>
+    /// <param name="message">一条描述错误的消息。</param>
+    public CapeLicenceErrorException(string message) : base(message) { }
     /// <summary>Initializes a new instance of the CapeLicenceErrorException class with serialized data.</summary>
-    /// <remarks> This constructor is called during deserialization to reconstitute the 
-    /// exception object transmitted over a stream. For more information, see XML and 
-    /// SOAP Serialization.</remarks>
-    /// <param name = "info">The object that holds the serialized object data.</param>
-    /// <param name = "context">The contextual information about the source or 
-    /// destination. </param>
-    public CapeLicenceErrorException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+    /// <remarks>这个构造函数在反序列化过程中被调用，用于重构通过流传输的异常对象。有关详细信息，请参阅 XML 和 SOAP 序列化。</remarks>
+    /// <param name="info">存储序列化对象数据的对象。</param>
+    /// <param name="context">有关源或目的地的上下文信息。</param>
+    public CapeLicenceErrorException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     /// <summary>Initializes a new instance of the CapeLicenceErrorException class with a specified error message and a reference to the inner exception that is the cause of this exception.</summary>
-    /// <remarks><para>The content of the message parameter is intended to be understood by 
-    /// humans. The caller of this constructor is required to ensure that this string 
-    /// has been localized for the current system culture.</para>
-    /// <para>An exception that is thrown as a direct result of a previous exception 
-    /// should include a erence to the previous exception in the InnerException 
-    /// property. The InnerException property returns the same value that is passed 
-    /// into the constructor, or a null erence if the InnerException property does 
-    /// not supply the inner exception value to the constructor.</para></remarks>
-    /// <param name = "message">The error message string.</param>
-    /// <param name = "inner">The inner exception erence.</param>
-    public CapeLicenceErrorException(String message, Exception inner) : base(message, inner) { }
-};
+    /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
+    /// <para>由于先前的异常直接导致的异常，应在内层异常属性中包含对先前异常的引用。内层异常属性返回传递给构造函数的相同值，或者如果内层异常属性没有向构造函数提供内层异常值，则返回 null 引用。</para></remarks>
+    /// <param name="message">错误消息字符串。</param>
+    /// <param name="inner">内部异常引用。</param>
+    public CapeLicenceErrorException(string message, Exception inner) : base(message, inner) { }
+}
 
 /// <summary>The limit of the implementation has been violated.</summary>
 /// <remarks><para>An operation may be partially implemented for example a Property Package could 
@@ -217,8 +178,8 @@ public class CapeLicenceErrorException : CapeDataException, ECapeLicenceError
 [ClassInterface(ClassInterfaceType.None)]
 public class CapeLimitedImplException : CapeImplementationException, ECapeLimitedImpl
 {
-    /// <summary>Initializes the description, interface name and name fields of this exception.</summary>
-    /// <remarks><para>Sets the values of the HResult, interface name and exception name.</para></remarks>
+    /// <summary>初始化此异常的描述、接口名称和名称字段。</summary>
+    /// <remarks>设置 HResult、接口名称和异常名称的值。</remarks>
     protected override void Initialize()
     {
         HResult = unchecked((int)CapeErrorInterfaceHR.ECapeLimitedImplHR);
@@ -227,39 +188,26 @@ public class CapeLimitedImplException : CapeImplementationException, ECapeLimite
     }
 
     /// <summary>Initializes a new instance of the CapeLimitedImplException class. </summary>
-    /// <remarks>This constructor initializes the Message property of the new instance to a 
-    /// system-supplied message that describes the error, such as "An application 
-    /// error has occurred." This message takes into account the current system 
-    /// culture.</remarks>
-    public CapeLimitedImplException() : base() { }
+    /// <remarks>这个构造函数会将新实例的“Message”属性初始化为系统提供的描述错误的信息，例如“发生了一个应用程序错误”。这条信息会考虑到当前的系统文化。</remarks>
+    public CapeLimitedImplException()
+    { }
     /// <summary>Initializes a new instance of the CapeLimitedImplException class with a specified error message. </summary>
-    /// <remarks><para>The content of the message parameter is intended to be understood by 
-    /// humans. The caller of this constructor is required to ensure that this string 
-    /// has been localized for the current system culture.</para>
-    /// <para>This message takes into account the current system culture.</para></remarks>
-    /// <param name = "message">A message that describes the error.</param>
-    public CapeLimitedImplException(String message) : base(message) { }
+    /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
+    /// <para>此消息考虑了当前的系统文化。</para></remarks>
+    /// <param name="message">一条描述错误的消息。</param>
+    public CapeLimitedImplException(string message) : base(message) { }
     /// <summary>Initializes a new instance of the CapeLimitedImplException class with serialized data.</summary>
-    /// <remarks> This constructor is called during deserialization to reconstitute the 
-    /// exception object transmitted over a stream. For more information, see XML and 
-    /// SOAP Serialization.</remarks>
-    /// <param name = "info">The object that holds the serialized object data.</param>
-    /// <param name = "context">The contextual information about the source or 
-    /// destination. </param>
-    public CapeLimitedImplException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+    /// <remarks>这个构造函数在反序列化过程中被调用，用于重构通过流传输的异常对象。有关详细信息，请参阅 XML 和 SOAP 序列化。</remarks>
+    /// <param name="info">存储序列化对象数据的对象。</param>
+    /// <param name="context">有关源或目的地的上下文信息。</param>
+    public CapeLimitedImplException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     /// <summary>Initializes a new instance of the CapeLimitedImplException class with a specified error message and a reference to the inner exception that is the cause of this exception.</summary>
-    /// <remarks><para>The content of the message parameter is intended to be understood by 
-    /// humans. The caller of this constructor is required to ensure that this string 
-    /// has been localized for the current system culture.</para>
-    /// <para>An exception that is thrown as a direct result of a previous exception 
-    /// should include a erence to the previous exception in the InnerException 
-    /// property. The InnerException property returns the same value that is passed 
-    /// into the constructor, or a null erence if the InnerException property does 
-    /// not supply the inner exception value to the constructor.</para></remarks>
-    /// <param name = "message">The error message string.</param>
-    /// <param name = "inner">The inner exception erence.</param>
-    public CapeLimitedImplException(String message, Exception inner) : base(message, inner) { }
-};
+    /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
+    /// <para>由于先前的异常直接导致的异常，应在内层异常属性中包含对先前异常的引用。内层异常属性返回传递给构造函数的相同值，或者如果内层异常属性没有向构造函数提供内层异常值，则返回 null 引用。</para></remarks>
+    /// <param name="message">错误消息字符串。</param>
+    /// <param name="inner">内部异常引用。</param>
+    public CapeLimitedImplException(string message, Exception inner) : base(message, inner) { }
+}
 
 /// <summary>An exception class that indicates that the requested operation has not been implemented by the current object.</summary>
 /// <remarks>The operation is “not” implemented even if this operation can be called due 
@@ -271,8 +219,8 @@ public class CapeLimitedImplException : CapeImplementationException, ECapeLimite
 [ClassInterface(ClassInterfaceType.None)]
 public class CapeNoImplException : CapeImplementationException, ECapeNoImpl
 {
-    /// <summary>Initializes the description, interface name and name fields of this exception.</summary>
-    /// <remarks><para>Sets the values of the HResult, interface name and exception name.</para></remarks>
+    /// <summary>初始化此异常的描述、接口名称和名称字段。</summary>
+    /// <remarks>设置 HResult、接口名称和异常名称的值。</remarks>
     protected override void Initialize()
     {
         HResult = unchecked((int)CapeErrorInterfaceHR.ECapeNoImplHR);
@@ -281,39 +229,26 @@ public class CapeNoImplException : CapeImplementationException, ECapeNoImpl
     }
 
     /// <summary>Initializes a new instance of the CapeNoImplException class. </summary>
-    /// <remarks>This constructor initializes the Message property of the new instance to a 
-    /// system-supplied message that describes the error, such as "An application 
-    /// error has occurred." This message takes into account the current system 
-    /// culture.</remarks>
-    public CapeNoImplException() : base() { }
+    /// <remarks>这个构造函数会将新实例的“Message”属性初始化为系统提供的描述错误的信息，例如“发生了一个应用程序错误”。这条信息会考虑到当前的系统文化。</remarks>
+    public CapeNoImplException()
+    { }
     /// <summary>Initializes a new instance of the CapeNoImplException class with a specified error message. </summary>
-    /// <remarks><para>The content of the message parameter is intended to be understood by 
-    /// humans. The caller of this constructor is required to ensure that this string 
-    /// has been localized for the current system culture.</para>
-    /// <para>This message takes into account the current system culture.</para></remarks>
-    /// <param name = "message">A message that describes the error.</param>
-    public CapeNoImplException(String message) : base(message) { }
+    /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
+    /// <para>此消息考虑了当前的系统文化。</para></remarks>
+    /// <param name="message">一条描述错误的消息。</param>
+    public CapeNoImplException(string message) : base(message) { }
     /// <summary>Initializes a new instance of the CapeNoImplException class with serialized data.</summary>
-    /// <remarks> This constructor is called during deserialization to reconstitute the 
-    /// exception object transmitted over a stream. For more information, see XML and 
-    /// SOAP Serialization.</remarks>
-    /// <param name = "info">The object that holds the serialized object data.</param>
-    /// <param name = "context">The contextual information about the source or 
-    /// destination. </param>
-    public CapeNoImplException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+    /// <remarks>这个构造函数在反序列化过程中被调用，用于重构通过流传输的异常对象。有关详细信息，请参阅 XML 和 SOAP 序列化。</remarks>
+    /// <param name="info">存储序列化对象数据的对象。</param>
+    /// <param name="context">有关源或目的地的上下文信息。</param>
+    public CapeNoImplException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     /// <summary>Initializes a new instance of the CapeNoImplException class with a specified error message and a reference to the inner exception that is the cause of this exception.</summary>
-    /// <remarks><para>The content of the message parameter is intended to be understood by 
-    /// humans. The caller of this constructor is required to ensure that this string 
-    /// has been localized for the current system culture.</para>
-    /// <para>An exception that is thrown as a direct result of a previous exception 
-    /// should include a erence to the previous exception in the InnerException 
-    /// property. The InnerException property returns the same value that is passed 
-    /// into the constructor, or a null erence if the InnerException property does 
-    /// not supply the inner exception value to the constructor.</para></remarks>
-    /// <param name = "message">The error message string.</param>
-    /// <param name = "inner">The inner exception erence.</param>
-    public CapeNoImplException(String message, Exception inner) : base(message, inner) { }
-};
+    /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
+    /// <para>由于先前的异常直接导致的异常，应在内层异常属性中包含对先前异常的引用。内层异常属性返回传递给构造函数的相同值，或者如果内层异常属性没有向构造函数提供内层异常值，则返回 null 引用。</para></remarks>
+    /// <param name="message">错误消息字符串。</param>
+    /// <param name="inner">内部异常引用。</param>
+    public CapeNoImplException(string message, Exception inner) : base(message, inner) { }
+}
 
 /// <summary>An exception class that indicates that the resources required by this operation are not available.</summary>
 /// <remarks>The physical resources necessary to the execution of the operation are out of limits.</remarks>
@@ -323,8 +258,8 @@ public class CapeNoImplException : CapeImplementationException, ECapeNoImpl
 [ClassInterface(ClassInterfaceType.None)]
 public class CapeOutOfResourcesException : CapeUserException, ECapeOutOfResources, ECapeComputation
 {
-    /// <summary>Initializes the description, interface name and name fields of this exception.</summary>
-    /// <remarks><para>Sets the values of the HResult, interface name and exception name.</para></remarks>
+    /// <summary>初始化此异常的描述、接口名称和名称字段。</summary>
+    /// <remarks>设置 HResult、接口名称和异常名称的值。</remarks>
     protected override void Initialize()
     {
         HResult = unchecked((int)CapeErrorInterfaceHR.ECapeOutOfResourcesHR);
@@ -333,51 +268,36 @@ public class CapeOutOfResourcesException : CapeUserException, ECapeOutOfResource
     }
 
     /// <summary>Initializes a new instance of the CapeOutOfResourcesException class. </summary>
-    /// <remarks>This constructor initializes the Message property of the new instance to a 
-    /// system-supplied message that describes the error, such as "An application 
-    /// error has occurred." This message takes into account the current system 
-    /// culture.</remarks>
+    /// <remarks>这个构造函数会将新实例的“Message”属性初始化为系统提供的描述错误的信息，例如“发生了一个应用程序错误”。这条信息会考虑到当前的系统文化。</remarks>
     public CapeOutOfResourcesException()
-        : base()
     {
     }
     /// <summary>Initializes a new instance of the CapeOutOfResourcesException class with a specified error message. </summary>
-    /// <remarks><para>The content of the message parameter is intended to be understood by 
-    /// humans. The caller of this constructor is required to ensure that this string 
-    /// has been localized for the current system culture.</para>
-    /// <para>This message takes into account the current system culture.</para></remarks>
-    /// <param name = "message">A message that describes the error.</param>
-    public CapeOutOfResourcesException(String message)
+    /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
+    /// <para>此消息考虑了当前的系统文化。</para></remarks>
+    /// <param name="message">一条描述错误的消息。</param>
+    public CapeOutOfResourcesException(string message)
         : base(message)
     {
     }
     /// <summary>Initializes a new instance of the CapeOutOfResourcesException class with serialized data.</summary>
-    /// <remarks> This constructor is called during deserialization to reconstitute the 
-    /// exception object transmitted over a stream. For more information, see XML and 
-    /// SOAP Serialization.</remarks>
-    /// <param name = "info">The object that holds the serialized object data.</param>
-    /// <param name = "context">The contextual information about the source or 
-    /// destination. </param>
-    public CapeOutOfResourcesException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+    /// <remarks>这个构造函数在反序列化过程中被调用，用于重构通过流传输的异常对象。有关详细信息，请参阅 XML 和 SOAP 序列化。</remarks>
+    /// <param name="info">存储序列化对象数据的对象。</param>
+    /// <param name="context">有关源或目的地的上下文信息。</param>
+    public CapeOutOfResourcesException(SerializationInfo info, StreamingContext context)
         : base(info, context)
     {
     }
     /// <summary>Initializes a new instance of the CapeOutOfResourcesException class with a specified error message and a reference to the inner exception that is the cause of this exception.</summary>
-    /// <remarks><para>The content of the message parameter is intended to be understood by 
-    /// humans. The caller of this constructor is required to ensure that this string 
-    /// has been localized for the current system culture.</para>
-    /// <para>An exception that is thrown as a direct result of a previous exception 
-    /// should include a erence to the previous exception in the InnerException 
-    /// property. The InnerException property returns the same value that is passed 
-    /// into the constructor, or a null erence if the InnerException property does 
-    /// not supply the inner exception value to the constructor.</para></remarks>
-    /// <param name = "message">The error message string.</param>
-    /// <param name = "inner">The inner exception erence.</param>
-    public CapeOutOfResourcesException(String message, Exception inner)
+    /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
+    /// <para>由于先前的异常直接导致的异常，应在内层异常属性中包含对先前异常的引用。内层异常属性返回传递给构造函数的相同值，或者如果内层异常属性没有向构造函数提供内层异常值，则返回 null 引用。</para></remarks>
+    /// <param name="message">错误消息字符串。</param>
+    /// <param name="inner">内部异常引用。</param>
+    public CapeOutOfResourcesException(string message, Exception inner)
         : base(message, inner)
     {
     }
-};
+}
 
 /// <summary>An exception class that indicates that the memory required for this operation is not available.</summary>
 /// <remarks>The physical memory necessary to the execution of the operation is out of limit.</remarks>
@@ -388,8 +308,8 @@ public class CapeOutOfResourcesException : CapeUserException, ECapeOutOfResource
 public class CapeNoMemoryException : CapeUserException, ECapeNoMemory
 {
 
-    /// <summary>Initializes the description, interface name and name fields of this exception.</summary>
-    /// <remarks><para>Sets the values of the HResult, interface name and exception name.</para></remarks>
+    /// <summary>初始化此异常的描述、接口名称和名称字段。</summary>
+    /// <remarks>设置 HResult、接口名称和异常名称的值。</remarks>
     protected override void Initialize()
     {
         HResult = unchecked((int)CapeErrorInterfaceHR.ECapeNoMemoryHR);
@@ -398,39 +318,27 @@ public class CapeNoMemoryException : CapeUserException, ECapeNoMemory
     }
 
     /// <summary>Initializes a new instance of the CapeNoMemoryException class. </summary>
-    /// <remarks>This constructor initializes the Message property of the new instance to a 
-    /// system-supplied message that describes the error, such as "An application 
-    /// error has occurred." This message takes into account the current system 
-    /// culture.</remarks>
-    public CapeNoMemoryException() : base() { }
+    /// <remarks>这个构造函数会将新实例的“Message”属性初始化为系统提供的描述错误的信息，例如“发生了一个应用程序错误”。这条信息会考虑到当前的系统文化。</remarks>
+    public CapeNoMemoryException()
+    { }
     /// <summary>Initializes a new instance of the CapeNoMemoryException class with a specified error message. </summary>
-    /// <remarks><para>The content of the message parameter is intended to be understood by 
-    /// humans. The caller of this constructor is required to ensure that this string 
-    /// has been localized for the current system culture.</para>
-    /// <para>This message takes into account the current system culture.</para></remarks>
-    /// <param name = "message">A message that describes the error.</param>
-    public CapeNoMemoryException(String message) : base(message) { }
+    /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
+    /// <para>此消息考虑了当前的系统文化。</para></remarks>
+    /// <param name="message">一条描述错误的消息。</param>
+    public CapeNoMemoryException(string message) : base(message) { }
     /// <summary>Initializes a new instance of the CapeNoMemoryException class with serialized data.</summary>
-    /// <remarks> This constructor is called during deserialization to reconstitute the 
-    /// exception object transmitted over a stream. For more information, see XML and 
-    /// SOAP Serialization.</remarks>
-    /// <param name = "info">The object that holds the serialized object data.</param>
-    /// <param name = "context">The contextual information about the source or 
-    /// destination. </param>
-    public CapeNoMemoryException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base() { }
+    /// <remarks>这个构造函数在反序列化过程中被调用，用于重构通过流传输的异常对象。有关详细信息，请参阅 XML 和 SOAP 序列化。</remarks>
+    /// <param name="info">存储序列化对象数据的对象。</param>
+    /// <param name="context">有关源或目的地的上下文信息。</param>
+    public CapeNoMemoryException(SerializationInfo info, StreamingContext context)
+    { }
     /// <summary>Initializes a new instance of the CapeNoMemoryException class with a specified error message and a reference to the inner exception that is the cause of this exception.</summary>
-    /// <remarks><para>The content of the message parameter is intended to be understood by 
-    /// humans. The caller of this constructor is required to ensure that this string 
-    /// has been localized for the current system culture.</para>
-    /// <para>An exception that is thrown as a direct result of a previous exception 
-    /// should include a erence to the previous exception in the InnerException 
-    /// property. The InnerException property returns the same value that is passed 
-    /// into the constructor, or a null erence if the InnerException property does 
-    /// not supply the inner exception value to the constructor.</para></remarks>
-    /// <param name = "message">The error message string.</param>
-    /// <param name = "inner">The inner exception erence.</param>
-    public CapeNoMemoryException(String message, Exception inner) : base(message, inner) { }
-};
+    /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
+    /// <para>由于先前的异常直接导致的异常，应在内层异常属性中包含对先前异常的引用。内层异常属性返回传递给构造函数的相同值，或者如果内层异常属性没有向构造函数提供内层异常值，则返回 null 引用。</para></remarks>
+    /// <param name="message">错误消息字符串。</param>
+    /// <param name="inner">内部异常引用。</param>
+    public CapeNoMemoryException(string message, Exception inner) : base(message, inner) { }
+}
 
 /// <summary>An exception class that indicates that the a persistence-related error has occurred.</summary>
 /// <remarks>The base class of the errors hierarchy related to the persistence.</remarks>
@@ -440,8 +348,8 @@ public class CapeNoMemoryException : CapeUserException, ECapeNoMemory
 [ClassInterface(ClassInterfaceType.None)]
 public class CapePersistenceException : CapeUserException, ECapePersistence
 {
-    /// <summary>Initializes the description, interface name and name fields of this exception.</summary>
-    /// <remarks><para>Sets the values of the HResult, interface name and exception name.</para></remarks>
+    /// <summary>初始化此异常的描述、接口名称和名称字段。</summary>
+    /// <remarks>设置 HResult、接口名称和异常名称的值。</remarks>
     protected override void Initialize()
     {
         HResult = unchecked((int)CapeErrorInterfaceHR.ECapePersistenceHR);
@@ -450,39 +358,26 @@ public class CapePersistenceException : CapeUserException, ECapePersistence
     }
 
     /// <summary>Initializes a new instance of the CapePersistenceException class. </summary>
-    /// <remarks>This constructor initializes the Message property of the new instance to a 
-    /// system-supplied message that describes the error, such as "An application 
-    /// error has occurred." This message takes into account the current system 
-    /// culture.</remarks>
-    public CapePersistenceException() : base() { }
+    /// <remarks>这个构造函数会将新实例的“Message”属性初始化为系统提供的描述错误的信息，例如“发生了一个应用程序错误”。这条信息会考虑到当前的系统文化。</remarks>
+    public CapePersistenceException()
+    { }
     /// <summary>Initializes a new instance of the CapePersistenceException class with a specified error message. </summary>
-    /// <remarks><para>The content of the message parameter is intended to be understood by 
-    /// humans. The caller of this constructor is required to ensure that this string 
-    /// has been localized for the current system culture.</para>
-    /// <para>This message takes into account the current system culture.</para></remarks>
-    /// <param name = "message">A message that describes the error.</param>
-    public CapePersistenceException(String message) : base(message) { }
+    /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
+    /// <para>此消息考虑了当前的系统文化。</para></remarks>
+    /// <param name="message">一条描述错误的消息。</param>
+    public CapePersistenceException(string message) : base(message) { }
     /// <summary>Initializes a new instance of the CapePersistenceException class with serialized data.</summary>
-    /// <remarks> This constructor is called during deserialization to reconstitute the 
-    /// exception object transmitted over a stream. For more information, see XML and 
-    /// SOAP Serialization.</remarks>
-    /// <param name = "info">The object that holds the serialized object data.</param>
-    /// <param name = "context">The contextual information about the source or 
-    /// destination. </param>
-    public CapePersistenceException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+    /// <remarks>这个构造函数在反序列化过程中被调用，用于重构通过流传输的异常对象。有关详细信息，请参阅 XML 和 SOAP 序列化。</remarks>
+    /// <param name="info">存储序列化对象数据的对象。</param>
+    /// <param name="context">有关源或目的地的上下文信息。</param>
+    public CapePersistenceException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     /// <summary>Initializes a new instance of the CapePersistenceException class with a specified error message and a reference to the inner exception that is the cause of this exception.</summary>
-    /// <remarks><para>The content of the message parameter is intended to be understood by 
-    /// humans. The caller of this constructor is required to ensure that this string 
-    /// has been localized for the current system culture.</para>
-    /// <para>An exception that is thrown as a direct result of a previous exception 
-    /// should include a erence to the previous exception in the InnerException 
-    /// property. The InnerException property returns the same value that is passed 
-    /// into the constructor, or a null erence if the InnerException property does 
-    /// not supply the inner exception value to the constructor.</para></remarks>
-    /// <param name = "message">The error message string.</param>
-    /// <param name = "inner">The inner exception erence.</param>
-    public CapePersistenceException(String message, Exception inner) : base(message, inner) { }
-};
+    /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
+    /// <para>由于先前的异常直接导致的异常，应在内层异常属性中包含对先前异常的引用。内层异常属性返回传递给构造函数的相同值，或者如果内层异常属性没有向构造函数提供内层异常值，则返回 null 引用。</para></remarks>
+    /// <param name="message">错误消息字符串。</param>
+    /// <param name="inner">内部异常引用。</param>
+    public CapePersistenceException(string message, Exception inner) : base(message, inner) { }
+}
 
 /// <summary>An exception class that indicates that the persistence was not found.</summary>
 /// <remarks>The requested object, table, or something else within the persistence system was not found.</remarks>
@@ -492,14 +387,14 @@ public class CapePersistenceException : CapeUserException, ECapePersistence
 [ClassInterface(ClassInterfaceType.None)]
 public class CapePersistenceNotFoundException : CapePersistenceException, ECapePersistenceNotFound
 {
-    private String m_ItemName;
+    private string m_ItemName;
 
-    /// <summary>Initializes the description, interface name and name fields of this exception.</summary>
-    /// <remarks><para>Sets the values of the HResult, interface name and exception name.</para></remarks>
-    /// <param name = "itemName">
+    /// <summary>初始化此异常的描述、接口名称和名称字段。</summary>
+    /// <remarks>设置 HResult、接口名称和异常名称的值。</remarks>
+    /// <param name="itemName">
     /// Name of the item that was not found that is the cause of this exception. 
     /// </param>
-    protected void Initialize(String itemName)
+    protected void Initialize(string itemName)
     {
         m_ItemName = itemName;
         HResult = unchecked((int)CapeErrorInterfaceHR.ECapePersistenceNotFoundHR);
@@ -508,57 +403,44 @@ public class CapePersistenceNotFoundException : CapePersistenceException, ECapeP
     }
 
     /// <summary>Initializes a new instance of the CapePersistenceNotFoundException class. </summary>
-    /// <remarks>This constructor initializes the Message property of the new instance to a 
-    /// system-supplied message that describes the error, such as "An application 
-    /// error has occurred." This message takes into account the current system 
-    /// culture.</remarks>
-    /// <param name = "itemName">
+    /// <remarks>这个构造函数会将新实例的“Message”属性初始化为系统提供的描述错误的信息，例如“发生了一个应用程序错误”。这条信息会考虑到当前的系统文化。</remarks>
+    /// <param name="itemName">
     /// Name of the item that was not found that is the cause of this exception. 
     /// </param>
-    public CapePersistenceNotFoundException(String itemName) : base() { Initialize(itemName); }
+    public CapePersistenceNotFoundException(string itemName)
+    { Initialize(itemName); }
     /// <summary>Initializes a new instance of the CapePersistenceNotFoundException class with a specified error message. </summary>
-    /// <remarks><para>The content of the message parameter is intended to be understood by 
-    /// humans. The caller of this constructor is required to ensure that this string 
-    /// has been localized for the current system culture.</para>
-    /// <para>This message takes into account the current system culture.</para></remarks>
-    /// <param name = "message">A message that describes the error.</param>
-    /// <param name = "itemName">
+    /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
+    /// <para>此消息考虑了当前的系统文化。</para></remarks>
+    /// <param name="message">一条描述错误的消息。</param>
+    /// <param name="itemName">
     /// Name of the item that was not found that is the cause of this exception. 
     /// </param>
-    public CapePersistenceNotFoundException(String message, String itemName) : base(message) { Initialize(itemName); }
+    public CapePersistenceNotFoundException(string message, string itemName) : base(message) { Initialize(itemName); }
     /// <summary>Initializes a new instance of the CapePersistenceNotFoundException class with serialized data.</summary>
-    /// <remarks> This constructor is called during deserialization to reconstitute the 
-    /// exception object transmitted over a stream. For more information, see XML and 
-    /// SOAP Serialization.</remarks>
-    /// <param name = "info">The object that holds the serialized object data.</param>
-    /// <param name = "context">The contextual information about the source or 
-    /// destination. </param>
-    /// <param name = "itemName">
+    /// <remarks>这个构造函数在反序列化过程中被调用，用于重构通过流传输的异常对象。有关详细信息，请参阅 XML 和 SOAP 序列化。</remarks>
+    /// <param name="info">存储序列化对象数据的对象。</param>
+    /// <param name="context">有关源或目的地的上下文信息。</param>
+    /// <param name="itemName">
     /// Name of the item that was not found that is the cause of this exception. 
     /// </param>
-    public CapePersistenceNotFoundException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context, String itemName) : base(info, context) { Initialize(itemName); }
+    public CapePersistenceNotFoundException(SerializationInfo info, StreamingContext context, string itemName) : base(info, context) { Initialize(itemName); }
     /// <summary>Initializes a new instance of the CapePersistenceNotFoundException class with a specified error message and a reference to the inner exception that is the cause of this exception.</summary>
-    /// <remarks><para>The content of the message parameter is intended to be understood by 
-    /// humans. The caller of this constructor is required to ensure that this string 
-    /// has been localized for the current system culture.</para>
-    /// <para>An exception that is thrown as a direct result of a previous exception 
-    /// should include a erence to the previous exception in the InnerException 
-    /// property. The InnerException property returns the same value that is passed 
-    /// into the constructor, or a null erence if the InnerException property does 
-    /// not supply the inner exception value to the constructor.</para></remarks>
-    /// <param name = "message">The error message string.</param>
-    /// <param name = "inner">The inner exception erence.</param>
-    /// <param name = "itemName">
+    /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
+    /// <para>由于先前的异常直接导致的异常，应在内层异常属性中包含对先前异常的引用。内层异常属性返回传递给构造函数的相同值，或者如果内层异常属性没有向构造函数提供内层异常值，则返回 null 引用。</para></remarks>
+    /// <param name="message">错误消息字符串。</param>
+    /// <param name="inner">内部异常引用。</param>
+    /// <param name="itemName">
     /// Name of the item that was not found that is the cause of this exception. 
     /// </param>
-    public CapePersistenceNotFoundException(String message, Exception inner, String itemName) : base(message, inner) { Initialize(itemName); }
+    public CapePersistenceNotFoundException(string message, Exception inner, string itemName) : base(message, inner) { Initialize(itemName); }
 
     /// <summary>Name of the item that was not found that is the cause of this exception. </summary>
     /// <remarks>Name of the item that was not found that is the cause of this exception. </remarks>
     /// <value>
     /// Name of the item that was not found that is the cause of this exception. 
     /// </value>
-    public String itemName
+    public string itemName
     {
         get
         {
@@ -566,7 +448,7 @@ public class CapePersistenceNotFoundException : CapePersistenceException, ECapeP
         }
     }
 
-};
+}
 
 /// <summary>An exception class that indicates an overflow of internal persistence system.</summary>
 /// <remarks>During the persistence process, an overflow of internal persistence system occurred.</remarks>
@@ -577,8 +459,8 @@ public class CapePersistenceNotFoundException : CapePersistenceException, ECapeP
 public class CapePersistenceOverflowException : 
     CapeUserException, ECapePersistenceOverflow, ECapePersistence
 {
-    /// <summary>Initializes the description, interface name and name fields of this exception.</summary>
-    /// <remarks><para>Sets the values of the HResult, interface name and exception name.</para></remarks>
+    /// <summary>初始化此异常的描述、接口名称和名称字段。</summary>
+    /// <remarks>设置 HResult、接口名称和异常名称的值。</remarks>
     protected override void Initialize()
     {
         HResult = unchecked((int)CapeErrorInterfaceHR.ECapePersistenceOverflowHR);
@@ -586,45 +468,29 @@ public class CapePersistenceOverflowException :
         MName = "CapePersistenceOverflowException";
     }
     /// <summary>Initializes a new instance of the CapePersistenceOverflowException class. </summary>
-    /// <remarks>This constructor initializes the Message property of the new instance to a 
-    /// system-supplied message that describes the error, such as "An application 
-    /// error has occurred." This message takes into account the current system 
-    /// culture.</remarks>
+    /// <remarks>这个构造函数会将新实例的“Message”属性初始化为系统提供的描述错误的信息，例如“发生了一个应用程序错误”。这条信息会考虑到当前的系统文化。</remarks>
     public CapePersistenceOverflowException()
-        : base()
     {
     }
     /// <summary>Initializes a new instance of the CapePersistenceOverflowException class with a specified error message. </summary>
-    /// <remarks><para>The content of the message parameter is intended to be understood by 
-    /// humans. The caller of this constructor is required to ensure that this string 
-    /// has been localized for the current system culture.</para>
-    /// <para>This message takes into account the current system culture.</para></remarks>
-    /// <param name = "message">A message that describes the error.</param>
-    public CapePersistenceOverflowException(String message)
-        : base()
+    /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
+    /// <para>此消息考虑了当前的系统文化。</para></remarks>
+    /// <param name="message">一条描述错误的消息。</param>
+    public CapePersistenceOverflowException(string message)
     {
     }
     /// <summary>Initializes a new instance of the CapePersistenceOverflowException class with serialized data.</summary>
-    /// <remarks> This constructor is called during deserialization to reconstitute the 
-    /// exception object transmitted over a stream. For more information, see XML and 
-    /// SOAP Serialization.</remarks>
-    /// <param name = "info">The object that holds the serialized object data.</param>
-    /// <param name = "context">The contextual information about the source or 
-    /// destination. </param>
-    public CapePersistenceOverflowException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+    /// <remarks>这个构造函数在反序列化过程中被调用，用于重构通过流传输的异常对象。有关详细信息，请参阅 XML 和 SOAP 序列化。</remarks>
+    /// <param name="info">存储序列化对象数据的对象。</param>
+    /// <param name="context">有关源或目的地的上下文信息。</param>
+    public CapePersistenceOverflowException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     /// <summary>Initializes a new instance of the CapePersistenceOverflowException class with a specified error message and a reference to the inner exception that is the cause of this exception.</summary>
-    /// <remarks><para>The content of the message parameter is intended to be understood by 
-    /// humans. The caller of this constructor is required to ensure that this string 
-    /// has been localized for the current system culture.</para>
-    /// <para>An exception that is thrown as a direct result of a previous exception 
-    /// should include a erence to the previous exception in the InnerException 
-    /// property. The InnerException property returns the same value that is passed 
-    /// into the constructor, or a null erence if the InnerException property does 
-    /// not supply the inner exception value to the constructor.</para></remarks>
-    /// <param name = "message">The error message string.</param>
-    /// <param name = "inner">The inner exception erence.</param>
-    public CapePersistenceOverflowException(String message, Exception inner) : base(message, inner) { }
-};
+    /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
+    /// <para>由于先前的异常直接导致的异常，应在内层异常属性中包含对先前异常的引用。内层异常属性返回传递给构造函数的相同值，或者如果内层异常属性没有向构造函数提供内层异常值，则返回 null 引用。</para></remarks>
+    /// <param name="message">错误消息字符串。</param>
+    /// <param name="inner">内部异常引用。</param>
+    public CapePersistenceOverflowException(string message, Exception inner) : base(message, inner) { }
+}
 
 /// <summary>An exception class that indicates a severe error occurred within the persistence system.</summary>
 /// <remarks>During the persistence process, a severe error occurred within the persistence system.</remarks>
@@ -634,8 +500,8 @@ public class CapePersistenceOverflowException :
 [ClassInterface(ClassInterfaceType.None)]
 public class CapePersistenceSystemErrorException : CapePersistenceException, ECapePersistenceSystemError
 {
-    /// <summary>Initializes the description, interface name and name fields of this exception.</summary>
-    /// <remarks><para>Sets the values of the HResult, interface name and exception name.</para></remarks>
+    /// <summary>初始化此异常的描述、接口名称和名称字段。</summary>
+    /// <remarks>设置 HResult、接口名称和异常名称的值。</remarks>
     protected override void Initialize()
     {
         HResult = unchecked((int)CapeErrorInterfaceHR.ECapePersistenceSystemErrorHR);
@@ -644,39 +510,26 @@ public class CapePersistenceSystemErrorException : CapePersistenceException, ECa
     }
 
     /// <summary>Initializes a new instance of the CapePersistenceSystemErrorException class. </summary>
-    /// <remarks>This constructor initializes the Message property of the new instance to a 
-    /// system-supplied message that describes the error, such as "An application 
-    /// error has occurred." This message takes into account the current system 
-    /// culture.</remarks>
-    public CapePersistenceSystemErrorException() : base() { }
+    /// <remarks>这个构造函数会将新实例的“Message”属性初始化为系统提供的描述错误的信息，例如“发生了一个应用程序错误”。这条信息会考虑到当前的系统文化。</remarks>
+    public CapePersistenceSystemErrorException()
+    { }
     /// <summary>Initializes a new instance of the CapePersistenceSystemErrorException class with a specified error message. </summary>
-    /// <remarks><para>The content of the message parameter is intended to be understood by 
-    /// humans. The caller of this constructor is required to ensure that this string 
-    /// has been localized for the current system culture.</para>
-    /// <para>This message takes into account the current system culture.</para></remarks>
-    /// <param name = "message">A message that describes the error.</param>
-    public CapePersistenceSystemErrorException(String message) : base(message) { }
+    /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
+    /// <para>此消息考虑了当前的系统文化。</para></remarks>
+    /// <param name="message">一条描述错误的消息。</param>
+    public CapePersistenceSystemErrorException(string message) : base(message) { }
     /// <summary>Initializes a new instance of the CapePersistenceSystemErrorException class with serialized data.</summary>
-    /// <remarks> This constructor is called during deserialization to reconstitute the 
-    /// exception object transmitted over a stream. For more information, see XML and 
-    /// SOAP Serialization.</remarks>
-    /// <param name = "info">The object that holds the serialized object data.</param>
-    /// <param name = "context">The contextual information about the source or 
-    /// destination. </param>
-    public CapePersistenceSystemErrorException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+    /// <remarks>这个构造函数在反序列化过程中被调用，用于重构通过流传输的异常对象。有关详细信息，请参阅 XML 和 SOAP 序列化。</remarks>
+    /// <param name="info">存储序列化对象数据的对象。</param>
+    /// <param name="context">有关源或目的地的上下文信息。</param>
+    public CapePersistenceSystemErrorException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     /// <summary>Initializes a new instance of the CapePersistenceSystemErrorException class with a specified error message and a reference to the inner exception that is the cause of this exception.</summary>
-    /// <remarks><para>The content of the message parameter is intended to be understood by 
-    /// humans. The caller of this constructor is required to ensure that this string 
-    /// has been localized for the current system culture.</para>
-    /// <para>An exception that is thrown as a direct result of a previous exception 
-    /// should include a erence to the previous exception in the InnerException 
-    /// property. The InnerException property returns the same value that is passed 
-    /// into the constructor, or a null erence if the InnerException property does 
-    /// not supply the inner exception value to the constructor.</para></remarks>
-    /// <param name = "message">The error message string.</param>
-    /// <param name = "inner">The inner exception erence.</param>
-    public CapePersistenceSystemErrorException(String message, Exception inner) : base(message, inner) { }
-};
+    /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
+    /// <para>由于先前的异常直接导致的异常，应在内层异常属性中包含对先前异常的引用。内层异常属性返回传递给构造函数的相同值，或者如果内层异常属性没有向构造函数提供内层异常值，则返回 null 引用。</para></remarks>
+    /// <param name="message">错误消息字符串。</param>
+    /// <param name="inner">内部异常引用。</param>
+    public CapePersistenceSystemErrorException(string message, Exception inner) : base(message, inner) { }
+}
 
 /// <summary>The access to something within the persistence system is not authorised.</summary>
 /// <remarks>This exception is thrown when the access to something within the persistence system is not authorised.</remarks>
@@ -686,8 +539,8 @@ public class CapePersistenceSystemErrorException : CapePersistenceException, ECa
 [ClassInterface(ClassInterfaceType.None)]
 public class CapeIllegalAccessException : CapePersistenceException, ECapeIllegalAccess
 {
-    /// <summary>Initializes the description, interface name and name fields of this exception.</summary>
-    /// <remarks><para>Sets the values of the HResult, interface name and exception name.</para></remarks>
+    /// <summary>初始化此异常的描述、接口名称和名称字段。</summary>
+    /// <remarks>设置 HResult、接口名称和异常名称的值。</remarks>
     protected override void Initialize()
     {
         HResult = unchecked((int)CapeErrorInterfaceHR.ECapeIllegalAccessHR);
@@ -696,39 +549,26 @@ public class CapeIllegalAccessException : CapePersistenceException, ECapeIllegal
     }
 
     /// <summary>Initializes a new instance of the CapeIllegalAccessException class. </summary>
-    /// <remarks>This constructor initializes the Message property of the new instance to a 
-    /// system-supplied message that describes the error, such as "An application 
-    /// error has occurred." This message takes into account the current system 
-    /// culture.</remarks>
-    public CapeIllegalAccessException() : base() { }
+    /// <remarks>这个构造函数会将新实例的“Message”属性初始化为系统提供的描述错误的信息，例如“发生了一个应用程序错误”。这条信息会考虑到当前的系统文化。</remarks>
+    public CapeIllegalAccessException()
+    { }
     /// <summary>Initializes a new instance of the CapeIllegalAccessException class with a specified error message. </summary>
-    /// <remarks><para>The content of the message parameter is intended to be understood by 
-    /// humans. The caller of this constructor is required to ensure that this string 
-    /// has been localized for the current system culture.</para>
-    /// <para>This message takes into account the current system culture.</para></remarks>
-    /// <param name = "message">A message that describes the error.</param>
-    public CapeIllegalAccessException(String message) : base(message) { }
+    /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
+    /// <para>此消息考虑了当前的系统文化。</para></remarks>
+    /// <param name="message">一条描述错误的消息。</param>
+    public CapeIllegalAccessException(string message) : base(message) { }
     /// <summary>Initializes a new instance of the CapeIllegalAccessException class with serialized data.</summary>
-    /// <remarks> This constructor is called during deserialization to reconstitute the 
-    /// exception object transmitted over a stream. For more information, see XML and 
-    /// SOAP Serialization.</remarks>
-    /// <param name = "info">The object that holds the serialized object data.</param>
-    /// <param name = "context">The contextual information about the source or 
-    /// destination. </param>
-    public CapeIllegalAccessException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+    /// <remarks>这个构造函数在反序列化过程中被调用，用于重构通过流传输的异常对象。有关详细信息，请参阅 XML 和 SOAP 序列化。</remarks>
+    /// <param name="info">存储序列化对象数据的对象。</param>
+    /// <param name="context">有关源或目的地的上下文信息。</param>
+    public CapeIllegalAccessException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     /// <summary>Initializes a new instance of the CapeIllegalAccessException class with a specified error message and a reference to the inner exception that is the cause of this exception.</summary>
-    /// <remarks><para>The content of the message parameter is intended to be understood by 
-    /// humans. The caller of this constructor is required to ensure that this string 
-    /// has been localized for the current system culture.</para>
-    /// <para>An exception that is thrown as a direct result of a previous exception 
-    /// should include a erence to the previous exception in the InnerException 
-    /// property. The InnerException property returns the same value that is passed 
-    /// into the constructor, or a null erence if the InnerException property does 
-    /// not supply the inner exception value to the constructor.</para></remarks>
-    /// <param name = "message">The error message string.</param>
-    /// <param name = "inner">The inner exception erence.</param>
-    public CapeIllegalAccessException(String message, Exception inner) : base(message, inner) { }
-};
+    /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
+    /// <para>由于先前的异常直接导致的异常，应在内层异常属性中包含对先前异常的引用。内层异常属性返回传递给构造函数的相同值，或者如果内层异常属性没有向构造函数提供内层异常值，则返回 null 引用。</para></remarks>
+    /// <param name="message">错误消息字符串。</param>
+    /// <param name="inner">内部异常引用。</param>
+    public CapeIllegalAccessException(string message, Exception inner) : base(message, inner) { }
+}
 
 /// <summary>An exception class that indicates a numerical algorithm failed for any reason.</summary>
 /// <remarks>Indicates that a numerical algorithm failed for any reason.</remarks>
@@ -739,8 +579,8 @@ public class CapeIllegalAccessException : CapePersistenceException, ECapeIllegal
 public class CapeSolvingErrorException : CapeComputationException, ECapeSolvingError
 {
 
-    /// <summary>Initializes the description, interface name and name fields of this exception.</summary>
-    /// <remarks><para>Sets the values of the HResult, interface name and exception name.</para></remarks>
+    /// <summary>初始化此异常的描述、接口名称和名称字段。</summary>
+    /// <remarks>设置 HResult、接口名称和异常名称的值。</remarks>
     protected override void Initialize()
     {
         HResult = unchecked((int)CapeErrorInterfaceHR.ECapeSolvingErrorHR);
@@ -749,39 +589,26 @@ public class CapeSolvingErrorException : CapeComputationException, ECapeSolvingE
     }
 
     /// <summary>Initializes a new instance of the CapeSolvingErrorException class. </summary>
-    /// <remarks>This constructor initializes the Message property of the new instance to a 
-    /// system-supplied message that describes the error, such as "An application 
-    /// error has occurred." This message takes into account the current system 
-    /// culture.</remarks>
-    public CapeSolvingErrorException() : base() { }
+    /// <remarks>这个构造函数会将新实例的“Message”属性初始化为系统提供的描述错误的信息，例如“发生了一个应用程序错误”。这条信息会考虑到当前的系统文化。</remarks>
+    public CapeSolvingErrorException()
+    { }
     /// <summary>Initializes a new instance of the CapeSolvingErrorException class with a specified error message. </summary>
-    /// <remarks><para>The content of the message parameter is intended to be understood by 
-    /// humans. The caller of this constructor is required to ensure that this string 
-    /// has been localized for the current system culture.</para>
-    /// <para>This message takes into account the current system culture.</para></remarks>
-    /// <param name = "message">A message that describes the error.</param>
-    public CapeSolvingErrorException(String message) : base(message) { }
+    /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
+    /// <para>此消息考虑了当前的系统文化。</para></remarks>
+    /// <param name="message">一条描述错误的消息。</param>
+    public CapeSolvingErrorException(string message) : base(message) { }
     /// <summary>Initializes a new instance of the CapeSolvingErrorException class with serialized data.</summary>
-    /// <remarks> This constructor is called during deserialization to reconstitute the 
-    /// exception object transmitted over a stream. For more information, see XML and 
-    /// SOAP Serialization.</remarks>
-    /// <param name = "info">The object that holds the serialized object data.</param>
-    /// <param name = "context">The contextual information about the source or 
-    /// destination. </param>
-    public CapeSolvingErrorException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+    /// <remarks>这个构造函数在反序列化过程中被调用，用于重构通过流传输的异常对象。有关详细信息，请参阅 XML 和 SOAP 序列化。</remarks>
+    /// <param name="info">存储序列化对象数据的对象。</param>
+    /// <param name="context">有关源或目的地的上下文信息。</param>
+    public CapeSolvingErrorException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     /// <summary>Initializes a new instance of the CapeSolvingErrorException class with a specified error message and a reference to the inner exception that is the cause of this exception.</summary>
-    /// <remarks><para>The content of the message parameter is intended to be understood by 
-    /// humans. The caller of this constructor is required to ensure that this string 
-    /// has been localized for the current system culture.</para>
-    /// <para>An exception that is thrown as a direct result of a previous exception 
-    /// should include a erence to the previous exception in the InnerException 
-    /// property. The InnerException property returns the same value that is passed 
-    /// into the constructor, or a null erence if the InnerException property does 
-    /// not supply the inner exception value to the constructor.</para></remarks>
-    /// <param name = "message">The error message string.</param>
-    /// <param name = "inner">The inner exception erence.</param>
-    public CapeSolvingErrorException(String message, Exception inner) : base(message, inner) { }
-};
+    /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
+    /// <para>由于先前的异常直接导致的异常，应在内层异常属性中包含对先前异常的引用。内层异常属性返回传递给构造函数的相同值，或者如果内层异常属性没有向构造函数提供内层异常值，则返回 null 引用。</para></remarks>
+    /// <param name="message">错误消息字符串。</param>
+    /// <param name="inner">内部异常引用。</param>
+    public CapeSolvingErrorException(string message, Exception inner) : base(message, inner) { }
+}
 
 /// <summary>Exception thrown when the Hessian for the MINLP problem is not available.</summary>
 /// <remarks>Exception thrown when the Hessian for the MINLP problem is not available.</remarks>
@@ -793,8 +620,8 @@ public class CapeHessianInfoNotAvailableException :
     CapeSolvingErrorException, ECapeHessianInfoNotAvailable
 {
 
-    /// <summary>Initializes the description, interface name and name fields of this exception.</summary>
-    /// <remarks><para>Sets the values of the HResult, interface name and exception name.</para></remarks>
+    /// <summary>初始化此异常的描述、接口名称和名称字段。</summary>
+    /// <remarks>设置 HResult、接口名称和异常名称的值。</remarks>
     protected override void Initialize()
     {
         HResult = unchecked((int)CapeErrorInterfaceHR.ECapeHessianInfoNotAvailableHR);
@@ -802,39 +629,26 @@ public class CapeHessianInfoNotAvailableException :
         MName = "CapeHessianInfoNotAvailableHR";
     }
     /// <summary>Initializes a new instance of the CapeHessianInfoNotAvailableException class. </summary>
-    /// <remarks>This constructor initializes the Message property of the new instance to a 
-    /// system-supplied message that describes the error, such as "An application 
-    /// error has occurred." This message takes into account the current system 
-    /// culture.</remarks>
-    public CapeHessianInfoNotAvailableException() : base() { }
+    /// <remarks>这个构造函数会将新实例的“Message”属性初始化为系统提供的描述错误的信息，例如“发生了一个应用程序错误”。这条信息会考虑到当前的系统文化。</remarks>
+    public CapeHessianInfoNotAvailableException()
+    { }
     /// <summary>Initializes a new instance of the CapeHessianInfoNotAvailableException class with a specified error message. </summary>
-    /// <remarks><para>The content of the message parameter is intended to be understood by 
-    /// humans. The caller of this constructor is required to ensure that this string 
-    /// has been localized for the current system culture.</para>
-    /// <para>This message takes into account the current system culture.</para></remarks>
-    /// <param name = "message">A message that describes the error.</param>
-    public CapeHessianInfoNotAvailableException(String message) : base(message) { }
+    /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
+    /// <para>此消息考虑了当前的系统文化。</para></remarks>
+    /// <param name="message">一条描述错误的消息。</param>
+    public CapeHessianInfoNotAvailableException(string message) : base(message) { }
     /// <summary>Initializes a new instance of the CapeHessianInfoNotAvailableException class with serialized data.</summary>
-    /// <remarks> This constructor is called during deserialization to reconstitute the 
-    /// exception object transmitted over a stream. For more information, see XML and 
-    /// SOAP Serialization.</remarks>
-    /// <param name = "info">The object that holds the serialized object data.</param>
-    /// <param name = "context">The contextual information about the source or 
-    /// destination. </param>
-    public CapeHessianInfoNotAvailableException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+    /// <remarks>这个构造函数在反序列化过程中被调用，用于重构通过流传输的异常对象。有关详细信息，请参阅 XML 和 SOAP 序列化。</remarks>
+    /// <param name="info">存储序列化对象数据的对象。</param>
+    /// <param name="context">有关源或目的地的上下文信息。</param>
+    public CapeHessianInfoNotAvailableException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     /// <summary>Initializes a new instance of the CapeHessianInfoNotAvailableException class with a specified error message and a reference to the inner exception that is the cause of this exception.</summary>
-    /// <remarks><para>The content of the message parameter is intended to be understood by 
-    /// humans. The caller of this constructor is required to ensure that this string 
-    /// has been localized for the current system culture.</para>
-    /// <para>An exception that is thrown as a direct result of a previous exception 
-    /// should include a erence to the previous exception in the InnerException 
-    /// property. The InnerException property returns the same value that is passed 
-    /// into the constructor, or a null erence if the InnerException property does 
-    /// not supply the inner exception value to the constructor.</para></remarks>
-    /// <param name = "message">The error message string.</param>
-    /// <param name = "inner">The inner exception erence.</param>
-    public CapeHessianInfoNotAvailableException(String message, Exception inner) : base(message, inner) { }
-};
+    /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
+    /// <para>由于先前的异常直接导致的异常，应在内层异常属性中包含对先前异常的引用。内层异常属性返回传递给构造函数的相同值，或者如果内层异常属性没有向构造函数提供内层异常值，则返回 null 引用。</para></remarks>
+    /// <param name="message">错误消息字符串。</param>
+    /// <param name="inner">内部异常引用。</param>
+    public CapeHessianInfoNotAvailableException(string message, Exception inner) : base(message, inner) { }
+}
 
 /// <summary>Exception thrown when the time-out criterion is reached.</summary>
 /// <remarks>Exception thrown when the time-out criterion is reached.</remarks>
@@ -845,8 +659,8 @@ public class CapeHessianInfoNotAvailableException :
 public class CapeTimeOutException : CapeUserException, ECapeTimeOut
 {
 
-    /// <summary>Initializes the description, interface name and name fields of this exception.</summary>
-    /// <remarks><para>Sets the values of the HResult, interface name and exception name.</para></remarks>
+    /// <summary>初始化此异常的描述、接口名称和名称字段。</summary>
+    /// <remarks>设置 HResult、接口名称和异常名称的值。</remarks>
     protected override void Initialize()
     {
         HResult = unchecked((int)CapeErrorInterfaceHR.ECapeTimeOutHR);
@@ -855,39 +669,26 @@ public class CapeTimeOutException : CapeUserException, ECapeTimeOut
     }
 
     /// <summary>Initializes a new instance of the CapeTimeOutException class. </summary>
-    /// <remarks>This constructor initializes the Message property of the new instance to a 
-    /// system-supplied message that describes the error, such as "An application 
-    /// error has occurred." This message takes into account the current system 
-    /// culture.</remarks>
-    public CapeTimeOutException() : base() { }
+    /// <remarks>这个构造函数会将新实例的“Message”属性初始化为系统提供的描述错误的信息，例如“发生了一个应用程序错误”。这条信息会考虑到当前的系统文化。</remarks>
+    public CapeTimeOutException()
+    { }
     /// <summary>Initializes a new instance of the CapeTimeOutException class with a specified error message. </summary>
-    /// <remarks><para>The content of the message parameter is intended to be understood by 
-    /// humans. The caller of this constructor is required to ensure that this string 
-    /// has been localized for the current system culture.</para>
-    /// <para>This message takes into account the current system culture.</para></remarks>
-    /// <param name = "message">A message that describes the error.</param>
-    public CapeTimeOutException(String message) : base(message) { }
+    /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
+    /// <para>此消息考虑了当前的系统文化。</para></remarks>
+    /// <param name="message">一条描述错误的消息。</param>
+    public CapeTimeOutException(string message) : base(message) { }
     /// <summary>Initializes a new instance of the CapeTimeOutException class with serialized data.</summary>
-    /// <remarks> This constructor is called during deserialization to reconstitute the 
-    /// exception object transmitted over a stream. For more information, see XML and 
-    /// SOAP Serialization.</remarks>
-    /// <param name = "info">The object that holds the serialized object data.</param>
-    /// <param name = "context">The contextual information about the source or 
-    /// destination. </param>
-    public CapeTimeOutException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+    /// <remarks>这个构造函数在反序列化过程中被调用，用于重构通过流传输的异常对象。有关详细信息，请参阅 XML 和 SOAP 序列化。</remarks>
+    /// <param name="info">存储序列化对象数据的对象。</param>
+    /// <param name="context">有关源或目的地的上下文信息。</param>
+    public CapeTimeOutException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     /// <summary>Initializes a new instance of the CapeTimeOutException class with a specified error message and a reference to the inner exception that is the cause of this exception.</summary>
-    /// <remarks><para>The content of the message parameter is intended to be understood by 
-    /// humans. The caller of this constructor is required to ensure that this string 
-    /// has been localized for the current system culture.</para>
-    /// <para>An exception that is thrown as a direct result of a previous exception 
-    /// should include a erence to the previous exception in the InnerException 
-    /// property. The InnerException property returns the same value that is passed 
-    /// into the constructor, or a null erence if the InnerException property does 
-    /// not supply the inner exception value to the constructor.</para></remarks>
-    /// <param name = "message">The error message string.</param>
-    /// <param name = "inner">The inner exception erence.</param>
-    public CapeTimeOutException(String message, Exception inner) : base(message, inner) { }
-};
+    /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
+    /// <para>由于先前的异常直接导致的异常，应在内层异常属性中包含对先前异常的引用。内层异常属性返回传递给构造函数的相同值，或者如果内层异常属性没有向构造函数提供内层异常值，则返回 null 引用。</para></remarks>
+    /// <param name="message">错误消息字符串。</param>
+    /// <param name="inner">内部异常引用。</param>
+    public CapeTimeOutException(string message, Exception inner) : base(message, inner) { }
+}
 
 /// <summary>A wrapper class for COM-based exceptions.</summary>
 /// <remarks><para>This class can be used when a COM-based CAPE-OPEN component returns a failure HRESULT.
@@ -912,8 +713,8 @@ public class CapeTimeOutException : CapeUserException, ECapeTimeOut
 public class COMCapeOpenExceptionWrapper : CapeUserException
 {
 
-    /// <summary>Initializes the description, interface name and name fields of this exception.</summary>
-    /// <remarks><para>Sets the values of the HResult, interface name and exception name.</para></remarks>
+    /// <summary>初始化此异常的描述、接口名称和名称字段。</summary>
+    /// <remarks>设置 HResult、接口名称和异常名称的值。</remarks>
     protected override void Initialize()
     {
     }
@@ -921,18 +722,18 @@ public class COMCapeOpenExceptionWrapper : CapeUserException
     /// <summary>Creates a new instance of the COMCapeOpenExceptionWrapper class.</summary>
     /// <remarks><para>Creates a .Net based exception wrapper for COM-based CAPE-OPEN componets to 
     /// enable users to utilize .Net structured exception handling.</para></remarks>
-    /// <param name = "message">The error message text from the COM-based component.</param>
-    /// <param name = "exceptionObject">The CAPE-OPEN object that raised the error.</param>
-    /// <param name = "HRESULT">The COM HResult value.</param>
-    /// <param name = "inner">An inner .Net-based exception obtained from the IErrorInfo
+    /// <param name="message">The error message text from the COM-based component.</param>
+    /// <param name="exceptionObject">The CAPE-OPEN object that raised the error.</param>
+    /// <param name="HRESULT">The COM HResult value.</param>
+    /// <param name="inner">An inner .Net-based exception obtained from the IErrorInfo
     /// object, if implemented or an accompanying .Net exception.</param>
-    public COMCapeOpenExceptionWrapper(String message, Object exceptionObject, int HRESULT, Exception inner)
+    public COMCapeOpenExceptionWrapper(string message, object exceptionObject, int HRESULT, Exception inner)
         : base(message, inner)
     {
         HResult = HRESULT;
         if (exceptionObject is ECapeRoot)
         {
-            MName = String.Concat("CAPE-OPEN Error: ", ((ECapeRoot)exceptionObject).Name);
+            MName = string.Concat("CAPE-OPEN Error: ", ((ECapeRoot)exceptionObject).Name);
         }
 
         if (exceptionObject is ECapeUser)
@@ -944,7 +745,7 @@ public class COMCapeOpenExceptionWrapper : CapeUserException
             HelpLink = user.moreInfo;
         }
     }
-};
+}
 
 /// <summary>Exception thrown when a requested theromdynamic property is not available.</summary>
 /// <remarks>Exception thrown when a requested theromdynamic property is not available.</remarks>
@@ -954,8 +755,8 @@ public class COMCapeOpenExceptionWrapper : CapeUserException
  [ClassInterface(ClassInterfaceType.None)]
 public class CapeThrmPropertyNotAvailableException : CapeUserException, ECapeThrmPropertyNotAvailable
 {
-    /// <summary>Initializes the description, interface name and name fields of this exception.</summary>
-    /// <remarks><para>Sets the values of the HResult, interface name and exception name.</para></remarks>
+    /// <summary>初始化此异常的描述、接口名称和名称字段。</summary>
+    /// <remarks>设置 HResult、接口名称和异常名称的值。</remarks>
     protected override void Initialize()
     {
         HResult = unchecked((int)CapeErrorInterfaceHR.ECapeThrmPropertyNotAvailableHR);
@@ -964,39 +765,26 @@ public class CapeThrmPropertyNotAvailableException : CapeUserException, ECapeThr
     }
 
     /// <summary>Initializes a new instance of the CapeThrmPropertyNotAvailable class. </summary>
-    /// <remarks>This constructor initializes the Message property of the new instance to a 
-    /// system-supplied message that describes the error, such as "An application 
-    /// error has occurred." This message takes into account the current system 
-    /// culture.</remarks>
-    public CapeThrmPropertyNotAvailableException() : base() { }
+    /// <remarks>这个构造函数会将新实例的“Message”属性初始化为系统提供的描述错误的信息，例如“发生了一个应用程序错误”。这条信息会考虑到当前的系统文化。</remarks>
+    public CapeThrmPropertyNotAvailableException()
+    { }
     /// <summary>Initializes a new instance of the CapeThrmPropertyNotAvailable class with a specified error message. </summary>
-    /// <remarks><para>The content of the message parameter is intended to be understood by 
-    /// humans. The caller of this constructor is required to ensure that this string 
-    /// has been localized for the current system culture.</para>
-    /// <para>This message takes into account the current system culture.</para></remarks>
-    /// <param name = "message">A message that describes the error.</param>
-    public CapeThrmPropertyNotAvailableException(String message) : base(message) { }
+    /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
+    /// <para>此消息考虑了当前的系统文化。</para></remarks>
+    /// <param name="message">一条描述错误的消息。</param>
+    public CapeThrmPropertyNotAvailableException(string message) : base(message) { }
     /// <summary>Initializes a new instance of the CapeThrmPropertyNotAvailable class with serialized data.</summary>
-    /// <remarks> This constructor is called during deserialization to reconstitute the 
-    /// exception object transmitted over a stream. For more information, see XML and 
-    /// SOAP Serialization.</remarks>
-    /// <param name = "info">The object that holds the serialized object data.</param>
-    /// <param name = "context">The contextual information about the source or 
-    /// destination. </param>
-    public CapeThrmPropertyNotAvailableException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+    /// <remarks>这个构造函数在反序列化过程中被调用，用于重构通过流传输的异常对象。有关详细信息，请参阅 XML 和 SOAP 序列化。</remarks>
+    /// <param name="info">存储序列化对象数据的对象。</param>
+    /// <param name="context">有关源或目的地的上下文信息。</param>
+    public CapeThrmPropertyNotAvailableException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     /// <summary>Initializes a new instance of the CapeThrmPropertyNotAvailable class with a specified error message and a reference to the inner exception that is the cause of this exception.</summary>
-    /// <remarks><para>The content of the message parameter is intended to be understood by 
-    /// humans. The caller of this constructor is required to ensure that this string 
-    /// has been localized for the current system culture.</para>
-    /// <para>An exception that is thrown as a direct result of a previous exception 
-    /// should include a erence to the previous exception in the InnerException 
-    /// property. The InnerException property returns the same value that is passed 
-    /// into the constructor, or a null erence if the InnerException property does 
-    /// not supply the inner exception value to the constructor.</para></remarks>
-    /// <param name = "message">The error message string.</param>
-    /// <param name = "inner">The inner exception erence.</param>
-    public CapeThrmPropertyNotAvailableException(String message, Exception inner) : base(message, inner) { }
-};
+    /// <remarks><para>消息参数的内容旨在供人类理解。调用此构造函数的一方必须确保该字符串已针对当前系统文化进行了本地化。</para>
+    /// <para>由于先前的异常直接导致的异常，应在内层异常属性中包含对先前异常的引用。内层异常属性返回传递给构造函数的相同值，或者如果内层异常属性没有向构造函数提供内层异常值，则返回 null 引用。</para></remarks>
+    /// <param name="message">错误消息字符串。</param>
+    /// <param name="inner">内部异常引用。</param>
+    public CapeThrmPropertyNotAvailableException(string message, Exception inner) : base(message, inner) { }
+}
 
 /// <summary>A helper class for handling exceptions from COM-based CAPE-OPEN components.</summary>
 /// <remarks><para>This class can be used when a COM-based CAPE-OPEN component returns a failure HRESULT.
@@ -1025,14 +813,14 @@ public class COMExceptionHandler
     /// wrapper class.</para></remarks>
     /// <returns>
     /// The COM-based object that returned the error HRESULT wrapper as the appropriate .Net-based exception.</returns>
-    /// <param name = "exceptionObject">The CAPE-OPEN object that raised the error.</param>
-    /// <param name = "inner">An inner .Net-based exception obtained from the IErrorInfo
+    /// <param name="exceptionObject">The CAPE-OPEN object that raised the error.</param>
+    /// <param name="inner">An inner .Net-based exception obtained from the IErrorInfo
     /// object, if implemented or an accompanying .Net exception.</param>
     /// <see c = "COMCapeOpenExceptionWrapper">COMCapeOpenExceptionWrapper</see> 
-    public static Exception ExceptionForHRESULT(Object exceptionObject, Exception inner)
+    public static Exception ExceptionForHRESULT(object exceptionObject, Exception inner)
     {
         int HRESULT = ((COMException)inner).ErrorCode;
-        String message = "Exception thrown by COM PMC.";
+        string message = "Exception thrown by COM PMC.";
         COMCapeOpenExceptionWrapper exception = new COMCapeOpenExceptionWrapper(message, exceptionObject, HRESULT, inner);
         switch (HRESULT)
         {
@@ -1050,18 +838,20 @@ public class COMExceptionHandler
                 return new CapeInvalidArgumentException(message, exception, ((ECapeBadArgument)exception).position);
             case unchecked((int)0x80040507)://ECapeOutOfBoundsHR = 0x80040507 
             {
-                Exception p_Ex = (Exception)(exception);
+                Exception p_Ex = exception;
                 if (exception is ECapeBoundaries)
                 {
                     ECapeBoundaries p_Ex1 = (ECapeBoundaries)(exception);
                     if (exception is ECapeBadArgument)
                     {
                         ECapeBadArgument p_Ex2 = (ECapeBadArgument)(exception);
-                        return new CapeOutOfBoundsException(message, p_Ex, (int)p_Ex2.position, p_Ex1.lowerBound, p_Ex1.upperBound, p_Ex1.value, p_Ex1.type);
+                        return new CapeOutOfBoundsException(message, p_Ex, p_Ex2.position, p_Ex1.lowerBound, p_Ex1.upperBound, p_Ex1.value, p_Ex1.type);
                     }
-                    else return new CapeOutOfBoundsException(message, p_Ex, 0, p_Ex1.lowerBound, p_Ex1.upperBound, p_Ex1.value, p_Ex1.type);
+
+                    return new CapeOutOfBoundsException(message, p_Ex, 0, p_Ex1.lowerBound, p_Ex1.upperBound, p_Ex1.value, p_Ex1.type);
                 }
-                else return new CapeOutOfBoundsException(message, p_Ex, 0, 0.0, 0.0, 0.0, "");
+
+                return new CapeOutOfBoundsException(message, p_Ex, 0, 0.0, 0.0, 0.0, "");
             }
             case unchecked((int)(0x80040508))://ECapeImplementationHR = 0x80040508
                 return new CapeImplementationException(message, exception);
@@ -1089,7 +879,8 @@ public class COMExceptionHandler
                     ECapeBadInvOrder p_Ex = (ECapeBadInvOrder)(exception);
                     return new CapeBadInvOrderException(message, exception, p_Ex.requestedOperation);
                 }
-                else return new CapeBadInvOrderException(message, exception, "");
+
+                return new CapeBadInvOrderException(message, exception, "");
             }
             case unchecked((int)0x80040512)://ECapeInvalidOperationHR = 0x80040512
                 return new CapeInvalidOperationException(message, exception);
@@ -1113,4 +904,4 @@ public class COMExceptionHandler
                 return new CapeUnknownException(message, exception);
         }
     }
-};
+}
