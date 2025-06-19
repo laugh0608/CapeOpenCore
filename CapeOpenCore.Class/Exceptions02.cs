@@ -23,8 +23,8 @@ public class CapeInvalidOperationException : CapeComputationException, ECapeInva
     protected override void Initialize()
     {
         HResult = unchecked((int)CapeErrorInterfaceHR.ECapeInvalidOperationHR);
-        m_interfaceName = "ECapeInvalidOperation";
-        m_name = "CapeInvalidOperationException";
+        MInterfaceName = "ECapeInvalidOperation";
+        MName = "CapeInvalidOperationException";
     }
     /// <summary>Initializes a new instance of the CapeInvalidOperationException class. </summary>
     /// <remarks>This constructor initializes the Message property of the new instance to a 
@@ -76,8 +76,8 @@ public class CapeBadInvOrderException : CapeComputationException, ECapeBadInvOrd
     protected override void Initialize()
     {
         HResult = unchecked((int)CapeErrorInterfaceHR.ECapeBadInvOrderHR);
-        m_interfaceName = "ECapeBadInvOrder";
-        m_name = "CapeBadInvOrderException";
+        MInterfaceName = "ECapeBadInvOrder";
+        MName = "CapeBadInvOrderException";
     }
 
 
@@ -162,8 +162,8 @@ public class CapeLicenceErrorException : CapeDataException, ECapeLicenceError
     protected override void Initialize()
     {
         HResult = unchecked((int)CapeErrorInterfaceHR.ECapeLicenceErrorHR);
-        m_interfaceName = "ECapeLicenceError";
-        m_name = "CapeLicenceErrorException";
+        MInterfaceName = "ECapeLicenceError";
+        MName = "CapeLicenceErrorException";
     }
 
     /// <summary>Initializes a new instance of the CapeLicenceErrorException class. </summary>
@@ -222,8 +222,8 @@ public class CapeLimitedImplException : CapeImplementationException, ECapeLimite
     protected override void Initialize()
     {
         HResult = unchecked((int)CapeErrorInterfaceHR.ECapeLimitedImplHR);
-        m_interfaceName = "ECapeLimitedImpl";
-        m_name = "CapeLimitedImplException";
+        MInterfaceName = "ECapeLimitedImpl";
+        MName = "CapeLimitedImplException";
     }
 
     /// <summary>Initializes a new instance of the CapeLimitedImplException class. </summary>
@@ -276,8 +276,8 @@ public class CapeNoImplException : CapeImplementationException, ECapeNoImpl
     protected override void Initialize()
     {
         HResult = unchecked((int)CapeErrorInterfaceHR.ECapeNoImplHR);
-        m_interfaceName = "ECapeNoImpl";
-        m_name = "CapeNoImplException";
+        MInterfaceName = "ECapeNoImpl";
+        MName = "CapeNoImplException";
     }
 
     /// <summary>Initializes a new instance of the CapeNoImplException class. </summary>
@@ -328,8 +328,8 @@ public class CapeOutOfResourcesException : CapeUserException, ECapeOutOfResource
     protected override void Initialize()
     {
         HResult = unchecked((int)CapeErrorInterfaceHR.ECapeOutOfResourcesHR);
-        m_interfaceName = "ECapeOutOfResources";
-        m_name = "CapeOutOfResourcesException";
+        MInterfaceName = "ECapeOutOfResources";
+        MName = "CapeOutOfResourcesException";
     }
 
     /// <summary>Initializes a new instance of the CapeOutOfResourcesException class. </summary>
@@ -393,8 +393,8 @@ public class CapeNoMemoryException : CapeUserException, ECapeNoMemory
     protected override void Initialize()
     {
         HResult = unchecked((int)CapeErrorInterfaceHR.ECapeNoMemoryHR);
-        m_interfaceName = "ECapeNoMemory";
-        m_name = "CapeNoMemoryException";
+        MInterfaceName = "ECapeNoMemory";
+        MName = "CapeNoMemoryException";
     }
 
     /// <summary>Initializes a new instance of the CapeNoMemoryException class. </summary>
@@ -445,8 +445,8 @@ public class CapePersistenceException : CapeUserException, ECapePersistence
     protected override void Initialize()
     {
         HResult = unchecked((int)CapeErrorInterfaceHR.ECapePersistenceHR);
-        m_interfaceName = "ECapePersistence";
-        m_name = "CapePersistenceException";
+        MInterfaceName = "ECapePersistence";
+        MName = "CapePersistenceException";
     }
 
     /// <summary>Initializes a new instance of the CapePersistenceException class. </summary>
@@ -503,8 +503,8 @@ public class CapePersistenceNotFoundException : CapePersistenceException, ECapeP
     {
         m_ItemName = itemName;
         HResult = unchecked((int)CapeErrorInterfaceHR.ECapePersistenceNotFoundHR);
-        m_interfaceName = "ECapePersistenceNotFound";
-        m_name = "CapePersistenceNotFoundException";
+        MInterfaceName = "ECapePersistenceNotFound";
+        MName = "CapePersistenceNotFoundException";
     }
 
     /// <summary>Initializes a new instance of the CapePersistenceNotFoundException class. </summary>
@@ -582,8 +582,8 @@ public class CapePersistenceOverflowException :
     protected override void Initialize()
     {
         HResult = unchecked((int)CapeErrorInterfaceHR.ECapePersistenceOverflowHR);
-        m_interfaceName = "ECapePersistenceOverflow";
-        m_name = "CapePersistenceOverflowException";
+        MInterfaceName = "ECapePersistenceOverflow";
+        MName = "CapePersistenceOverflowException";
     }
     /// <summary>Initializes a new instance of the CapePersistenceOverflowException class. </summary>
     /// <remarks>This constructor initializes the Message property of the new instance to a 
@@ -639,8 +639,8 @@ public class CapePersistenceSystemErrorException : CapePersistenceException, ECa
     protected override void Initialize()
     {
         HResult = unchecked((int)CapeErrorInterfaceHR.ECapePersistenceSystemErrorHR);
-        m_interfaceName = "ECapePersistenceSystemError";
-        m_name = "CapePersistenceSystemErrorException";
+        MInterfaceName = "ECapePersistenceSystemError";
+        MName = "CapePersistenceSystemErrorException";
     }
 
     /// <summary>Initializes a new instance of the CapePersistenceSystemErrorException class. </summary>
@@ -691,8 +691,8 @@ public class CapeIllegalAccessException : CapePersistenceException, ECapeIllegal
     protected override void Initialize()
     {
         HResult = unchecked((int)CapeErrorInterfaceHR.ECapeIllegalAccessHR);
-        m_interfaceName = "ECapeIllegalAccess";
-        m_name = "CapeIllegalAccessException";
+        MInterfaceName = "ECapeIllegalAccess";
+        MName = "CapeIllegalAccessException";
     }
 
     /// <summary>Initializes a new instance of the CapeIllegalAccessException class. </summary>
@@ -744,8 +744,8 @@ public class CapeSolvingErrorException : CapeComputationException, ECapeSolvingE
     protected override void Initialize()
     {
         HResult = unchecked((int)CapeErrorInterfaceHR.ECapeSolvingErrorHR);
-        m_interfaceName = "ECapeSolvingError";
-        m_name = "CapeSolvingErrorException";
+        MInterfaceName = "ECapeSolvingError";
+        MName = "CapeSolvingErrorException";
     }
 
     /// <summary>Initializes a new instance of the CapeSolvingErrorException class. </summary>
@@ -798,8 +798,8 @@ public class CapeHessianInfoNotAvailableException :
     protected override void Initialize()
     {
         HResult = unchecked((int)CapeErrorInterfaceHR.ECapeHessianInfoNotAvailableHR);
-        m_interfaceName = "ECapeHessianInfoNotAvailable";
-        m_name = "CapeHessianInfoNotAvailableHR";
+        MInterfaceName = "ECapeHessianInfoNotAvailable";
+        MName = "CapeHessianInfoNotAvailableHR";
     }
     /// <summary>Initializes a new instance of the CapeHessianInfoNotAvailableException class. </summary>
     /// <remarks>This constructor initializes the Message property of the new instance to a 
@@ -850,8 +850,8 @@ public class CapeTimeOutException : CapeUserException, ECapeTimeOut
     protected override void Initialize()
     {
         HResult = unchecked((int)CapeErrorInterfaceHR.ECapeTimeOutHR);
-        m_interfaceName = "ECapeTimeOut";
-        m_name = "CapeTimeOutException";
+        MInterfaceName = "ECapeTimeOut";
+        MName = "CapeTimeOutException";
     }
 
     /// <summary>Initializes a new instance of the CapeTimeOutException class. </summary>
@@ -932,14 +932,14 @@ public class COMCapeOpenExceptionWrapper : CapeUserException
         HResult = HRESULT;
         if (exceptionObject is ECapeRoot)
         {
-            m_name = String.Concat("CAPE-OPEN Error: ", ((ECapeRoot)exceptionObject).Name);
+            MName = String.Concat("CAPE-OPEN Error: ", ((ECapeRoot)exceptionObject).Name);
         }
 
         if (exceptionObject is ECapeUser)
         {
             ECapeUser user = (ECapeUser)exceptionObject;
-            m_description = user.description;
-            m_interfaceName = user.interfaceName;
+            MDescription = user.description;
+            MInterfaceName = user.interfaceName;
             Source = user.scope;
             HelpLink = user.moreInfo;
         }
@@ -959,8 +959,8 @@ public class CapeThrmPropertyNotAvailableException : CapeUserException, ECapeThr
     protected override void Initialize()
     {
         HResult = unchecked((int)CapeErrorInterfaceHR.ECapeThrmPropertyNotAvailableHR);
-        m_interfaceName = "ECapePersistence";
-        m_name = "CapeThrmPropertyNotAvailable";
+        MInterfaceName = "ECapePersistence";
+        MName = "CapeThrmPropertyNotAvailable";
     }
 
     /// <summary>Initializes a new instance of the CapeThrmPropertyNotAvailable class. </summary>
@@ -1043,7 +1043,7 @@ public class COMExceptionHandler
             case unchecked((int)0x80040503)://ECapeLicenceErrorHR = 0x80040503 ,
                 return new CapeLicenceErrorException(message, exception);
             case unchecked((int)0x80040504)://ECapeBadCOParameterHR = 0x80040504 ,
-                return new CapeBadCOParameter(message, exception);
+                return new CapeBadCoParameter(message, exception);
             case unchecked((int)0x80040505)://ECapeBadArgumentHR = 0x80040505 ,
                 return new CapeBadArgumentException(message, exception, ((ECapeBadArgument)exception).position);
             case unchecked((int)0x80040506)://ECapeInvalidArgumentHR = 0x80040506 ,
