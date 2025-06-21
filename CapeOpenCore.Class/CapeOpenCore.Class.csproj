@@ -73,7 +73,8 @@
     <Compile Include="Exceptions01.cs" />
     <Compile Include="Exceptions02.cs" />
     <Compile Include="IntegerParameter.cs" />
-    <Compile Include="MaterialObjectWrapper.cs" />
+    <Compile Include="MaterialObjectWrapper01.cs" />
+    <Compile Include="MaterialObjectWrapper02.cs" />
     <Compile Include="MaterialObjectWrapper10.cs" />
     <Compile Include="MaterialObjectWrapper11.cs" />
     <Compile Include="MonitoringInterfaces.cs" />
