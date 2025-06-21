@@ -138,7 +138,7 @@ public abstract class CapeObjectBase : CapeIdentification, ICapeUtilities, ICape
     /// <exception cref="ECapeLicenceError">ECapeLicenceError</exception>
     /// <exception cref="ECapeFailedInitialisation">ECapeFailedInitialisation</exception>
     /// <exception cref="ECapeBadInvOrder">ECapeBadInvOrder</exception>
-    /// <param name = "name">PMC 的名字。</param>
+    /// <param name="name">PMC 的名字。</param>
     protected CapeObjectBase(string name) : base(name)
     {
         // _mParameters = new ParameterCollection();
@@ -155,8 +155,8 @@ public abstract class CapeObjectBase : CapeIdentification, ICapeUtilities, ICape
     /// <exception cref="ECapeLicenceError">ECapeLicenceError</exception>
     /// <exception cref="ECapeFailedInitialisation">ECapeFailedInitialisation</exception>
     /// <exception cref="ECapeBadInvOrder">ECapeBadInvOrder</exception>
-    /// <param name = "name">PMC 的名字。</param>
-    /// <param name = "description">PMC 的描述。</param>
+    /// <param name="name">PMC 的名字。</param>
+    /// <param name="description">PMC 的描述。</param>
     protected CapeObjectBase(string name, string description) : base(name, description)
     {
         // _mParameters = new ParameterCollection();
@@ -170,7 +170,7 @@ public abstract class CapeObjectBase : CapeIdentification, ICapeUtilities, ICape
     /// <remarks><para>克隆可以以深度复制或浅层复制的方式实现。在深度复制中，所有对象都被复制； 在浅层复制中，只有顶层对象被复制，低层对象包含引用。</para>
     /// <para>生成的克隆必须与原始实例的类型相同或兼容。</para>
     /// <para>有关克隆、深拷贝与浅拷贝以及示例的更多信息，请参见 <see cref="Object.MemberwiseClone"/>。</para></remarks>
-    /// <param name = "objectToBeCopied">被复制的对象。</param>
+    /// <param name="objectToBeCopied">被复制的对象。</param>
     protected CapeObjectBase(CapeObjectBase objectToBeCopied) : base(objectToBeCopied)  // : base((CapeIdentification)objectToBeCopied)
     {
         _mSimulationContext = objectToBeCopied._mSimulationContext;
@@ -217,7 +217,7 @@ public abstract class CapeObjectBase : CapeIdentification, ICapeUtilities, ICape
     /// <para><c>Dispose</c> 可以被其他对象多次调用。在重写 <c>Dispose(Boolean)</c> 时，要小心不要引用在之前调用 <c>Dispose</c> 时已经处理过的对象。
     /// 有关如何实现 <c>Dispose(Boolean)</c> 的详细信息，请参阅实现一个 Dispose 方法。</para>
     /// <para>有关 <c>Dispose</c> 和 <c>Finalize</c> 的更多信息，请参阅清理未托管的资源和重写 Finalize 方法。</para></remarks> 
-    /// <param name = "disposing">true 释放托管和非托管资源；false 只释放非托管资源。</param>
+    /// <param name="disposing">true 释放托管和非托管资源；false 只释放非托管资源。</param>
     protected override void Dispose(bool disposing)
     {
         // 检查是否已调用 Dispose。
@@ -241,7 +241,7 @@ public abstract class CapeObjectBase : CapeIdentification, ICapeUtilities, ICape
     /// <remarks>该功能用于添加 CAPE-OPEN 方法和工具规范中指定的注册密钥。特别是，它表示该单元操作执行了 CAPE-OPEN 单元操作类别标识。
     ///	它还使用 <see cref="CapeNameAttribute"/>、<see cref="CapeDescriptionAttribute"/>、<see cref="CapeVersionAttribute"/>、
     /// <see cref="CapeVendorURLAttribute"/>、<see cref="CapeHelpURLAttribute"/>、<see ref="CapeAboutAttribute"/> 属性添加 CapeDescription 注册表键值。</remarks>
-    /// <param name = "t">注册类的类型。</param> 
+    /// <param name="t">注册类的类型。</param> 
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不合适时将引发的错误。</exception>
     [ComRegisterFunction]
     public static void RegisterFunction(Type t)
@@ -322,7 +322,7 @@ public abstract class CapeObjectBase : CapeIdentification, ICapeUtilities, ICape
     
     /// <summary>该函数控制在卸载类时从 COM 注册表中删除该类。</summary>
     /// <remarks>该方法将删除所有添加到类注册中的子键，包括在 <see cref="RegisterFunction"/> 方法中添加的 CAPE-OPEN 特定键。</remarks>
-    /// <param name = "t">未注册类的类型。</param> 
+    /// <param name="t">未注册类的类型。</param> 
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不合适时将引发的错误。</exception>
     [ComUnregisterFunction]
     public static void UnregisterFunction(Type t)
@@ -374,7 +374,7 @@ public abstract class CapeObjectBase : CapeIdentification, ICapeUtilities, ICape
     /// 这由 Validate 方法返回 <c>true</c> 表示。</remarks>
     /// <returns><para>如果单位有效，则为 true。</para>
     /// <para>如果单位无效，则为 false。</para></returns>
-    /// <param name = "message">指向字符串的引用，该字符串将包含与参数验证相关的信息。</param>
+    /// <param name="message">指向字符串的引用，该字符串将包含与参数验证相关的信息。</param>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不合适时将引发的错误。</exception>
     /// <exception cref="ECapeBadCOParameter">ECapeBadCOParameter</exception>
     /// <exception cref="ECapeBadInvOrder">ECapeBadInvOrder</exception>
@@ -497,7 +497,7 @@ public abstract class CapeObjectBase : CapeIdentification, ICapeUtilities, ICape
     /// <remarks><para>向终端写入字符串。</para>
     /// <para>当需要将消息提请用户注意时，会调用此方法。实现应确保将字符串写入对话框或消息列表，以便用户能够轻松查看。</para>
     /// <para>该信息必须尽快显示给用户。</para></remarks>
-    /// <param name = "message">要显示的文本。</param>
+    /// <param name="message">要显示的文本。</param>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不合适时将引发的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递的参数值无效时使用，例如未识别的复合标识符或道具参数的 UNDEFINED。</exception>
     public void PopUpMessage(string message)
@@ -516,7 +516,7 @@ public abstract class CapeObjectBase : CapeIdentification, ICapeUtilities, ICape
     /// <summary>将字符串写入 PME 的日志文件。</summary>
     /// <remarks><para>将字符串写入日志。</para>
     /// <para>当需要记录消息进行日志记录时，会调用此方法。预计实现会将字符串写入日志文件或其他日志设备。</para></remarks>
-    /// <param name = "message">要记录的文本。</param>
+    /// <param name="message">要记录的文本。</param>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不合适时将引发的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递的参数值无效时使用，例如未识别的复合标识符或道具参数的 UNDEFINED。</exception>
     public void LogMessage(string message)

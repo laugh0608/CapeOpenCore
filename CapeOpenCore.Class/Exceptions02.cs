@@ -814,12 +814,12 @@ public class CapeTimeOutException : CapeUserException, ECapeTimeOut
 
 /// <summary>用于封装基于 COM 的异常的包装类。</summary>
 /// <remarks><para>当基于 COM 的 CAPE-OPEN 组件返回失败 HRESULT 时，可以调用此类。失败 HRESULT 表示已发生错误情况。
-/// 此类由 <see href="COMExceptionHandler"/> 使用，以将基于 COM 的错误情况重新抛为基于 .Net 的异常。</para>
+/// 此类由 <see cref="COMExceptionHandler"/> 使用，以将基于 COM 的错误情况重新抛为基于 .Net 的异常。</para>
 /// <para>由于开发错误处理协议时 Visual Basic 程序设计语言的限制，CAPE-OPEN 错误处理过程选择不使用 COM IErrorInfo API。
 /// 相反，CAPE-OPEN 错误处理协议要求发生错误的组件公开适当的错误接口。在实践中，这通常意味着所有 CAPE-OPEN 对象都实现
-/// <see href="ECapeRoot"/>、<see href="ECapeUser"/>，有时也实现 <see href="ECapeUnknown"/> 错误接口。</para>
+/// <see cref="ECapeRoot"/>、<see cref="ECapeUser"/>，有时也实现 <see cref="ECapeUnknown"/> 错误接口。</para>
 /// <para>这个类封装了抛出异常的 CAPE-OPEN 对象，并创建相应的 .Net 异常，以便用户能够使用 .Net 异常处理协议。</para></remarks>
-/// <see href="COMExceptionHandler">COMExceptionHandler</see>
+/// <see cref="COMExceptionHandler">COMExceptionHandler</see>
 [Serializable]
 [ComVisible(true)]
 [Guid("31CD55DE-AEFD-44ff-8BAB-F6252DD43F16")]
@@ -909,22 +909,22 @@ public class CapeThermoPropertyNotAvailableException : CapeUserException, ECapeT
 /// <summary>用于处理基于 COM 的 CAPE-OPEN 组件异常的辅助类。</summary>
 /// <remarks><para>当基于 COM 的 CAPE-OPEN 组件返回失败 HRESULT 时，可以调用此类。失败 HRESULT 表示发生了错误情况。
 /// <see c="ExceptionForHRESULT"/> 格式化基于 .NET 的异常对象和基于 COM 的 CAPE-OPEN 部件，以便使用
-/// <see href="COMCapeOpenExceptionWrapper"/> 包装类，将基于 COM 的错误情况重新抛掷为基于 .NET 的异常。</para>
+/// <see cref="ComCapeOpenExceptionWrapper"/> 包装类，将基于 COM 的错误情况重新抛掷为基于 .NET 的异常。</para>
 /// <para>由于开发错误处理协议时 Visual Basic 程序设计语言的限制，CAPE-OPEN 错误处理过程选择不使用 COM IErrorInfo API。
 /// 相反，CAPE-OPEN 错误处理协议要求发生错误的组件公开适当的错误接口。在实践中，这通常意味着所有 CAPE-OPEN 对象都实现
-/// <see href="ECapeRoot"/>、<see href="ECapeUser"/>，有时也实现 <see href="ECapeUnknown"/> 错误接口。</para></remarks>
-/// <see href="COMCapeOpenExceptionWrapper">COMCapeOpenExceptionWrapper</see> 
+/// <see cref="ECapeRoot"/>、<see cref="ECapeUser"/>，有时也实现 <see cref="ECapeUnknown"/> 错误接口。</para></remarks>
+/// <see cref="ComCapeOpenExceptionWrapper">COMCapeOpenExceptionWrapper</see> 
 [ComVisible(false)]
 public class COMExceptionHandler
 {
     /// <summary>创建并返回 COMCapeOpenExceptionWrapper 类的全新实例。</summary>
     /// <remarks>为基于 COM 的 CAPE-OPEN 组件创建一个基于 .NET 的异常包装器，以使用户能够利用 .NET 结构化异常处理。
-    /// 该方法将基于 .NET 的异常对象与基于 COM 的 CAPE-OPEN 部件格式化，以便使用 <see href="COMCapeOpenExceptionWrapper"/> 
+    /// 该方法将基于 .NET 的异常对象与基于 COM 的 CAPE-OPEN 部件格式化，以便使用 <see cref="ComCapeOpenExceptionWrapper"/> 
     /// 包装类将基于 COM 的错误条件重新包装为基于 .NET 的异常。</remarks>
     /// <returns>基于 COM 的对象将错误 HRESULT 封装为相应的 .NET 异常。</returns>
     /// <param name="exceptionObject">引发错误的 CAPE-OPEN 对象。</param>
     /// <param name="inner">一个基于 .Net 的内部异常，该异常来自 IErrorInfo 对象，如果实现了此接口，或者是一个与之关联的 .Net 异常。</param>
-    /// <see href="COMCapeOpenExceptionWrapper">COMCapeOpenExceptionWrapper</see> 
+    /// <see cref="ComCapeOpenExceptionWrapper">COMCapeOpenExceptionWrapper</see> 
     public static Exception ExceptionForHRESULT(object exceptionObject, Exception inner)
     {
         var pHresult = ((COMException)inner).ErrorCode;

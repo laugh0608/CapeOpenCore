@@ -19,8 +19,8 @@ namespace CapeOpenCore.Class;
 /// <para>在 .NET 中，有一个可用的应用异常类（System.ApplicationException），可以用来提供诸如消息和异常来源等信息。
 /// CAPE-OPEN 异常定义都源自于一个 ECapeRoot 接口（贝奥迪等人，2001 年）。在 CAPE-OPEN 异常类的当前实现中，
 /// 所有异常类都继承自 CapeUserException 类，而 CapeUserException 类本身又继承自 .NET 的
-/// System.ApplicationException 类。CapeUserException 类暴露了 <see href="ECapeRoot"/> 和
-/// <see href="ECapeUser"/> 接口。通过这种方式，由过程建模组件抛出的所有异常，除了作为继承的异常类型被捕获外，
+/// System.ApplicationException 类。CapeUserException 类暴露了 <see cref="ECapeRoot"/> 和
+/// <see cref="ECapeUser"/> 接口。通过这种方式，由过程建模组件抛出的所有异常，除了作为继承的异常类型被捕获外，
 /// 还可以作为 CapeRootException 或 System.ApplicationException 被捕获。</para></remarks>
 [Serializable,ComVisible(true)]
 [Guid("28686562-77AD-448f-8A41-8CF9C3264A3E")]
@@ -29,17 +29,17 @@ namespace CapeOpenCore.Class;
 public abstract class CapeUserException : ApplicationException, ECapeRoot, ECapeUser
 {
     /// <summary>抛出异常时所使用的异常接口的名称。</summary>
-    /// <remarks>MInterfaceName 字段是在 <see href="Initialize">Initialize</see> 方法中为该异常设置的。
+    /// <remarks>MInterfaceName 字段是在 <see cref="Initialize">Initialize</see> 方法中为该异常设置的。
     /// 任何从 CapeUserException 类派生的异常都必须在 Initialize 方法中设置此值。</remarks>
     protected string MInterfaceName;
     
     /// <summary>抛出的异常的名称。</summary>
-    /// <remarks>MName 字段是在 <see href="Initialize">Initialize</see> 方法中为该异常设置的。
+    /// <remarks>MName 字段是在 <see cref="Initialize">Initialize</see> 方法中为该异常设置的。
     /// 任何从 CapeUserException 类派生的异常都需在 Initialize 方法中设置此值。</remarks>
     protected string MName;
     
     /// <summary>抛出的异常的描述。</summary>
-    /// <remarks>MDescription 字段是在异常的 <see href="Initialize">Initialize</see> 方法中设置的。
+    /// <remarks>MDescription 字段是在异常的 <see cref="Initialize">Initialize</see> 方法中设置的。
     /// 任何从 CapeUserException 类派生的异常都需要在 Initialize 方法中设置此值。</remarks>
     protected string MDescription;
 
@@ -97,10 +97,10 @@ public abstract class CapeUserException : ApplicationException, ECapeRoot, ECape
 
     /// <summary>控制 COM 注册的功能。</summary>
     /// <remarks>该函数添加了 CAPE-OPEN 方法与工具规范中指定的注册键。特别是，它表明该单元操作实现了
-    /// CAPE-OPEN 单元操作类别标识。此外，它还使用 <see href="CapeNameAttribute"/>、
-    /// <see href="CapeDescriptionAttribute"/>、<see href=" CapeVersionAttribute"/>、
-    /// <see href="CapeVendorURLAttribute"/>、<see href="CapeHelpURLAttribute"/> 和
-    /// <see href="CapeAboutAttribute"/> 属性来添加 CapeDescription 注册键。</remarks>
+    /// CAPE-OPEN 单元操作类别标识。此外，它还使用 <see cref="CapeNameAttribute"/>、
+    /// <see cref="CapeDescriptionAttribute"/>、<see cref=" CapeVersionAttribute"/>、
+    /// <see cref="CapeVendorURLAttribute"/>、<see cref="CapeHelpURLAttribute"/> 和
+    /// <see cref="CapeAboutAttribute"/> 属性来添加 CapeDescription 注册键。</remarks>
     /// <param name="t">正在注册的类类型。</param> 
     /// <exception cref ="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
     [ComRegisterFunction]
@@ -108,7 +108,7 @@ public abstract class CapeUserException : ApplicationException, ECapeRoot, ECape
     
     /// <summary>此功能用于控制在卸载类时从 COM 注册表中删除该类。</summary>
     /// <remarks>该方法将删除添加到该类注册表中的所有子键，包括由
-    /// <see href="RegisterFunction"/> 方法添加的特定于 CAPE-OPEN 的键。</remarks>
+    /// <see cref="RegisterFunction"/> 方法添加的特定于 CAPE-OPEN 的键。</remarks>
     /// <param name="t">该类未注册。</param> 
     /// <exception cref ="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
     [ComUnregisterFunction]
@@ -123,7 +123,7 @@ public abstract class CapeUserException : ApplicationException, ECapeRoot, ECape
 
     /// <summary>用于指定错误子类别的代码。</summary>
     /// <remarks>值的分配由每个实现自行决定。因此，这是一段专用于 CO 组件提供者的私有代码。
-    /// 默认情况下，它被设置为 CAPE-OPEN 错误 HRESULT，参见 <see href="CapeErrorInterfaceHR"/>。</remarks>
+    /// 默认情况下，它被设置为 CAPE-OPEN 错误 HRESULT，参见 <see cref="CapeErrorInterfaceHR"/>。</remarks>
     /// <value>异常的 HRESULT 值。</value>
     public int code => HResult;
 
@@ -137,7 +137,7 @@ public abstract class CapeUserException : ApplicationException, ECapeRoot, ECape
     }
 
     /// <summary>错误的范围。</summary>
-    /// <remarks>该属性提供了一份包含错误发生位置的软件包列表。例如 <see href="ICapeIdentification"/>。</remarks>
+    /// <remarks>该属性提供了一份包含错误发生位置的软件包列表。例如 <see cref="ICapeIdentification"/>。</remarks>
     /// <value>错误的来源。</value>
     public string scope => Source;
 
@@ -556,7 +556,7 @@ public abstract class CapeBoundariesException : CapeUserException, ECapeBoundari
 }
 
 /// <summary>参数值超出范围。</summary>
-/// <remarks>此类继承自 <see href="CapeBoundariesException"/> 类。它用于表示其中一个参数超出了其范围。</remarks>
+/// <remarks>此类继承自 <see cref="CapeBoundariesException"/> 类。它用于表示其中一个参数超出了其范围。</remarks>
 [Serializable]
 [ComVisible(true)]
 [Guid("4438458A-1659-48c2-9138-03AD8B4C38D8")]
@@ -650,13 +650,13 @@ public class CapeOutOfBoundsException :
 
 /// <summary>与计算相关的错误层次结构的基类。</summary>
 /// <remarks>此类用于指示在进行计算时发生了错误。其他与计算相关的类，如 
-/// <see href="CapeFailedInitialisationException">CapeOpen.CapeFailedInitialisationException</see>、
-/// <see href="CapeOutOfResourcesException">CapeOpen.CapeOutOfResourcesException</see>、
-/// <see href="CapeSolvingErrorException">CapeOpen.CapeSolvingErrorException</see>、
-/// <see href="CapeBadInvOrderException">CapeOpen.CapeBadInvOrderException</see>、
-/// <see href="CapeInvalidOperationException">CapeOpen.CapeInvalidOperationException</see>、
-/// <see href="CapeNoMemoryException">CapeOpen.CapeNoMemoryException</see> 和 
-/// <see href="CapeTimeOutException">CapeOpen.CapeTimeOutException</see> 从该类派生。</remarks>
+/// <see cref="CapeFailedInitialisationException">CapeOpen.CapeFailedInitialisationException</see>、
+/// <see cref="CapeOutOfResourcesException">CapeOpen.CapeOutOfResourcesException</see>、
+/// <see cref="CapeSolvingErrorException">CapeOpen.CapeSolvingErrorException</see>、
+/// <see cref="CapeBadInvOrderException">CapeOpen.CapeBadInvOrderException</see>、
+/// <see cref="CapeInvalidOperationException">CapeOpen.CapeInvalidOperationException</see>、
+/// <see cref="CapeNoMemoryException">CapeOpen.CapeNoMemoryException</see> 和 
+/// <see cref="CapeTimeOutException">CapeOpen.CapeTimeOutException</see> 从该类派生。</remarks>
 [Serializable]
 [ComVisible(true)]
 [Guid("9D416BF5-B9E3-429a-B13A-222EE85A92A7")]
@@ -745,8 +745,8 @@ public class CapeFailedInitialisationException : CapeComputationException, ECape
 
 /// <summary>与当前实现相关的错误层次结构的基类。</summary>
 /// <remarks>此类用于指示在某个对象的实现过程中发生了错误。与实现相关的类，如 
-/// <see href="CapeNoImplException ">CapeOpen.CapeNoImplException </see> 和 
-/// <see href="CapeLimitedImplException ">CapeOpen.CapeLimitedImplException </see> 从此类派生。</remarks>
+/// <see cref="CapeNoImplException ">CapeOpen.CapeNoImplException </see> 和 
+/// <see cref="CapeLimitedImplException ">CapeOpen.CapeLimitedImplException </see> 从此类派生。</remarks>
 [Serializable]
 [ComVisible(true)]
 [Guid("7828A87E-582D-4947-9E8F-4F56725B6D75")]

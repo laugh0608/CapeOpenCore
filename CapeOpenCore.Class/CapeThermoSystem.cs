@@ -23,8 +23,8 @@ public abstract class CapeThermoSystem : CapeIdentification, ICapeThermoSystem, 
     /// <remarks>返回一个包含热力学系统支持的物性包名称的字符串数组。</remarks>
     /// <returns>返回的受支持物性包集。包含从 COM 对象序列化的字符串数组的 System.Object 对象。</returns>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
-    /// <exception cref = "ECapeFailedInitialisation">ECapeFailedInitialisation</exception>
-    /// <exception cref = "ECapeNoImpl">ECapeNoImpl</exception>
+    /// <exception cref="ECapeFailedInitialisation">ECapeFailedInitialisation</exception>
+    /// <exception cref="ECapeNoImpl">ECapeNoImpl</exception>
     object ICapeThermoSystemCOM.GetPropertyPackages()
     {
         return GetPropertyPackages();
@@ -33,10 +33,10 @@ public abstract class CapeThermoSystem : CapeIdentification, ICapeThermoSystem, 
     /// <summary>解决特定的物性包。</summary>
     /// <remarks>将引用的物性包解析为物性包接口。</remarks>
     /// <returns>物性包接口。</returns>
-    /// <param name = "propertyPackage">待解决的物性包。</param>
+    /// <param name="propertyPackage">待解决的物性包。</param>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
-    /// <exception cref = "ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为未定义。</exception>
-    /// <exception cref = "ECapeFailedInitialisation">ECapeFailedInitialisation</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为未定义。</exception>
+    /// <exception cref="ECapeFailedInitialisation">ECapeFailedInitialisation</exception>
     object ICapeThermoSystemCOM.ResolvePropertyPackage(string propertyPackage)
     {
         return ResolvePropertyPackage(propertyPackage);
@@ -45,24 +45,24 @@ public abstract class CapeThermoSystem : CapeIdentification, ICapeThermoSystem, 
     // Process Modeling Component 简称 PMC，为过程模拟组件，简单理解为单元模块，Process Modeling Environment 简称 PME，为过程模拟环境。
     /// <summary>创建一个名为 CapeThermoSystem 的类实例，并使用提供的名称和描述。</summary>
     /// <remarks>可以使用此构造函数指定热力学系统的特定名称和描述。</remarks>
-    /// <param name = "name">PMC 的名称。</param>
-    /// <param name = "description">PMC 的描述。</param>
+    /// <param name="name">PMC 的名称。</param>
+    /// <param name="description">PMC 的描述。</param>
     protected CapeThermoSystem(string name, string description) : base(name, description) { }
 
     /// <summary>获取可用物性包列表。</summary>
     /// <remarks>返回由热系统支持的物性包名称的字符串数组。</remarks>
     /// <returns>返回的受支持物性包集合。</returns>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
-    /// <exception cref = "ECapeFailedInitialisation">ECapeFailedInitialisation</exception>
-    /// <exception cref = "ECapeNoImpl">ECapeNoImpl</exception>
+    /// <exception cref="ECapeFailedInitialisation">ECapeFailedInitialisation</exception>
+    /// <exception cref="ECapeNoImpl">ECapeNoImpl</exception>
     public abstract string[] GetPropertyPackages();
 
     /// <summary>解决特定的物性包。</summary>
     /// <remarks>将引用的物性包解析为物性包接口。</remarks>
     /// <returns>物性包接口。</returns>
-    /// <param name = "propertyPackage">待解决的物性包。</param>
+    /// <param name="propertyPackage">待解决的物性包。</param>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
-    /// <exception cref = "ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为未定义。</exception>
-    /// <exception cref = "ECapeFailedInitialisation">ECapeFailedInitialisation</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为未定义。</exception>
+    /// <exception cref="ECapeFailedInitialisation">ECapeFailedInitialisation</exception>
     public abstract ICapeThermoPropertyPackage ResolvePropertyPackage(string propertyPackage);
 }
