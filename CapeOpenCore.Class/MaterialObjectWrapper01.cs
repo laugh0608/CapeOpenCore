@@ -6,18 +6,15 @@
  */
 
 using System;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
 
 namespace CapeOpenCore.Class;
 
-/// <summary>Status of the phases present in the material object.</summary>
-/// <remarks>All the Phases with a status of Cape_AtEquilibrium have values of 
-/// temperature, pressure, composition and Phase fraction set that correspond to an 
-/// equilibrium state, i.e. equal temperature, pressure and fugacities of each 
-/// Compound. Phases with a Cape_Estimates status have values of temperature, pressure, 
-/// composition and Phase fraction set in the Material Object. These values are 
-/// available for use by an Equilibrium Calculator component to initialise an 
-/// Equilibrium Calculation. The stored values are available but there is no guarantee 
-/// that they will be used.</remarks>
+/// <summary>物流对象中各相态的状态。</summary>
+/// <remarks>所有状态为 Cape_AtEquilibrium 的相均设置有温度、压力、组成和相分数值，这些值对应于平衡状态，
+/// 即每个化合物的温度、压力和逸度相等。处于 Cape_Estimates 状态的相的温度、压力、组分和相分数值在物流对象中设置。
+/// 这些值可供平衡计算组件用于初始化平衡计算。存储的值可用，但不保证会被使用。</remarks>
 [Serializable]
 [Flags]
 public enum CapeFugacityFlag
@@ -32,7 +29,7 @@ public enum CapeFugacityFlag
     CAPE_P_DERIVATIVE = 4,
     /// <summary>Mole Number Derivative.</summary>
     CAPE_MOLE_NUMBERS_DERIVATIVES = 8
-};
+}
 
 /// <summary>Wrapper class for COM-based CAPE-OPEN ICapeThermoMaterialObject material object.</summary>
 /// <remarks><para>This class is a wrapper class for COM-based CAPE-OPEN ICapeThermoMaterialObject material object.
@@ -41,60 +38,61 @@ public enum CapeFugacityFlag
 /// <para>In addition, this method converts the COM variants used in the <see cref ="ICapeThermoMaterialObject">
 /// ICapeThermoMaterialObject</see> interface to the desired .Net object types. This elimiates the need to convert the data types
 /// whne you use a COM-based CAPE-OPEN material object.</para></remarks>
-[System.Runtime.InteropServices.ComVisibleAttribute(false)]
-[System.Runtime.InteropServices.GuidAttribute("5A65B4B2-2FDD-4208-813D-7CC527FB91BD")]
-[System.ComponentModel.DescriptionAttribute("ICapeThermoMaterialObject Interface")]
+[ComVisible(false)]
+[Guid("5A65B4B2-2FDD-4208-813D-7CC527FB91BD")]
+[Description("ICapeThermoMaterialObject Interface")]
 internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMaterialObject, ICapeThermoMaterial, ICapeThermoCompounds, 
     ICapeThermoPhases, ICapeThermoUniversalConstant, ICapeThermoEquilibriumRoutine, ICapeThermoPropertyRoutine
 {
     [NonSerialized]
-    private ICapeThermoMaterialObjectCOM p_MaterialObject;
+    private ICapeThermoMaterialObjectCOM _pMaterialObject;
     [NonSerialized]
-    private CapeOpenCore.Class.ICapeThermoMaterialCOM p_IMatObj;
+    private ICapeThermoMaterialCOM _pIMatObj;
     [NonSerialized]
-    private CapeOpenCore.Class.ICapeThermoCompoundsCOM p_ICompounds;
+    private ICapeThermoCompoundsCOM _pICompounds;
     [NonSerialized]
-    private CapeOpenCore.Class.ICapeThermoPhasesCOM p_IPhases;
+    private ICapeThermoPhasesCOM _pIPhases;
     [NonSerialized]
-    private CapeOpenCore.Class.ICapeThermoUniversalConstantCOM p_IUniversalConstant;
+    private ICapeThermoUniversalConstantCOM _pIUniversalConstant;
     [NonSerialized]
-    private CapeOpenCore.Class.ICapeThermoPropertyRoutineCOM p_IPropertyRoutine;
+    private ICapeThermoPropertyRoutineCOM _pIPropertyRoutine;
     [NonSerialized]
-    private CapeOpenCore.Class.ICapeThermoEquilibriumRoutineCOM p_IEquilibriumRoutine;
-    // Track whether Dispose has been called.
+    private ICapeThermoEquilibriumRoutineCOM _pIEquilibriumRoutine;
+    
+    // 跟踪是否已调用 Dispose 方法。
     private bool _disposed;
 
-    private bool Thermo10;
-    private bool Thermo11;
+    private bool _thermo10;
+    private bool _thermo11;
     
     /// <summary>Creates a new instance of the MaterialObjectWrapper class</summary>
     /// <param name="materialObject">The material Object to be wrapped.</param>
     public MaterialObjectWrapper(Object materialObject)
     {
         _disposed = false;
-        Thermo10 = false;
-        Thermo11 = false;
+        _thermo10 = false;
+        _thermo11 = false;
         
         if (materialObject is ICapeThermoMaterialObjectCOM)
         {
-            p_MaterialObject = (CapeOpenCore.Class.ICapeThermoMaterialObjectCOM)materialObject;
-            Thermo10 = true;
+            _pMaterialObject = (ICapeThermoMaterialObjectCOM)materialObject;
+            _thermo10 = true;
         }
-        p_IMatObj = null;
-        p_IPropertyRoutine = null;
-        p_IUniversalConstant = null;
-        p_IPhases = null;
-        p_ICompounds = null;
-        p_IEquilibriumRoutine = null;
+        _pIMatObj = null;
+        _pIPropertyRoutine = null;
+        _pIUniversalConstant = null;
+        _pIPhases = null;
+        _pICompounds = null;
+        _pIEquilibriumRoutine = null;
         if (materialObject is ICapeThermoMaterialCOM)
         {
-            Thermo11 = true;
-            p_IMatObj = (ICapeThermoMaterialCOM)materialObject;
-            p_IPropertyRoutine = (ICapeThermoPropertyRoutineCOM)materialObject;
-            p_IUniversalConstant = (ICapeThermoUniversalConstantCOM)materialObject;
-            p_IPhases = (ICapeThermoPhasesCOM)materialObject;
-            p_ICompounds = (ICapeThermoCompoundsCOM)materialObject;
-            p_IEquilibriumRoutine = (ICapeThermoEquilibriumRoutineCOM)materialObject;                
+            _thermo11 = true;
+            _pIMatObj = (ICapeThermoMaterialCOM)materialObject;
+            _pIPropertyRoutine = (ICapeThermoPropertyRoutineCOM)materialObject;
+            _pIUniversalConstant = (ICapeThermoUniversalConstantCOM)materialObject;
+            _pIPhases = (ICapeThermoPhasesCOM)materialObject;
+            _pICompounds = (ICapeThermoCompoundsCOM)materialObject;
+            _pIEquilibriumRoutine = (ICapeThermoEquilibriumRoutineCOM)materialObject;                
         }
     }
 
@@ -136,52 +134,52 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
             {
             }
             // Indicate that the instance has been disposed.
-            if (p_MaterialObject != null)
-                if (p_MaterialObject.GetType().IsCOMObject)
+            if (_pMaterialObject != null)
+                if (_pMaterialObject.GetType().IsCOMObject)
                 {
-                    System.Runtime.InteropServices.Marshal.FinalReleaseComObject(p_MaterialObject);
+                    Marshal.FinalReleaseComObject(_pMaterialObject);
                 }
-            p_MaterialObject = null;
-            if (p_IMatObj != null)
+            _pMaterialObject = null;
+            if (_pIMatObj != null)
             {
-                if (p_IMatObj.GetType().IsCOMObject)
+                if (_pIMatObj.GetType().IsCOMObject)
                 {
-                    System.Runtime.InteropServices.Marshal.FinalReleaseComObject(p_IMatObj);
+                    Marshal.FinalReleaseComObject(_pIMatObj);
                 }
             }
-            p_IMatObj = null;
-            if (p_ICompounds != null)
+            _pIMatObj = null;
+            if (_pICompounds != null)
             {
-                if (p_ICompounds.GetType().IsCOMObject)
+                if (_pICompounds.GetType().IsCOMObject)
                 {
-                    System.Runtime.InteropServices.Marshal.FinalReleaseComObject(p_ICompounds);
+                    Marshal.FinalReleaseComObject(_pICompounds);
                 }
             }
-            p_ICompounds = null;
-            if (p_IPhases != null)
+            _pICompounds = null;
+            if (_pIPhases != null)
             {
-                if (p_IPhases.GetType().IsCOMObject)
+                if (_pIPhases.GetType().IsCOMObject)
                 {
-                    System.Runtime.InteropServices.Marshal.FinalReleaseComObject(p_IPhases);
+                    Marshal.FinalReleaseComObject(_pIPhases);
                 }
             }
-            p_IPhases = null;
-            if (p_IUniversalConstant != null)
+            _pIPhases = null;
+            if (_pIUniversalConstant != null)
             {
-                if (p_IUniversalConstant.GetType().IsCOMObject)
+                if (_pIUniversalConstant.GetType().IsCOMObject)
                 {
-                    System.Runtime.InteropServices.Marshal.FinalReleaseComObject(p_IUniversalConstant);
+                    Marshal.FinalReleaseComObject(_pIUniversalConstant);
                 }
             }
-            p_IUniversalConstant = null;
-            if (p_IPropertyRoutine != null)
+            _pIUniversalConstant = null;
+            if (_pIPropertyRoutine != null)
             {
-                if (p_IPropertyRoutine.GetType().IsCOMObject)
+                if (_pIPropertyRoutine.GetType().IsCOMObject)
                 {
-                    System.Runtime.InteropServices.Marshal.FinalReleaseComObject(p_IPropertyRoutine);
+                    Marshal.FinalReleaseComObject(_pIPropertyRoutine);
                 }
             }
-            p_IPropertyRoutine = null;
+            _pIPropertyRoutine = null;
             _disposed = true;
         }
     }
@@ -198,18 +196,18 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// user of the component will do it.</para></remarks>
     /// <value>The unique name of the component.</value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    [System.ComponentModel.DescriptionAttribute("Unit Operation Parameter Collection. Click on the (...) button to edit collection.")]
-    [System.ComponentModel.CategoryAttribute("CapeIdentification")]
+    [Description("Unit Operation Parameter Collection. Click on the (...) button to edit collection.")]
+    [Category("CapeIdentification")]
     override public String ComponentName
     {
         get
         {
-            return ((ICapeIdentification)p_MaterialObject).ComponentName;
+            return ((ICapeIdentification)_pMaterialObject).ComponentName;
         }
 
         set
         {
-            ((ICapeIdentification)p_MaterialObject).ComponentName = value;
+            ((ICapeIdentification)_pMaterialObject).ComponentName = value;
         }
     }
 
@@ -225,17 +223,17 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// user of the component will do it.</para></remarks>
     /// <value>The description of the component.</value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    [System.ComponentModel.DescriptionAttribute("Unit Operation Parameter Collection. Click on the (...) button to edit collection.")]
-    [System.ComponentModel.CategoryAttribute("CapeIdentification")]
+    [Description("Unit Operation Parameter Collection. Click on the (...) button to edit collection.")]
+    [Category("CapeIdentification")]
     override public String ComponentDescription
     {
         get
         {
-            return ((ICapeIdentification)p_MaterialObject).ComponentDescription;
+            return ((ICapeIdentification)_pMaterialObject).ComponentDescription;
         }
         set
         {
-            ((ICapeIdentification)p_MaterialObject).ComponentDescription = value;
+            ((ICapeIdentification)_pMaterialObject).ComponentDescription = value;
         }
     }
 
@@ -247,7 +245,7 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     {
         get
         {
-            return Thermo10;
+            return _thermo10;
         }
     }
 
@@ -259,7 +257,7 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     {
         get
         {
-            return Thermo11;
+            return _thermo11;
         }
     }
         
@@ -268,13 +266,13 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// <para>The material object exposes the COm version of the ICapeThermoMaterialObject interface.</para></remarks>
     /// <value>The wrapped Thermo Version 1.0 Material Object.</value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    [System.ComponentModel.DescriptionAttribute("Unit Operation Parameter Collection. Click on the (...) button to edit collection.")]
-    [System.ComponentModel.CategoryAttribute("CapeIdentification")]
+    [Description("Unit Operation Parameter Collection. Click on the (...) button to edit collection.")]
+    [Category("CapeIdentification")]
     public object MaterialObject10
     {
         get
         {
-            return p_MaterialObject;
+            return _pMaterialObject;
         }
     }
 
@@ -284,13 +282,13 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// <para>The material object exposes the COM version of the Thermo 1.1 interfaces.</para></remarks>
     /// <value>The wrapped Thermo Version 1.1 Material Object.</value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    [System.ComponentModel.DescriptionAttribute("Unit Operation Parameter Collection. Click on the (...) button to edit collection.")]
-    [System.ComponentModel.CategoryAttribute("CapeIdentification")]
+    [Description("Unit Operation Parameter Collection. Click on the (...) button to edit collection.")]
+    [Category("CapeIdentification")]
     public object MaterialObject11
     {
         get
         {
-            return p_IMatObj;
+            return _pIMatObj;
         }
     }
         
@@ -304,11 +302,11 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
         {
             try
             {
-                return (String[])p_MaterialObject.ComponentIds;
+                return (String[])_pMaterialObject.ComponentIds;
             }
-            catch (System.Exception p_Ex)
+            catch (Exception p_Ex)
             {
-                throw COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
+                throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
             }
         }
     }
@@ -325,11 +323,11 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
         {
             try
             {
-                return (String[])p_MaterialObject.PhaseIds;
+                return (String[])_pMaterialObject.PhaseIds;
             }
-            catch (System.Exception p_Ex)
+            catch (Exception p_Ex)
             {
-                throw COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
+                throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
             }
         }
     }
@@ -347,11 +345,11 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     {
         try
         {
-            return (double[])p_MaterialObject.GetUniversalConstant(props);
+            return (double[])_pMaterialObject.GetUniversalConstant(props);
         }
-        catch (System.Exception p_Ex)
+        catch (Exception p_Ex)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
         }
     }
 
@@ -379,11 +377,11 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     {
         try
         {
-            return (object[])p_MaterialObject.GetComponentConstant(props, compIds);
+            return (object[])_pMaterialObject.GetComponentConstant(props, compIds);
         }
-        catch (System.Exception p_Ex)
+        catch (Exception p_Ex)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
         }
     }
 
@@ -408,11 +406,11 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     {
         try
         {
-            p_MaterialObject.CalcProp(props, phases, calcType);
+            _pMaterialObject.CalcProp(props, phases, calcType);
         }
-        catch (System.Exception p_Ex)
+        catch (Exception p_Ex)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
         }
     }
 
@@ -434,19 +432,19 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// apply (see also Specific properties.</param>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    double[] ICapeThermoMaterialObject.GetProp(System.String property,
-        System.String phase,
+    double[] ICapeThermoMaterialObject.GetProp(String property,
+        String phase,
         String[] compIds,
-        System.String calcType,
-        System.String basis)
+        String calcType,
+        String basis)
     {
         try
         {
-            return (double[])p_MaterialObject.GetProp(property, phase, compIds, calcType, basis);
+            return (double[])_pMaterialObject.GetProp(property, phase, compIds, calcType, basis);
         }
-        catch (System.Exception p_Ex)
+        catch (Exception p_Ex)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
         }
     }
 
@@ -466,20 +464,20 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// <param name = "values">Values to set for the property.</param>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    void ICapeThermoMaterialObject.SetProp(System.String property,
-        System.String phase,
+    void ICapeThermoMaterialObject.SetProp(String property,
+        String phase,
         String[] compIds,
-        System.String calcType,
-        System.String basis,
+        String calcType,
+        String basis,
         double[] values)
     {
         try
         {
-            p_MaterialObject.SetProp(property, phase, compIds, calcType, basis, values);
+            _pMaterialObject.SetProp(property, phase, compIds, calcType, basis, values);
         }
-        catch (System.Exception p_Ex)
+        catch (Exception p_Ex)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
         }
     }
     
@@ -500,15 +498,15 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// <exception cref = "ECapeSolvingError">ECapeSolvingError</exception>
     /// <exception cref = "ECapeOutOfBounds">ECapeOutOfBounds</exception>
     /// <exception cref = "ECapeLicenceError">ECapeLicenceError</exception>
-    void ICapeThermoMaterialObject.CalcEquilibrium(System.String flashType, String[] props)
+    void ICapeThermoMaterialObject.CalcEquilibrium(String flashType, String[] props)
     {
         try
         {
-            p_MaterialObject.CalcEquilibrium(flashType, props);
+            _pMaterialObject.CalcEquilibrium(flashType, props);
         }
-        catch (System.Exception p_Ex)
+        catch (Exception p_Ex)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
         }
     }
 
@@ -526,11 +524,11 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     {
         try
         {
-            p_MaterialObject.SetIndependentVar(indVars, values);
+            _pMaterialObject.SetIndependentVar(indVars, values);
         }
-        catch (System.Exception p_Ex)
+        catch (Exception p_Ex)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
         }
     }
 
@@ -546,11 +544,11 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     {
         try
         {
-            return (double[])p_MaterialObject.GetIndependentVar(indVars);
+            return (double[])_pMaterialObject.GetIndependentVar(indVars);
         }
-        catch (System.Exception p_Ex)
+        catch (Exception p_Ex)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
         }
     }
     
@@ -564,11 +562,11 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     {
         try
         {
-            return (bool[])p_MaterialObject.PropCheck(props);
+            return (bool[])_pMaterialObject.PropCheck(props);
         }
-        catch (System.Exception p_Ex)
+        catch (Exception p_Ex)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
         }
     }
 
@@ -582,11 +580,11 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     {
         try
         {
-            return (String[])p_MaterialObject.AvailableProps();
+            return (String[])_pMaterialObject.AvailableProps();
         }
-        catch (System.Exception p_Ex)
+        catch (Exception p_Ex)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
         }
     }
 
@@ -598,11 +596,11 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     {
         try
         {
-            p_MaterialObject.RemoveResults(props);
+            _pMaterialObject.RemoveResults(props);
         }
-        catch (System.Exception p_Ex)
+        catch (Exception p_Ex)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
         }
     }
     
@@ -619,11 +617,11 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     {
         try
         {
-            return (ICapeThermoMaterialObject)p_MaterialObject.CreateMaterialObject();
+            return (ICapeThermoMaterialObject)_pMaterialObject.CreateMaterialObject();
         }
-        catch (System.Exception p_Ex)
+        catch (Exception p_Ex)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
         }
     }
 
@@ -634,18 +632,18 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeOutOfResources">ECapeOutOfResources</exception>
     /// <exception cref = "ECapeLicenceError">ECapeLicenceError</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(15)]
-    [System.ComponentModel.DescriptionAttribute("method Duplicate")]
-    [return: System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.IDispatch)]
+    [DispId(15)]
+    [Description("method Duplicate")]
+    [return: MarshalAs(UnmanagedType.IDispatch)]
     ICapeThermoMaterialObject ICapeThermoMaterialObject.Duplicate()
     {
         try
         {
-            return new MaterialObjectWrapper(p_MaterialObject.Duplicate());
+            return new MaterialObjectWrapper(_pMaterialObject.Duplicate());
         }
-        catch (System.Exception p_Ex)
+        catch (Exception p_Ex)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
         }
     }
 
@@ -662,11 +660,11 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     {
         try
         {
-            return (ICapeThermoReliability[])p_MaterialObject.ValidityCheck(props);
+            return (ICapeThermoReliability[])_pMaterialObject.ValidityCheck(props);
         }
-        catch (System.Exception p_Ex)
+        catch (Exception p_Ex)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
         }
     }
 
@@ -685,11 +683,11 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     {
         try
         {
-            return (String[])p_MaterialObject.GetPropList();
+            return (String[])_pMaterialObject.GetPropList();
         }
-        catch (System.Exception p_Ex)
+        catch (Exception p_Ex)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
         }
     }
 
@@ -702,11 +700,11 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     {
         try
         {
-            return p_MaterialObject.GetNumComponents();
+            return _pMaterialObject.GetNumComponents();
         }
-        catch (System.Exception p_Ex)
+        catch (Exception p_Ex)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
         }
     }
     
@@ -730,7 +728,7 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// other error(s), specified for this operation, are not suitable.</exception>
     void ICapeThermoMaterial.ClearAllProps()
     {
-        p_IMatObj.ClearAllProps();
+        _pIMatObj.ClearAllProps();
     }
 
     /// <summary>Copies all the stored non-constant Physical Properties (which have been set 
@@ -765,7 +763,7 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// other error(s), specified for this operation, are not suitable.</exception>
     void ICapeThermoMaterial.CopyFromMaterial(ICapeThermoMaterial source)
     {
-        p_IMatObj.CopyFromMaterial(((MaterialObjectWrapper)source).MaterialObject11);
+        _pIMatObj.CopyFromMaterial(((MaterialObjectWrapper)source).MaterialObject11);
     }
 
     /// <summary>Creates a Material Object with the same configuration as the current 
@@ -793,7 +791,7 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// other error(s), specified for this operation, are not suitable.</exception>
     ICapeThermoMaterial ICapeThermoMaterial.CreateMaterial()
     {
-        return (ICapeThermoMaterial)new MaterialObjectWrapper(p_IMatObj.CreateMaterial());
+        return new MaterialObjectWrapper(_pIMatObj.CreateMaterial());
     }
 
     /// <summary>Retrieves non-constant Physical Property values for the overall mixture.</summary>
@@ -840,7 +838,7 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     void ICapeThermoMaterial.GetOverallProp(String property, String basis, ref double[] results)
     {
         Object obj1 = null;
-        p_IMatObj.GetOverallProp(property, basis, ref obj1);
+        _pIMatObj.GetOverallProp(property, basis, ref obj1);
         results = (double[])obj1;
     }
 
@@ -870,7 +868,7 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     void ICapeThermoMaterial.GetOverallTPFraction(ref double temperature, ref double pressure, ref double[] composition)
     {
         Object obj1 = null;
-        p_IMatObj.GetOverallTPFraction(temperature, pressure, ref obj1);
+        _pIMatObj.GetOverallTPFraction(temperature, pressure, ref obj1);
         composition = (double[])obj1;
     }
 
@@ -949,19 +947,19 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// it is not supported by the current implementation</exception>
     /// <exception cref = "ECapeUnknown">The error to be raised when 
     /// other error(s), specified for this operation, are not suitable.</exception>
-    void ICapeThermoMaterial.GetPresentPhases(ref String[] phaseLabels, ref CapeOpenCore.Class.CapePhaseStatus[] phaseStatus)
+    void ICapeThermoMaterial.GetPresentPhases(ref String[] phaseLabels, ref CapePhaseStatus[] phaseStatus)
     {
         Object obj1 = null;
         Object obj2 = null;
-        p_IMatObj.GetPresentPhases(ref obj1, ref obj2);
+        _pIMatObj.GetPresentPhases(ref obj1, ref obj2);
         phaseLabels = (String[])obj1;
-        phaseStatus = new CapeOpenCore.Class.CapePhaseStatus[phaseLabels.Length];
+        phaseStatus = new CapePhaseStatus[phaseLabels.Length];
         int[] values = (int[])obj2;
         for (int i = 0; i < phaseStatus.Length; i++)
         {
-            if (values[i] == 0) phaseStatus[i] = CapeOpenCore.Class.CapePhaseStatus.CAPE_UNKNOWNPHASESTATUS;
-            if (values[i] == 1) phaseStatus[i] = CapeOpenCore.Class.CapePhaseStatus.CAPE_ATEQUILIBRIUM;
-            if (values[i] == 2) phaseStatus[i] = CapeOpenCore.Class.CapePhaseStatus.CAPE_ESTIMATES;
+            if (values[i] == 0) phaseStatus[i] = CapePhaseStatus.CAPE_UNKNOWNPHASESTATUS;
+            if (values[i] == 1) phaseStatus[i] = CapePhaseStatus.CAPE_ATEQUILIBRIUM;
+            if (values[i] == 2) phaseStatus[i] = CapePhaseStatus.CAPE_ESTIMATES;
         }
     }
 
@@ -1026,7 +1024,7 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     void ICapeThermoMaterial.GetSinglePhaseProp(String property, String phaseLabel, String basis, ref double[] results)
     {
         Object obj1 = null;
-        p_IMatObj.GetSinglePhaseProp(property, phaseLabel, basis, ref obj1);
+        _pIMatObj.GetSinglePhaseProp(property, phaseLabel, basis, ref obj1);
         results = (double[])obj1;
     }
 
@@ -1065,7 +1063,7 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     void ICapeThermoMaterial.GetTPFraction(String phaseLabel, ref double temperature, ref double pressure, ref double[] composition)
     {
         Object obj1 = null;
-        p_IMatObj.GetTPFraction(phaseLabel, temperature, pressure, obj1);
+        _pIMatObj.GetTPFraction(phaseLabel, temperature, pressure, obj1);
         composition = (double[])obj1;
     }
 
@@ -1138,7 +1136,7 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     void ICapeThermoMaterial.GetTwoPhaseProp(String property, String[] phaseLabels, String basis, ref double[] results)
     {
         Object obj1 = null;
-        p_IMatObj.GetTwoPhaseProp(property, phaseLabels, basis, ref obj1);
+        _pIMatObj.GetTwoPhaseProp(property, phaseLabels, basis, ref obj1);
         results = (double[])obj1;
     }
 
@@ -1177,7 +1175,7 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// specified for the SetSinglePhaseProp operation, are not suitable.</exception>
     void ICapeThermoMaterial.SetOverallProp(String property, String basis, double[] values)
     {
-        p_IMatObj.SetOverallProp(property, basis, values);
+        _pIMatObj.SetOverallProp(property, basis, values);
     }
 
     /// <summary>Allows the PME or the Property Package to specify the list of Phases that 
@@ -1238,16 +1236,16 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// phaseStatus contains a value that is not in the above table.</exception>
     /// <exception cref = "ECapeUnknown">The error to be raised when 
     /// other error(s), specified for this operation, are not suitable.</exception>
-    void ICapeThermoMaterial.SetPresentPhases(String[] phaseLabels, CapeOpenCore.Class.CapePhaseStatus[] phaseStatus)
+    void ICapeThermoMaterial.SetPresentPhases(String[] phaseLabels, CapePhaseStatus[] phaseStatus)
     {
         int[] obj1 = new int[phaseStatus.Length];
         for (int i = 0; i < obj1.Length; i++)
         {
-            if (phaseStatus[i] == CapeOpenCore.Class.CapePhaseStatus.CAPE_UNKNOWNPHASESTATUS) obj1[i] = 0;
-            if (phaseStatus[i] == CapeOpenCore.Class.CapePhaseStatus.CAPE_ATEQUILIBRIUM) obj1[i] = 1;
-            if (phaseStatus[i] == CapeOpenCore.Class.CapePhaseStatus.CAPE_ESTIMATES) obj1[i] = 2;
+            if (phaseStatus[i] == CapePhaseStatus.CAPE_UNKNOWNPHASESTATUS) obj1[i] = 0;
+            if (phaseStatus[i] == CapePhaseStatus.CAPE_ATEQUILIBRIUM) obj1[i] = 1;
+            if (phaseStatus[i] == CapePhaseStatus.CAPE_ESTIMATES) obj1[i] = 2;
         }
-        p_IMatObj.SetPresentPhases(phaseLabels, obj1);
+        _pIMatObj.SetPresentPhases(phaseLabels, obj1);
     }
 
     /// <summary>Sets single-phase non-constant property values for a mixture.</summary>
@@ -1294,6 +1292,6 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// specified for the SetSinglePhaseProp operation, are not suitable.</exception>
     void ICapeThermoMaterial.SetSinglePhaseProp(String prop, String phaseLabel, String basis, double[] values)
     {
-        p_IMatObj.SetSinglePhaseProp(prop, phaseLabel, basis, values);
+        _pIMatObj.SetSinglePhaseProp(prop, phaseLabel, basis, values);
     }
 }

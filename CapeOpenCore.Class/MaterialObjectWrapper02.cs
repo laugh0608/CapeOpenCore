@@ -63,7 +63,7 @@ internal partial class MaterialObjectWrapper
     /// specified for the SetSinglePhaseProp operation, are not suitable.</exception>
     void ICapeThermoMaterial.SetTwoPhaseProp(String property, String[] phaseLabels, String basis, double[] values)
     {
-        p_IMatObj.SetTwoPhaseProp(property, phaseLabels, basis, values);
+        _pIMatObj.SetTwoPhaseProp(property, phaseLabels, basis, values);
     }
 
     /// <summary>Sets two-phase non-constant property values for a mixture.</summary>
@@ -122,7 +122,7 @@ internal partial class MaterialObjectWrapper
     [System.ComponentModel.DescriptionAttribute("method SetTwoPhaseProp")]
     void ICapeThermoMaterial.SetTwoPhaseProp(String property, string[] phaseLabels, String basis, object values)
     {
-        p_IMatObj.SetTwoPhaseProp(property, phaseLabels, basis, values);
+        _pIMatObj.SetTwoPhaseProp(property, phaseLabels, basis, values);
     }
 
     /// <summary>Retrieves the value of a Universal Constant.</summary>
@@ -145,7 +145,7 @@ internal partial class MaterialObjectWrapper
     /// specified for the GetUniversalConstant operation, are not suitable.</exception>	
     object ICapeThermoUniversalConstant.GetUniversalConstant(String constantId)
     {
-        return (double)p_IUniversalConstant.GetUniversalConstant(constantId);
+        return (double)_pIUniversalConstant.GetUniversalConstant(constantId);
     }
 
     /// <summary>Returns the identifiers of the supported Universal Constants.</summary>
@@ -166,7 +166,7 @@ internal partial class MaterialObjectWrapper
     /// </exception>
     String[] ICapeThermoUniversalConstant.GetUniversalConstantList()
     {
-        return (String[])p_IUniversalConstant.GetUniversalConstantList();
+        return (String[])_pIUniversalConstant.GetUniversalConstantList();
     }
 
     /// <summary>Returns the number of Phases.</summary>
@@ -182,7 +182,7 @@ internal partial class MaterialObjectWrapper
     /// specified for this operation, are not suitable.</exception>
     int ICapeThermoPhases.GetNumPhases()
     {
-        return p_IPhases.GetNumPhases();
+        return _pIPhases.GetNumPhases();
     }
 
     /// <summary>Returns information on an attribute associated with a Phase for the 
@@ -220,7 +220,7 @@ internal partial class MaterialObjectWrapper
     /// specified for this operation, are not suitable.</exception>
     String[] ICapeThermoPhases.GetPhaseInfo(String phaseLabel, String phaseAttribute)
     {
-        return (String[])p_IPhases.GetPhaseInfo(phaseLabel, phaseAttribute);
+        return (String[])_pIPhases.GetPhaseInfo(phaseLabel, phaseAttribute);
     }
 
     /// <summary>Returns Phase labels and other important descriptive information for all the 
@@ -259,7 +259,7 @@ internal partial class MaterialObjectWrapper
         object obj1 = null;
         object obj2 = null;
         object obj3 = null;
-        p_IPhases.GetPhaseList(ref obj1, ref obj2, ref obj3);
+        _pIPhases.GetPhaseList(ref obj1, ref obj2, ref obj3);
         phaseLabels = (string[])obj1;
         stateOfAggregation = (string[])obj2;
         keyCompoundId = (string[])obj3;
@@ -319,7 +319,7 @@ internal partial class MaterialObjectWrapper
     /// GetCompoundConstant method is implemented by a Material Object.</exception>
     object[] ICapeThermoCompounds.GetCompoundConstant(String[] props, String[] compIds)
     {
-        return (object[])p_ICompounds.GetCompoundConstant(props, compIds);
+        return (object[])_pICompounds.GetCompoundConstant(props, compIds);
     }
 
     /// <summary>Returns the list of all Compounds. This includes the Compound 
@@ -380,7 +380,7 @@ internal partial class MaterialObjectWrapper
         Object obj4 = null;
         Object obj5 = null;
         Object obj6 = null;
-        p_ICompounds.GetCompoundList(ref obj1, ref obj2, ref obj3, ref obj4, ref obj5, ref obj6);
+        _pICompounds.GetCompoundList(ref obj1, ref obj2, ref obj3, ref obj4, ref obj5, ref obj6);
         compIds = (String[])obj1;
         formulae = (String[])obj2;
         names = (String[])obj3;
@@ -415,7 +415,7 @@ internal partial class MaterialObjectWrapper
     /// GetConstPropList method is implemented by a Material Object.</exception>
     String[] ICapeThermoCompounds.GetConstPropList()
     {
-        return (String[])p_ICompounds.GetConstPropList();
+        return (String[])_pICompounds.GetConstPropList();
     }
 
     /// <summary>Returns the number of Compounds supported.</summary>
@@ -435,7 +435,7 @@ internal partial class MaterialObjectWrapper
     /// GetNumCompounds method is implemented by a Material Object.</exception>
     int ICapeThermoCompounds.GetNumCompounds()
     {
-        return p_ICompounds.GetNumCompounds();
+        return _pICompounds.GetNumCompounds();
     }
 
     /// <summary>Returns the values of pressure-dependent Physical Properties for 
@@ -497,7 +497,7 @@ internal partial class MaterialObjectWrapper
     void ICapeThermoCompounds.GetPDependentProperty(String[] props, double pressure, String[] compIds, ref double[] propVals)
     {
         Object obj1 = null;
-        p_ICompounds.GetPDependentProperty(props, pressure, compIds, ref obj1);
+        _pICompounds.GetPDependentProperty(props, pressure, compIds, ref obj1);
         propVals = (double[])obj1;
     }
 
@@ -526,7 +526,7 @@ internal partial class MaterialObjectWrapper
     /// GetPDependentPropList method is implemented by a Material Object.</exception>
     String[] ICapeThermoCompounds.GetPDependentPropList()
     {
-        return (String[])p_ICompounds.GetPDependentPropList();
+        return (String[])_pICompounds.GetPDependentPropList();
     }
 
     /// <summary>Returns the values of temperature-dependent Physical Properties for 
@@ -588,7 +588,7 @@ internal partial class MaterialObjectWrapper
     void ICapeThermoCompounds.GetTDependentProperty(String[] props, double temperature, String[] compIds, ref double[] propVals)
     {
         Object obj1 = null;
-        p_ICompounds.GetTDependentProperty(props, temperature, compIds, ref obj1);
+        _pICompounds.GetTDependentProperty(props, temperature, compIds, ref obj1);
         propVals = (double[])obj1;
     }
 
@@ -619,7 +619,7 @@ internal partial class MaterialObjectWrapper
     /// GetTDependentPropList method is implemented by a Material Object.</exception>
     String[] ICapeThermoCompounds.GetTDependentPropList()
     {
-        return (String[])p_ICompounds.GetTDependentPropList();
+        return (String[])_pICompounds.GetTDependentPropList();
     }
     /// <summary>This method is used to calculate the natural logarithm of the 
     /// fugacity coefficients (and optionally their derivatives) in a single Phase 
@@ -729,7 +729,7 @@ internal partial class MaterialObjectWrapper
         object obj3 = null;
         object obj4 = null;
         int flags = (int)fFlags;
-        p_IPropertyRoutine.CalcAndGetLnPhi(phaseLabel, temperature, pressure, moleNumbers, flags, ref obj1, ref obj2, ref obj3, ref obj4);
+        _pIPropertyRoutine.CalcAndGetLnPhi(phaseLabel, temperature, pressure, moleNumbers, flags, ref obj1, ref obj2, ref obj3, ref obj4);
         lnPhi = (double[])obj1;
         lnPhiDT = (double[])obj2;
         lnPhiDP = (double[])obj3;
@@ -821,7 +821,7 @@ internal partial class MaterialObjectWrapper
     [System.ComponentModel.DescriptionAttribute("method CalcSinglePhaseProp")]
     void ICapeThermoPropertyRoutine.CalcSinglePhaseProp(string[] props, String phaseLabel)
     {
-        p_IPropertyRoutine.CalcSinglePhaseProp(props, phaseLabel);
+        _pIPropertyRoutine.CalcSinglePhaseProp(props, phaseLabel);
     }
 
     /// <summary>CalcTwoPhaseProp is used to calculate mixture properties and property 
@@ -922,7 +922,7 @@ internal partial class MaterialObjectWrapper
     [System.ComponentModel.DescriptionAttribute("method CalcTwoPhaseProp")]
     void ICapeThermoPropertyRoutine.CalcTwoPhaseProp(string[] props, string[] phaseLabels)
     {
-        p_IPropertyRoutine.CalcTwoPhaseProp(props, phaseLabels);
+        _pIPropertyRoutine.CalcTwoPhaseProp(props, phaseLabels);
     }
 
     /// <summary>Checks whether it is possible to calculate a property with the 
@@ -967,7 +967,7 @@ internal partial class MaterialObjectWrapper
     /// specified for the CheckSinglePhasePropSpec operation, are not suitable.</exception>
     bool ICapeThermoPropertyRoutine.CheckSinglePhasePropSpec(String property, String phaseLabel)
     {
-        return p_IPropertyRoutine.CheckSinglePhasePropSpec(property, phaseLabel);
+        return _pIPropertyRoutine.CheckSinglePhasePropSpec(property, phaseLabel);
     }
 
     /// <summary>Checks whether it is possible to calculate a property with the 
@@ -1014,7 +1014,7 @@ internal partial class MaterialObjectWrapper
     /// specified for the CheckTwoPhasePropSpec operation, are not suitable.</exception>
     bool ICapeThermoPropertyRoutine.CheckTwoPhasePropSpec(String property, string[] phaseLabels)
     {
-        return p_IPropertyRoutine.CheckTwoPhasePropSpec(property, phaseLabels);
+        return _pIPropertyRoutine.CheckTwoPhasePropSpec(property, phaseLabels);
     }
 
     /// <summary>Returns the list of supported non-constant single-phase Physical 
@@ -1044,7 +1044,7 @@ internal partial class MaterialObjectWrapper
     [System.ComponentModel.DescriptionAttribute("method GetSinglePhasePropList")]
     string[] ICapeThermoPropertyRoutine.GetSinglePhasePropList()
     {
-        return (string[])p_IPropertyRoutine.GetSinglePhasePropList();
+        return (string[])_pIPropertyRoutine.GetSinglePhasePropList();
     }
 
     /// <summary>Returns the list of supported non-constant two-phase properties.</summary>
@@ -1076,7 +1076,7 @@ internal partial class MaterialObjectWrapper
     [System.ComponentModel.DescriptionAttribute("method GetTwoPhasePropList")]
     string[] ICapeThermoPropertyRoutine.GetTwoPhasePropList()
     {
-        return (string[])p_IPropertyRoutine.GetTwoPhasePropList();
+        return (string[])_pIPropertyRoutine.GetTwoPhasePropList();
     }
     
     /// <summary> CalcEquilibrium is used to calculate the amounts and compositions 
@@ -1204,7 +1204,7 @@ internal partial class MaterialObjectWrapper
     /// specified for this operation, are not suitable.</exception>
     void ICapeThermoEquilibriumRoutine.CalcEquilibrium(string[] specification1, string[] specification2, String solutionType)
     {
-        p_IEquilibriumRoutine.CalcEquilibrium(specification1, specification2, solutionType);
+        _pIEquilibriumRoutine.CalcEquilibrium(specification1, specification2, solutionType);
     }
 
     /// <summary>Checks whether the Property Package can support a particular type of 
@@ -1238,6 +1238,6 @@ internal partial class MaterialObjectWrapper
     /// specified for this operation, are not suitable.</exception>
     bool ICapeThermoEquilibriumRoutine.CheckEquilibriumSpec(string[] specification1, string[] specification2, String solutionType)
     {
-        return p_IEquilibriumRoutine.CheckEquilibriumSpec(specification1, specification2, solutionType);
+        return _pIEquilibriumRoutine.CheckEquilibriumSpec(specification1, specification2, solutionType);
     }
 }
