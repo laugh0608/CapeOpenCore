@@ -1,789 +1,551 @@
-﻿using System;
+﻿/*
+ * 原作者：wbarret1 (https://github.com/wbarret1/CapeOpen)
+ * 重构 & 翻译：DaBaiLuoBo
+ * 帮助社区：CEPD@BBS (https://bbs.imbhj.com)
+ * 重构时间：2025.06.21
+ */
 
-namespace CapeOpenCore.Class
+using System;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
+
+namespace CapeOpenCore.Class;
+
+/// <summary>表示整数型参数的规格已发生变更。</summary>
+/// <remarks><para>该接口面向基于 COM 的 PMEs，并作为与整数值参数规范更改相关联的事件的源接口。</para>
+/// <para>此接口并非 CAPE-OPEN 规范的一部分。提供此接口及其实现，是为了让基于 COM 的开发人员能够获得与基于 .NET 的开发人员相似的功能。</para></remarks>
+[InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
+[ComVisible(true)]
+[Guid("2EA7C47A-A4E0-47A2-8AC1-658F96A0B79D")]
+[Description("CapeIntegerParameterEvents Interface")]
+internal interface ICapeIntegerParameterSpecEvents
 {
+    /// <summary>当用户更改参数的默认值时发生。</summary>
+    /// <remarks><para>触发事件时，会通过委托调用事件处理程序。</para>
+    /// <para><c>OnParameterDefaultValueChanged</c> 方法还允许子类在不附加委托的情况下处理事件。这是子类处理事件的优选技术。</para>
+    /// <para>致继承开发者的注意事项：</para>
+    /// <para>当在派生类中重写 <c>OnParameterDefaultValueChanged</c> 时，
+    /// 务必调用基类的 <c>OnParameterDefaultValueChange</c> 方法，以便注册的委托能够接收到该事件。</para></remarks>
+    /// <param name="sender">引发事件的 <see cref="IntegerParameter">RealParameter</see>。</param>
+    /// <param name="args">一个包含事件信息的 <see cref="ParameterDefaultValueChanged"/>。</param>
+    void ParameterDefaultValueChanged(
+        [MarshalAs(UnmanagedType.IDispatch)]
+        object sender,
+        [MarshalAs(UnmanagedType.IDispatch)]
+        object args
+    );
 
-    /// <summary>
-    /// Indicates that the specification of an interger-valued parameter has been changed.
-    /// </summary>
-    /// <remarks>
-    /// <para>This interface is exposed to COM-based PMEs and serves as a source interface for events associated with changes
-    /// to the specification of an integer-valued parameters.</para>
-    /// <para>This interface is not a part of the CAPE-OPEN specifications. This interface and its implementation is 
-    /// provided to give COM-based developers similar functionality as .NET-based developers.</para>
-    /// </remarks>
-    [System.Runtime.InteropServices.InterfaceType(System.Runtime.InteropServices.ComInterfaceType.InterfaceIsIDispatch)]
-    [System.Runtime.InteropServices.ComVisibleAttribute(true)]
-    [System.Runtime.InteropServices.GuidAttribute("2EA7C47A-A4E0-47A2-8AC1-658F96A0B79D")]
-    [System.ComponentModel.DescriptionAttribute("CapeIntegerParameterEvents Interface")]
-    interface ICapeIntegerParameterSpecEvents
+    /// <summary>当用户更改参数的下限时发生。</summary>
+    /// <remarks><para>触发事件时，会通过委托调用事件处理程序。</para>
+    /// <para><c>OnComponentNameChanged</c> 方法还允许子类在不附加委托的情况下处理事件。这是子类处理事件的优选技术。</para>
+    /// <para>致继承开发者的注意事项：</para>
+    /// <para>当在派生类中重写 <c>OnComponentNameChanged</c> 时，
+    /// 务必调用基类的 <c>OnComponentNameChanged </c> 方法，以便注册的委托能够接收到该事件。</para></remarks>
+    /// <param name="sender">引发事件的 <see cref="IntegerParameter">RealParameter</see>。</param>
+    /// <param name="args">一个包含事件信息的 <see cref="ParameterValueChangedEventArgs"/>。</param>
+    void ParameterLowerBoundChanged(
+        [MarshalAs(UnmanagedType.IDispatch)]
+        object sender,
+        [MarshalAs(UnmanagedType.IDispatch)]
+        object args
+    );
+
+    /// <summary>当用户更改参数的上限时发生。</summary>
+    /// <remarks><para>触发事件时，会通过委托调用事件处理程序。</para>
+    /// <para><c>OnParameterUpperBoundChanged</c> 方法还允许子类在不附加委托的情况下处理事件。这是子类处理事件的优选方法。</para>
+    /// <para>致继承开发者的注意事项：</para>
+    /// <para>在派生类中重写 <c>OnParameterUpperBoundChanged</c> 时，
+    /// 务必调用基类的 <c>OnParameterUpperBoundChanged</c> 方法，以便注册的委托能够接收到该事件。</para></remarks>
+    /// <param name="sender">引发事件的 <see cref="IntegerParameter">RealParameter</see>。</param>
+    /// <param name="args">一个包含事件信息的 <see cref="ParameterUpperBoundChangedEventArgs"/>。</param>
+    void ParameterUpperBoundChanged(object sender, object args);
+
+    /// <summary>当参数验证时发生。</summary>
+    /// <remarks><para>触发事件时，会通过委托调用事件处理程序。</para>
+    /// <para><c>OnParameterValidated</c> 方法还允许子类在不附加委托的情况下处理事件。这是子类处理事件的优选技术。</para>
+    /// <para>致继承开发者的注意事项：</para>
+    /// <para>当在派生类中重写 <c>OnParameterValidated</c> 时，
+    /// 务必调用基类的 <c>OnParameterValidated </c> 方法，以便注册的委托能够接收到该事件。</para></remarks>
+    /// <param name="sender">引发事件的 <see cref="IntegerParameter">RealParameter</see>。</param>
+    /// <param name="args">一个包含事件相关信息的 <see cref="ParameterValidatedEventArgs"/>。</param>
+    void ParameterValidated(object sender, object args);
+}
+
+/// <summary>整数型参数，用于 CAPE-OPEN 参数集合。</summary>
+/// <remarks>整数型参数，用于 CAPE-OPEN 参数集合。</remarks>
+[Serializable]
+[ComVisible(true)]
+[ComSourceInterfaces(typeof(ICapeIntegerParameterSpecEvents))]
+[Guid("2C57DC9F-1368-42eb-888F-5BC6ED7DDFA7")]
+[ClassInterface(ClassInterfaceType.None)]
+public class IntegerParameter : CapeParameter, ICapeParameter, ICapeParameterSpec, ICapeParameterSpecCOM,
+    ICapeIntegerParameterSpec  //, INotifyPropertyChanged
+{
+    private int _mValue;
+    private int _mDefaultValue, _mLowerBound, _mUpperBound;
+
+    /// <summary>获取并设置此参数的值。</summary>
+    /// <remarks>此值使用 System.Object 数据类型以确保与基于 COM 的 CAPE-OPEN 兼容。</remarks>
+    /// <value>该参数的值。</value>
+    /// <exception cref ="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为 UNDEFINED。</exception>
+    [Browsable(false)]
+    public override object value
     {
-        /// <summary>
-        /// Occurs when the user changes of the default value of a parameter.
-        /// </summary>
-        /// <remarks><para>Raising an event invokes the event handler through a delegate.</para>
-        /// <para>The <c>OnParameterDefaultValueChanged</c> method also allows derived classes to handle the event without attaching a delegate. This is the preferred 
-        /// technique for handling the event in a derived class.</para>
-        /// <para>Notes to Inheritors: </para>
-        /// <para>When overriding <c>OnParameterDefaultValueChanged</c> in a derived class, be sure to call the base class's <c>OnParameterDefaultValueChanged</c> method so that registered 
-        /// delegates receive the event.</para>
-        /// </remarks>
-        /// <param name = "sender">The <see cref = "IntegerParameter">RealParameter</see> that raised the event.</param>
-        /// <param name = "args">A <see cref = "ParameterDefaultValueChanged">ParameterDefaultValueChanged</see> that contains information about the event.</param>
-        void ParameterDefaultValueChanged(
-            [System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.IDispatch)]object sender, 
-            [System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.IDispatch)]object args
-            );
+        get => _mValue;
+        set
+        {
+            var args = new ParameterValueChangedEventArgs(ComponentName, _mValue, value);
+            _mValue = (int)value;
+            OnParameterValueChanged(args);
+            NotifyPropertyChanged("Value");
+        }
+    }
 
-        /// <summary>
-        /// Occurs when the user changes of the lower bound of a parameter.
-        /// </summary>
-        /// <remarks><para>Raising an event invokes the event handler through a delegate.</para>
-        /// <para>The <c>OnComponentNameChanged</c> method also allows derived classes to handle the event without attaching a delegate. This is the preferred 
-        /// technique for handling the event in a derived class.</para>
-        /// <para>Notes to Inheritors: </para>
-        /// <para>When overriding <c>OnComponentNameChanged</c> in a derived class, be sure to call the base class's <c>OnComponentNameChanged</c> method so that registered 
-        /// delegates receive the event.</para>
-        /// </remarks>
-        /// <param name = "sender">The <see cref = "IntegerParameter">RealParameter</see> that raised the event.</param>
-        /// <param name = "args">A <see cref = "ParameterValueChangedEventArgs">ParameterValueChangedEventArgs</see> that contains information about the event.</param>
-        void ParameterLowerBoundChanged(
-            [System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.IDispatch)]object sender, 
-            [System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.IDispatch)]object args
-            );
+    /// <summary>创建整数值参数类的实例。</summary>
+    /// <remarks>默认值设置为参数的初始值。上限设置为 Int32.MaxValue（2,147,483,647），
+    /// 下限设置为 Int32.MinValue（-2,147,483,648）。类型设置为 CapeParamMode.CAPE_INPUT_OUTPUT。</remarks>
+    /// <param name="name">将该参数的 ICapeIdentification 接口的 ComponentName 设置为指定值。</param>
+    /// <param name="value">设置参数的初始值。</param>
+    /// <param name="mode">设置参数的 CapeParamMode 模式。</param>
+    public IntegerParameter(string name, int value, CapeParamMode mode)
+        : base(name, string.Empty, mode)
+    {
+        _mValue = value;
+        Mode = mode;
+        _mLowerBound = int.MinValue;
+        _mUpperBound = int.MaxValue;
+        _mDefaultValue = value;
+    }
 
-        /// <summary>
-        /// Occurs when the user changes of the upper bound of a parameter.
-        /// </summary>
-        /// <remarks><para>Raising an event invokes the event handler through a delegate.</para>
-        /// <para>The <c>OnParameterUpperBoundChanged</c> method also allows derived classes to handle the event without attaching a delegate. This is the preferred 
-        /// technique for handling the event in a derived class.</para>
-        /// <para>Notes to Inheritors: </para>
-        /// <para>When overriding <c>OnParameterUpperBoundChanged</c> in a derived class, be sure to call the base class's <c>OnParameterUpperBoundChanged</c> method so that registered 
-        /// delegates receive the event.</para>
-        /// </remarks>
-        /// <param name = "sender">The <see cref = "IntegerParameter">RealParameter</see> that raised the event.</param>
-        /// <param name = "args">A <see cref = "ParameterLowerBoundChangedEventArgs">ParameterUpperBoundChangedEventArgs</see> that contains information about the event.</param>
-        void ParameterUpperBoundChanged(object sender, object args);
+    /// <summary>使用输入的值创建整数值参数类的实例。</summary>
+    /// <remarks>该构造函数中指定了参数的默认值、上限、下限以及众数。</remarks>
+    /// <param name="name">将该参数的 ICapeIdentification 接口的 ComponentName 设置为指定值。</param>
+    /// <param name="description">将参数的 ICapeIdentification 接口设置为组件描述。</param>
+    /// <param name="value">设置参数的初始值。</param>
+    /// <param name="defaultValue">设置参数的默认值。</param>
+    /// <param name="minValue">设置参数的下限值。</param>
+    /// <param name="maxValue">设置参数的上限值。</param>
+    /// <param name="mode">设置参数的 CapeParamMode 模式。</param>
+    public IntegerParameter(string name, string description, int value, int defaultValue, int minValue, int maxValue,
+        CapeParamMode mode) : base(name, description, mode)
+    {
+        _mValue = value;
+        Mode = mode;
+        _mLowerBound = minValue;
+        _mUpperBound = maxValue;
+        _mDefaultValue = defaultValue;
+        var message = "";
+        if (!Validate(ref message))
+        {
+            MessageBox.Show(message, string.Concat("Invalid Parameter Value: ", ComponentName));
+        }
+    }
 
-        /// <summary>
-        /// Occurs when a parameter is validated.
-        /// </summary>
-        /// <remarks><para>Raising an event invokes the event handler through a delegate.</para>
-        /// <para>The <c>OnParameterValidated</c> method also allows derived classes to handle the event without attaching a delegate. This is the preferred 
-        /// technique for handling the event in a derived class.</para>
-        /// <para>Notes to Inheritors: </para>
-        /// <para>When overriding <c>OnParameterValidated</c> in a derived class, be sure to call the base class's <c>OnParameterValidated</c> method so that registered 
-        /// delegates receive the event.</para>
-        /// </remarks>
-        /// <param name = "sender">The <see cref = "IntegerParameter">RealParameter</see> that raised the event.</param>
-        /// <param name = "args">A <see cref = "ParameterValidatedEventArgs">ParameterValidatedEventArgs</see> that contains information about the event.</param>
-        void ParameterValidated(object sender, object args);
+    /// <summary>当用户更改参数的下限时发生。</summary>
+    /// <remarks>触发事件时，会通过委托调用事件处理程序。</remarks>
+    public event ParameterLowerBoundChangedHandler ParameterLowerBoundChanged;
+
+    /// <summary>当用户更改参数的下限时发生。</summary>
+    /// <remarks><para>触发事件时，会通过委托调用事件处理程序。</para>
+    /// <para><c>OnComponentNameChanged</c> 方法还允许子类在不附加委托的情况下处理事件。这是子类处理事件的优选技术。</para>
+    /// <para>致继承开发者的注意事项：</para>
+    /// <para>当在派生类中重写 <c>OnComponentNameChanged</c> 时，
+    /// 务必调用基类的 <c>OnComponentNameChanged </c> 方法，以便注册的委托能够接收到该事件。</para></remarks>
+    /// <param name="args">一个包含事件信息的 <see cref="ParameterValueChangedEventArgs"/>。</param>
+    protected void OnParameterLowerBoundChanged(ParameterLowerBoundChangedEventArgs args)
+    {
+        ParameterLowerBoundChanged?.Invoke(this, args);
+    }
+
+    /// <summary>当用户更改参数的上限时发生。</summary>
+    /// <remarks>触发事件时，会通过委托调用事件处理程序。</remarks>
+    public event ParameterUpperBoundChangedHandler ParameterUpperBoundChanged;
+
+    /// <summary>当用户更改参数的上限时发生。</summary>
+    /// <remarks><para>触发事件时，会通过委托调用事件处理程序。</para>
+    /// <para><c>OnParameterUpperBoundChanged</c> 方法还允许子类在不附加委托的情况下处理事件。这是子类处理事件的优选方法。</para>
+    /// <para>致继承开发者的注意事项：</para>
+    /// <para>在派生类中重写 <c>OnParameterUpperBoundChanged</c> 时，
+    /// 务必调用基类的 <c>OnParameterUpperBoundChanged</c> 方法，以便注册的委托能够接收到该事件。</para></remarks>
+    /// <param name="args">一个包含事件信息的 <see cref="ParameterUpperBoundChangedEventArgs"/>。</param>
+    protected void OnParameterUpperBoundChanged(ParameterUpperBoundChangedEventArgs args)
+    {
+        ParameterUpperBoundChanged?.Invoke(this, args);
+    }
+
+    // ICloneable
+    /// <summary>创建参数的副本。</summary>
+    /// <remarks>克隆方法用于创建参数的深度副本。</remarks>
+    /// <returns>当前参数的副本。</returns>
+    public override object Clone()
+    {
+        return new IntegerParameter(ComponentName, ComponentDescription, _mValue, _mDefaultValue,
+            _mLowerBound, _mUpperBound, Mode);
     }
 
 
-    /// <summary>
-    /// Intger-Valued parameter for use in the CAPE-OPEN parameter collection.
-    /// </summary>
-    /// <remarks>
-    /// Intger-Valued parameter for use in the CAPE-OPEN parameter collection.
-    /// </remarks>
-    [Serializable]
-    [System.Runtime.InteropServices.ComSourceInterfaces(typeof(ICapeIntegerParameterSpecEvents))]
-    [System.Runtime.InteropServices.ComVisible(true)]
-    [System.Runtime.InteropServices.Guid("2C57DC9F-1368-42eb-888F-5BC6ED7DDFA7")]
-    [System.Runtime.InteropServices.ClassInterface(System.Runtime.InteropServices.ClassInterfaceType.None)]
-    public class IntegerParameter : CapeParameter,
-        ICapeParameter,
-        ICapeParameterSpec,
-        ICapeParameterSpecCOM,
-        ICapeIntegerParameterSpec,
-        System.ComponentModel.INotifyPropertyChanged
+    /// <summary>获取并设置此参数的值。</summary>
+    /// <remarks>该参数的值。</remarks>
+    /// <value>该参数的值。</value>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为 UNDEFINED。</exception>
+    [Category("ICapeParameter")]
+    public int Value
     {
-
-        private int m_value;
-        private int m_DefaultValue, m_LowerBound, m_UpperBound;
-        
-        /// <summary>
-        /// Gets and sets the value for this Parameter.
-        /// </summary>
-        /// <remarks>
-        /// This value uses the System.Object data type for compatibility with 
-        /// COM-based CAPE-OPEN.
-        /// </remarks>
-        /// <value>The value of the parameter.</value>
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-        [System.ComponentModel.BrowsableAttribute(false)]
-        override public Object value
+        get => _mValue;
+        set
         {
-            get
-            {
-                return m_value;
-            }
-            set
-            {
-                ParameterValueChangedEventArgs args = new ParameterValueChangedEventArgs(this.ComponentName, m_value, value);
-                m_value = (int)value;
-                OnParameterValueChanged(args);
-                NotifyPropertyChanged("Value");
-            }
+            var args = new ParameterValueChangedEventArgs(ComponentName, _mValue, value);
+            _mValue = value;
+            OnParameterValueChanged(args);
+            NotifyPropertyChanged("Value");
         }
+    }
 
-        /// <summary>
-        /// Creates a new instance of the integer-valued parameter class.
-        /// </summary>
-        /// <remarks>
-        /// <para>The default value is set to the inital value of the parameter. The upper
-        /// bound is set to Int32.MaxValue (2,147,483,647) and the lower bound is set to 
-        /// Int32.MinValue (-2,147,483,648). The mode is set to CapeParamMode.CAPE_INPUT_OUTPUT.</para>
-        /// </remarks>
-        /// <param name = "name">Sets as the ComponentName of the parameter's ICapeIdentification interface.</param>
-        /// <param name = "value">Sets the inital value of the parameter.</param>
-        /// <param name = "mode">Sets the CapeParamMode mode of the parameter</param>
-        public IntegerParameter(String name, int value, CapeParamMode mode)
-            : base(name, String.Empty, mode)
+    /// <summary>根据参数的规范验证参数的当前值。</summary>
+    /// <remarks>如果当前值在上限和下限之间，则认为该参数有效。消息用于返回参数无效的原因。</remarks>
+    /// <returns>如果参数有效则为真，否则为假。</returns>
+    /// <param name="message">引用一个字符串，该字符串将包含关于参数验证的消息。</param>
+    /// <exception cref ="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为 UNDEFINED。</exception>
+    public override bool Validate(ref string message)
+    {
+        ParameterValidatedEventArgs args;
+        if (_mValue < _mLowerBound)
         {
-            m_value = value;
-            this.Mode = mode;
-            m_LowerBound = int.MinValue;
-            m_UpperBound = int.MaxValue;
-            m_DefaultValue = value;
-        }
-        /// <summary>
-        /// Creates a new instance of the integer-valued parameter class using the values enterred. 
-        /// </summary>
-        /// <remarks>
-        /// The default value, upper and lower 
-        /// bound, as well as the mode of the parameter are specified in this constructor.
-        /// </remarks>
-        /// <param name = "name">Sets as the ComponentName of the parameter's ICapeIdentification interface.</param>
-        /// <param name = "description">Sets as the ComponentDescription of the parameter's ICapeIdentification interface.</param>
-        /// <param name = "value">Sets the inital value of the parameter.</param>
-        /// <param name = "defaultValue">Sets the default value of the parameter.</param>
-        /// <param name = "minValue">Sets the lower bound of the parameter.</param>
-        /// <param name = "maxValue">Sets the upper bound of the parameter.</param>
-        /// <param name = "mode">Sets the CapeParamMode mode of the parameter.</param>
-        public IntegerParameter(String name, String description, int value, int defaultValue, int minValue, int maxValue, CapeParamMode mode)
-            : base(name, description, mode)
-        {
-            m_value = value;
-            this.Mode = mode;
-            m_LowerBound = minValue;
-            m_UpperBound = maxValue;
-            m_DefaultValue = defaultValue;
-            String message = "";
-            if (!this.Validate(ref message))
-            {
-                System.Windows.Forms.MessageBox.Show(message, String.Concat("Invalid Parameter Value: ", this.ComponentName));
-            }
-        }
-
-        /// <summary>
-        /// Occurs when the user changes of the lower bound of the parameter changes.
-        /// </summary>
-        /// <remarks><para>Raising an event invokes the event handler through a delegate.</para>
-        /// </remarks>
-        public event ParameterLowerBoundChangedHandler ParameterLowerBoundChanged;
-        /// <summary>
-        /// Occurs when the user changes of the lower bound of a parameter.
-        /// </summary>
-        /// <remarks><para>Raising an event invokes the event handler through a delegate.</para>
-        /// <para>The <c>OnComponentNameChanged</c> method also allows derived classes to handle the event without attaching a delegate. This is the preferred 
-        /// technique for handling the event in a derived class.</para>
-        /// <para>Notes to Inheritors: </para>
-        /// <para>When overriding <c>OnComponentNameChanged</c> in a derived class, be sure to call the base class's <c>OnComponentNameChanged</c> method so that registered 
-        /// delegates receive the event.</para>
-        /// </remarks>
-        /// <param name = "args">A <see cref = "ParameterValueChangedEventArgs">ParameterValueChangedEventArgs</see> that contains information about the event.</param>
-        protected void OnParameterLowerBoundChanged(ParameterLowerBoundChangedEventArgs args)
-        {
-            if (ParameterLowerBoundChanged != null)
-            {
-                ParameterLowerBoundChanged(this, args);
-            }
-        }
-
-        /// <summary>
-        /// Occurs when the user changes of the upper bound of the parameter changes.
-        /// </summary>
-        /// <remarks><para>Raising an event invokes the event handler through a delegate.</para>
-        /// </remarks>
-        public event ParameterUpperBoundChangedHandler ParameterUpperBoundChanged;
-        /// <summary>
-        /// Occurs when the user changes of the upper bound of a parameter.
-        /// </summary>
-        /// <remarks><para>Raising an event invokes the event handler through a delegate.</para>
-        /// <para>The <c>OnParameterUpperBoundChanged</c> method also allows derived classes to handle the event without attaching a delegate. This is the preferred 
-        /// technique for handling the event in a derived class.</para>
-        /// <para>Notes to Inheritors: </para>
-        /// <para>When overriding <c>OnParameterUpperBoundChanged</c> in a derived class, be sure to call the base class's <c>OnParameterUpperBoundChanged</c> method so that registered 
-        /// delegates receive the event.</para>
-        /// </remarks>
-        /// <param name = "args">A <see cref = "ParameterLowerBoundChangedEventArgs">ParameterUpperBoundChangedEventArgs</see> that contains information about the event.</param>
-        protected void OnParameterUpperBoundChanged(ParameterUpperBoundChangedEventArgs args)
-        {
-            if (ParameterUpperBoundChanged != null)
-            {
-                ParameterUpperBoundChanged(this, args);
-            }
-        }
-
-        // ICloneable
-        /// <summary>
-        /// Creates a copy of the parameter.
-        /// </summary>
-        /// <remarks><para>The clone method is used to create a deep copy of the parameter.</para>
-        /// </remarks>
-        /// <returns>A copy of the current parameter.</returns>
-        override public object Clone()
-        {
-            return new IntegerParameter(this.ComponentName, this.ComponentDescription, m_value, m_DefaultValue, m_LowerBound, m_UpperBound, this.Mode);
-        }
-
-
-        /// <summary>
-        /// Gets and sets the value for this Parameter. 
-        /// </summary>
-        /// <remarks>
-        /// The value of the parameter.
-        /// </remarks>
-        /// <value>
-        /// The value of the parameter.
-        /// </value>
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-        [System.ComponentModel.CategoryAttribute("ICapeParameter")]
-        public int Value
-        {
-            get
-            {
-                return m_value;
-            }
-            set
-            {
-                ParameterValueChangedEventArgs args = new ParameterValueChangedEventArgs(this.ComponentName, m_value, value);
-                m_value = (int)value;
-                OnParameterValueChanged(args);
-                NotifyPropertyChanged("Value");
-            }
-        }
-
-        /// <summary>
-        /// Validates the current value of the parameter against the 
-        /// specification of the parameter.
-        /// </summary>
-        /// <remarks>
-        /// The parameter is considered valid if the current value is between the 
-        /// upper and lower bound. The message is used to return the reason that 
-        /// the parameter is invalid.
-        /// </remarks>
-        /// <returns>
-        /// True if the parameter is valid, false if not valid.
-        /// </returns>
-        /// <param name = "message">Reference to a string that will conain a message regarding the validation of the parameter.</param>
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-        public override bool Validate(ref String message)
-        {
-            ParameterValidatedEventArgs args;
-            if (m_value < m_LowerBound)
-            {
-                message = "Value below the Lower Bound.";
-                args = new ParameterValidatedEventArgs(this.ComponentName, message, m_ValStatus, CapeValidationStatus.CAPE_INVALID);
-                m_ValStatus = CapeValidationStatus.CAPE_INVALID;
-                NotifyPropertyChanged("ValStatus");
-                OnParameterValidated(args);
-                return false;
-            }
-            if (m_value > m_UpperBound)
-            {
-                message = "Value greater than upper bound.";
-                args = new ParameterValidatedEventArgs(this.ComponentName, message, m_ValStatus, CapeValidationStatus.CAPE_INVALID);
-                m_ValStatus = CapeValidationStatus.CAPE_INVALID;
-                NotifyPropertyChanged("ValStatus");
-                OnParameterValidated(args);
-                return false;
-            }
-            message = "Value is valid.";
-            args = new ParameterValidatedEventArgs(this.ComponentName, message, m_ValStatus, CapeValidationStatus.CAPE_VALID);
-            m_ValStatus = CapeValidationStatus.CAPE_VALID;
+            message = "Value below the Lower Bound.";
+            args = new ParameterValidatedEventArgs(ComponentName, message, m_ValStatus,
+                CapeValidationStatus.CAPE_INVALID);
+            m_ValStatus = CapeValidationStatus.CAPE_INVALID;
             NotifyPropertyChanged("ValStatus");
             OnParameterValidated(args);
-            return true;
+            return false;
         }
 
-        /// <summary>
-        /// Sets the value of the parameter to its default value.
-        /// </summary>
-        /// <remarks>
-        ///  This method sets the parameter's value to the default value.
-        /// </remarks>
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        public override void Reset()
+        if (_mValue > _mUpperBound)
         {
-            ParameterResetEventArgs args = new ParameterResetEventArgs(this.ComponentName);
-            m_value = m_DefaultValue;
-            OnParameterReset(args);
-            NotifyPropertyChanged("Value");
-        }
-
-        // ICapeParameterSpec
-        // ICapeParameterSpec
-        /// <summary>
-        /// Gets the type of the parameter. 
-        /// </summary>
-        /// <remarks>
-        /// Gets the <see cref = "CapeParamType"/> of the parameter for which this is a specification: real 
-        /// (CAPE_REAL), integer(CAPE_INT), option(CAPE_OPTION), boolean(CAPE_BOOLEAN) 
-        /// or array(CAPE_ARRAY).
-        /// </remarks>
-        /// <value>The parameter type. </value>
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed.</exception>
-        [System.ComponentModel.CategoryAttribute("ICapeParameterSpec")]
-        public override CapeParamType Type
-        {
-            get
-            {
-                return CapeParamType.CAPE_INT;
-            }
-        }
-
-        //ICapeIntegerParameterSpec
-
-        /// <summary>
-        /// Gets and sets the default value of the parameter.
-        /// </summary>
-        /// <remarks>
-        /// Gets and sets the default value of the parameter.
-        /// </remarks>
-        /// <value>The default value for the parameter. </value>
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-        [System.ComponentModel.CategoryAttribute("ICapeIntegerParameterSpec")]
-        public int DefaultValue
-        {
-            get
-            {
-                return m_DefaultValue;
-            }
-            set
-            {
-                ParameterDefaultValueChangedEventArgs args = new ParameterDefaultValueChangedEventArgs(this.ComponentName, m_DefaultValue, value);
-                m_DefaultValue = value;
-                OnParameterDefaultValueChanged(args);
-                NotifyPropertyChanged("DefaultValue");
-            }
-        }
-
-        /// <summary>
-        /// Gets and sets the lower bound of the parameter.
-        /// </summary>
-        /// <remarks>
-        /// The lower bound can be an valid integer. By default, it is set to 
-        /// Int32.MinValue, 2,147,483,648; that is, hexadecimal 0x80000000
-        /// </remarks>
-        /// <value>The lower bound for the parameter. </value>
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-        [System.ComponentModel.CategoryAttribute("ICapeIntegerParameterSpec")]
-        public int LowerBound
-        {
-            get
-            {
-                return m_LowerBound;
-            }
-            set
-            {
-                ParameterLowerBoundChangedEventArgs args = new ParameterLowerBoundChangedEventArgs(this.ComponentName, m_LowerBound, value);
-                m_LowerBound = value;
-                OnParameterLowerBoundChanged(args);
-                NotifyPropertyChanged("LowerBound");
-            }
-        }
-
-        /// <summary>
-        /// Gets and sets the upper bound of the parameter.
-        /// </summary>
-        /// <remarks>
-        /// The lower bound can be an valid integer. By default, it is set to 
-        /// Int32.MaxValue, 2,147,483,647; that is, hexadecimal 0x7FFFFFFF.
-        /// </remarks>
-        /// <value>The upper bound for the parameter. </value>
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-        [System.ComponentModel.CategoryAttribute("ICapeIntegerParameterSpec")]
-        public int UpperBound
-        {
-            get
-            {
-                return m_UpperBound;
-            }
-            set
-            {
-                ParameterUpperBoundChangedEventArgs args = new ParameterUpperBoundChangedEventArgs(this.ComponentName, m_UpperBound, value);
-                m_UpperBound = value;
-                OnParameterUpperBoundChanged(args);
-                NotifyPropertyChanged("UpperBound");
-            }
-        }
-
-        /// <summary>
-        /// Validates the value sent against the specification of the parameter. 
-        /// </summary>
-        /// <remarks>
-        /// The parameter is considered valid if the current value is between 
-        /// the upper and lower bound. The message is used to return the reason 
-        /// that the parameter is invalid.
-        /// </remarks>
-        /// <returns>
-        /// True if the parameter is valid, false if not valid.
-        /// </returns>
-        /// <param name = "value">Integer value that will be validated against the parameter's current specification.</param>
-        /// <param name = "message">Reference to a string that will conain a message regarding the validation of the parameter.</param>
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-        public bool Validate(int value, ref String message)
-        {
-            if (value < m_LowerBound)
-            {
-                message = "Value below the Lower Bound.";
-                return false;
-            }
-            if (value > m_UpperBound)
-            {
-                message = "Value greater than upper bound.";
-                return false;
-            }
-            message = "Value is valid.";
-            return true;
-        }
-    };
-
-    /// <summary>
-    /// Integer-Valued parameter for use in the CAPE-OPEN parameter collection.
-    /// </summary>
-    /// <remarks>
-    /// Integer-Valued parameter for use in the CAPE-OPEN parameter collection.
-    /// </remarks>
-    [Serializable]
-    [System.Runtime.InteropServices.ComVisible(true)]
-    [System.Runtime.InteropServices.ComSourceInterfaces(typeof(ICapeIntegerParameterSpecEvents))]
-    [System.Runtime.InteropServices.Guid("EFC01B53-9A6A-4AD9-97BE-3F0294B3BBFB")]//ICapeThermoMaterialObject_IID)
-    [System.Runtime.InteropServices.ClassInterface(System.Runtime.InteropServices.ClassInterfaceType.None)]
-    class IntegerParameterWrapper : CapeParameter,
-        ICapeParameter,
-        ICapeParameterSpec,
-        ICapeIntegerParameterSpec,
-        ICloneable,
-        System.ComponentModel.INotifyPropertyChanged
-    {
-        ICapeParameter m_parameter;
-
-        /// <summary>
-        /// Gets and sets the value for this Parameter.
-        /// </summary>
-        /// <remarks>
-        /// This value uses the System.Object data type for compatibility with 
-        /// COM-based CAPE-OPEN.
-        /// </remarks>
-        /// <value>The value of the parameter.</value>
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-        [System.ComponentModel.BrowsableAttribute(false)]
-        override public Object value
-        {
-            get
-            {
-                return m_parameter.value;
-            }
-            set
-            {
-                ParameterValueChangedEventArgs args = new ParameterValueChangedEventArgs(this.ComponentName, m_parameter.value, value);
-                m_parameter.value = (int)value;
-                OnParameterValueChanged(args);
-                NotifyPropertyChanged("Value");
-            }
-        }
-
-        /// <summary>
-        /// Creates a new instance of the integer-valued parameter class.
-        /// </summary>
-        /// <remarks>
-        /// <para>The default value is set to the inital value of the parameter. The upper
-        /// bound is set to Int32.MaxValue (2,147,483,647) and the lower bound is set to 
-        /// Int32.MinValue (-2,147,483,648). The mode is set to CapeParamMode.CAPE_INPUT_OUTPUT.</para>
-        /// </remarks>
-        /// <param name = "parameter">Sets the inital value of the parameter.</param>
-        public IntegerParameterWrapper(ICapeParameter parameter)
-            : base(String.Empty, string.Empty, parameter.Mode)
-        {
-            m_parameter = parameter;
-            this.ComponentName = ((ICapeIdentification)parameter).ComponentName;
-            this.ComponentDescription = ((ICapeIdentification)parameter).ComponentDescription;
-            this.Mode = parameter.Mode;
-            m_ValStatus = parameter.ValStatus;
-        }
-
-
-        /// <summary>Creates a new object that is a copy of the current instance.</summary>
-        /// <remarks>
-        /// <para>
-        /// Clone can be implemented either as a deep copy or a shallow copy. In a deep copy, all objects are duplicated; 
-        /// in a shallow copy, only the top-level objects are duplicated and the lower levels contain references.
-        /// </para>
-        /// <para>
-        /// The resulting clone must be of the same type as, or compatible with, the original instance.
-        /// </para>
-        /// <para>
-        /// See <see cref="Object.MemberwiseClone"/> for more information on cloning, deep versus shallow copies, and examples.
-        /// </para>
-        /// </remarks>
-        /// <returns>A new object that is a copy of this instance.</returns>
-        override public object Clone()
-        {
-            return new IntegerParameter(this.ComponentName, this.ComponentDescription, this.Value, this.DefaultValue, this.LowerBound, this.UpperBound, this.Mode);
-        }
-
-        /// <summary>
-        /// Occurs when the user changes of the lower bound of the parameter changes.
-        /// </summary>
-        /// <remarks><para>Raising an event invokes the event handler through a delegate.</para>
-        /// </remarks>
-        public event ParameterLowerBoundChangedHandler ParameterLowerBoundChanged;
-        /// <summary>
-        /// Occurs when the user changes of the lower bound of a parameter.
-        /// </summary>
-        /// <remarks><para>Raising an event invokes the event handler through a delegate.</para>
-        /// <para>The <c>OnParameterLowerBoundChanged</c> method also allows derived classes to handle the event without attaching a delegate. This is the preferred 
-        /// technique for handling the event in a derived class.</para>
-        /// <para>Notes to Inheritors: </para>
-        /// <para>When overriding <c>OnParameterLowerBoundChanged</c> in a derived class, be sure to call the base class's <c>OnComponentNameChanged</c> method so that registered 
-        /// delegates receive the event.</para>
-        /// </remarks>
-        /// <param name = "args">A <see cref = "ParameterValueChangedEventArgs">ParameterValueChangedEventArgs</see> that contains information about the event.</param>
-        protected void OnParameterLowerBoundChanged(ParameterLowerBoundChangedEventArgs args)
-        {
-            if (ParameterLowerBoundChanged != null)
-            {
-                ParameterLowerBoundChanged(this, args);
-            }
-        }
-
-        /// <summary>
-        /// Occurs when the user changes of the upper bound of the parameter changes.
-        /// </summary>
-        /// <remarks><para>Raising an event invokes the event handler through a delegate.</para>
-        /// </remarks>
-        public event ParameterUpperBoundChangedHandler ParameterUpperBoundChanged;
-        /// <summary>
-        /// Occurs when the user changes of the upper bound of a parameter.
-        /// </summary>
-        /// <remarks><para>Raising an event invokes the event handler through a delegate.</para>
-        /// <para>The <c>OnParameterUpperBoundChanged</c> method also allows derived classes to handle the event without attaching a delegate. This is the preferred 
-        /// technique for handling the event in a derived class.</para>
-        /// <para>Notes to Inheritors: </para>
-        /// <para>When overriding <c>OnParameterUpperBoundChanged</c> in a derived class, be sure to call the base class's <c>OnParameterUpperBoundChanged</c> method so that registered 
-        /// delegates receive the event.</para>
-        /// </remarks>
-        /// <param name = "args">A <see cref = "ParameterLowerBoundChangedEventArgs">ParameterUpperBoundChangedEventArgs</see> that contains information about the event.</param>
-        protected void OnParameterUpperBoundChanged(ParameterUpperBoundChangedEventArgs args)
-        {
-            if (ParameterUpperBoundChanged != null)
-            {
-                ParameterUpperBoundChanged(this, args);
-            }
-        }
-        // ICloneable
-        /// <summary>
-        /// Creates a copy of the parameter.
-        /// </summary>
-        /// <remarks><para>The clone method is used to create a deep copy of the parameter.</para>
-        /// </remarks>
-        /// <returns>A copy of the current parameter.</returns>
-        Object ICloneable.Clone()
-        {
-            return new IntegerParameterWrapper(m_parameter);
-        }
-
-
-        /// <summary>
-        /// Gets and sets the value for this Parameter. 
-        /// </summary>
-        /// <remarks>
-        /// The value of the parameter.
-        /// </remarks>
-        /// <value>
-        /// The value of the parameter.
-        /// </value>
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-        [System.ComponentModel.CategoryAttribute("ICapeParameter")]
-        public int Value
-        {
-            get
-            {
-                return (int)m_parameter.value;
-            }
-            set
-            {
-                ParameterValueChangedEventArgs args = new ParameterValueChangedEventArgs(this.ComponentName, m_parameter.value, value);
-                m_parameter.value = value;
-                OnParameterValueChanged(args);
-                NotifyPropertyChanged("Value");
-            }
-        }
-
-        /// <summary>
-        /// Validates the current value of the parameter against the 
-        /// specification of the parameter.
-        /// </summary>
-        /// <remarks>
-        /// The parameter is considered valid if the current value is between the 
-        /// upper and lower bound. The message is used to return the reason that 
-        /// the parameter is invalid.
-        /// </remarks>
-        /// <returns>
-        /// True if the parameter is valid, false if not valid.
-        /// </returns>
-        /// <param name = "message">Reference to a string that will conain a message regarding the validation of the parameter.</param>
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-        public override bool Validate(ref String message)
-        {
-            ParameterValidatedEventArgs args;
-            CapeValidationStatus valStatus = m_parameter.ValStatus;
-            bool retval = m_parameter.Validate(message);
-            args = new ParameterValidatedEventArgs(this.ComponentName, message, ValStatus, m_parameter.ValStatus);
+            message = "Value greater than upper bound.";
+            args = new ParameterValidatedEventArgs(ComponentName, message, m_ValStatus,
+                CapeValidationStatus.CAPE_INVALID);
+            m_ValStatus = CapeValidationStatus.CAPE_INVALID;
+            NotifyPropertyChanged("ValStatus");
             OnParameterValidated(args);
-            this.NotifyPropertyChanged("ValStatus");
-            return retval;
+            return false;
         }
 
-        /// <summary>
-        /// Sets the value of the parameter to its default value.
-        /// </summary>
-        /// <remarks>
-        ///  This method sets the parameter's value to the default value.
-        /// </remarks>
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        public override void Reset()
+        message = "Value is valid.";
+        args = new ParameterValidatedEventArgs(ComponentName, message, m_ValStatus,
+            CapeValidationStatus.CAPE_VALID);
+        m_ValStatus = CapeValidationStatus.CAPE_VALID;
+        NotifyPropertyChanged("ValStatus");
+        OnParameterValidated(args);
+        return true;
+    }
+
+    /// <summary>将参数的值设置为其默认值。</summary>
+    /// <remarks>此方法将参数的值设置为默认值。</remarks>
+    /// <exception cref ="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    public override void Reset()
+    {
+        var args = new ParameterResetEventArgs(ComponentName);
+        _mValue = _mDefaultValue;
+        OnParameterReset(args);
+        NotifyPropertyChanged("Value");
+    }
+
+    // ICapeParameterSpec
+    /// <summary>获取参数的类型。</summary>
+    /// <remarks>获取此参数对应的 <see cref="CapeParamType"/>：real（CAPE_REAL）、integer（CAPE_INT）、
+    /// option（CAPE_OPTION）、boolean（CAPE_BOOLEAN）或 array（CAPE_ARRAY）。</remarks>
+    /// <value>参数的类型。</value>
+    /// <exception cref ="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用。</exception>
+    [Category("ICapeParameterSpec")]
+    public override CapeParamType Type => CapeParamType.CAPE_INT;
+
+    //ICapeIntegerParameterSpec
+    /// <summary>获取并设置参数的默认值。</summary>
+    /// <remarks>获取并设置参数的默认值。</remarks>
+    /// <value>参数的默认值。</value>
+    /// <exception cref ="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为 UNDEFINED。</exception>
+    [Category("ICapeIntegerParameterSpec")]
+    public int DefaultValue
+    {
+        get => _mDefaultValue;
+        set
         {
-            ParameterResetEventArgs args = new ParameterResetEventArgs(this.ComponentName);
-            m_parameter.Reset();
-            OnParameterReset(args);
-            NotifyPropertyChanged("Value");
+            var args = new ParameterDefaultValueChangedEventArgs(ComponentName, _mDefaultValue, value);
+            _mDefaultValue = value;
+            OnParameterDefaultValueChanged(args);
+            NotifyPropertyChanged("DefaultValue");
         }
+    }
 
-        // ICapeParameterSpec
-        // ICapeParameterSpec
-        /// <summary>
-        /// Gets the type of the parameter. 
-        /// </summary>
-        /// <remarks>
-        /// Gets the <see cref = "CapeParamType"/> of the parameter for which this is a specification: real 
-        /// (CAPE_REAL), integer(CAPE_INT), option(CAPE_OPTION), boolean(CAPE_BOOLEAN) 
-        /// or array(CAPE_ARRAY).
-        /// </remarks>
-        /// <value>The parameter type. </value>
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed.</exception>
-        [System.ComponentModel.CategoryAttribute("ICapeParameterSpec")]
-        public override CapeParamType Type
+    /// <summary>获取并设置参数的下限。</summary>
+    /// <remarks>下限可以是一个有效的整数。默认情况下，它设置为 Int32.MinValue，即 2,147,483,648；也就是十六进制 0x80000000。</remarks>
+    /// <value>参数的下限值。</value>
+    /// <exception cref ="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为 UNDEFINED。</exception>
+    [Category("ICapeIntegerParameterSpec")]
+    public int LowerBound
+    {
+        get => _mLowerBound;
+        set
         {
-            get
-            {
-                return CapeParamType.CAPE_INT;
-            }
+            var args = new ParameterLowerBoundChangedEventArgs(ComponentName, _mLowerBound, value);
+            _mLowerBound = value;
+            OnParameterLowerBoundChanged(args);
+            NotifyPropertyChanged("LowerBound");
         }
+    }
 
-        //ICapeIntegerParameterSpec
-
-        /// <summary>
-        /// Gets and sets the default value of the parameter.
-        /// </summary>
-        /// <remarks>
-        /// Gets and sets the default value of the parameter.
-        /// </remarks>
-        /// <value>The default value for the parameter. </value>
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-        [System.ComponentModel.CategoryAttribute("ICapeIntegerParameterSpec")]
-        public int DefaultValue
+    /// <summary>获取并设置参数的上限。</summary>
+    /// <remarks>上限可以是一个有效的整数。默认情况下，它被设置为 Int32.MaxValue，即 2,147,483,647；也就是十六进制 0x7FFFFFFF。</remarks>
+    /// <value>参数的上限值。</value>
+    /// <exception cref ="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为 UNDEFINED。</exception>
+    [Category("ICapeIntegerParameterSpec")]
+    public int UpperBound
+    {
+        get => _mUpperBound;
+        set
         {
-            get
-            {
-                return ((ICapeIntegerParameterSpec)m_parameter.Specification).DefaultValue;
-            }
-            set
-            {
-            }
+            var args = new ParameterUpperBoundChangedEventArgs(ComponentName, _mUpperBound, value);
+            _mUpperBound = value;
+            OnParameterUpperBoundChanged(args);
+            NotifyPropertyChanged("UpperBound");
+        }
+    }
+
+    /// <summary>验证发送的值是否符合参数的规格。</summary>
+    /// <remarks>如果当前值在上限和下限之间，则认为该参数有效。消息用于返回参数无效的原因。</remarks>
+    /// <returns>如果参数有效则为真，否则为假。</returns>
+    /// <param name="pValue">将与参数当前规格进行验证的整数值。</param>
+    /// <param name="message">引用一个字符串，该字符串将包含关于参数验证的消息。</param>
+    /// <exception cref ="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为 UNDEFINED。</exception>
+    public bool Validate(int pValue, ref string message)
+    {
+        if (pValue < _mLowerBound)
+        {
+            message = "Value below the Lower Bound.";
+            return false;
         }
 
-        /// <summary>
-        /// Gets and sets the lower bound of the parameter.
-        /// </summary>
-        /// <remarks>
-        /// The lower bound can be an valid integer. By default, it is set to 
-        /// Int32.MinValue, 2,147,483,648; that is, hexadecimal 0x80000000
-        /// </remarks>
-        /// <value>The lower bound for the parameter. </value>
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-        [System.ComponentModel.CategoryAttribute("ICapeIntegerParameterSpec")]
-        public int LowerBound
+        if (pValue > _mUpperBound)
         {
-            get
-            {
-                return ((ICapeIntegerParameterSpec)m_parameter.Specification).LowerBound;
-            }
-            set
-            {
-            }
+            message = "Value greater than upper bound.";
+            return false;
         }
 
-        /// <summary>
-        /// Gets and sets the upper bound of the parameter.
-        /// </summary>
-        /// <remarks>
-        /// The lower bound can be an valid integer. By default, it is set to 
-        /// Int32.MaxValue, 2,147,483,647; that is, hexadecimal 0x7FFFFFFF.
-        /// </remarks>
-        /// <value>The upper bound for the parameter. </value>
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-        [System.ComponentModel.CategoryAttribute("ICapeIntegerParameterSpec")]
-        public int UpperBound
-        {
-            get
-            {
-                return ((ICapeIntegerParameterSpec)m_parameter.Specification).UpperBound;
-            }
-            set
-            {
-            }
-        }
-
-        /// <summary>
-        /// Validates the value sent against the specification of the parameter. 
-        /// </summary>
-        /// <remarks>
-        /// The parameter is considered valid if the current value is between 
-        /// the upper and lower bound. The message is used to return the reason 
-        /// that the parameter is invalid.
-        /// </remarks>
-        /// <returns>
-        /// True if the parameter is valid, false if not valid.
-        /// </returns>
-        /// <param name = "value">Integer value that will be validated against the parameter's current specification.</param>
-        /// <param name = "message">Reference to a string that will conain a message regarding the validation of the parameter.</param>
-        /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-        /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-        public bool Validate(int value, ref String message)
-        {
-            return ((ICapeIntegerParameterSpec)m_parameter.Specification).Validate(value, message);
-        }
-    };
+        message = "Value is valid.";
+        return true;
+    }
 }
 
+/// <summary>用于 CAPE-OPEN 参数集合的整型参数。</summary>
+/// <remarks>用于 CAPE-OPEN 参数集合的整型参数。</remarks>
+[Serializable]
+[ComVisible(true)]
+[ComSourceInterfaces(typeof(ICapeIntegerParameterSpecEvents))]
+[Guid("EFC01B53-9A6A-4AD9-97BE-3F0294B3BBFB")] //ICapeThermoMaterialObject_IID)
+[ClassInterface(ClassInterfaceType.None)]
+internal class IntegerParameterWrapper : CapeParameter, ICapeParameter, ICapeParameterSpec, 
+    ICapeIntegerParameterSpec, ICloneable  //, INotifyPropertyChanged
+{
+    private ICapeParameter _mParameter;
+
+    /// <summary>获取并设置此参数的值。</summary>
+    /// <remarks>此值使用 System.Object 数据类型以确保与基于 COM 的 CAPE-OPEN 兼容。</remarks>
+    /// <value>参数的值。</value>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为 UNDEFINED。</exception>
+    [Browsable(false)]
+    public override object value
+    {
+        get => _mParameter.value;
+        set
+        {
+            var args = new ParameterValueChangedEventArgs(ComponentName, _mParameter.value, value);
+            _mParameter.value = (int)value;
+            OnParameterValueChanged(args);
+            NotifyPropertyChanged("Value");
+        }
+    }
+
+    /// <summary>创建整数值参数类的实例。</summary>
+    /// <remarks>默认值设置为参数的初始值。上限设置为 Int32.MaxValue（2,147,483,647），
+    /// 下限设置为 Int32.MinValue（-2,147,483,648）。模式设置为 CapeParamMode.CAPE_INPUT_OUTPUT。</remarks>
+    /// <param name="parameter">设置参数的初始值。</param>
+    public IntegerParameterWrapper(ICapeParameter parameter) 
+        : base(string.Empty, string.Empty, parameter.Mode)
+    {
+        _mParameter = parameter;
+        ComponentName = ((ICapeIdentification)parameter).ComponentName;
+        ComponentDescription = ((ICapeIdentification)parameter).ComponentDescription;
+        Mode = parameter.Mode;
+        m_ValStatus = parameter.ValStatus;
+    }
+
+    /// <summary>创建一个与当前实例相同的副本对象。</summary>
+    /// <remarks><para>克隆的实现方式可以是深度复制或浅度复制。在深度复制中，所有对象都会被复制；
+    /// 在浅度复制中，只复制顶层对象，而较低级别的对象包含引用。</para>
+    /// <para>生成的克隆必须与原始实例属于同一类型或与之兼容。</para>
+    /// <para>有关克隆、深拷贝与浅拷贝的详细信息及示例，请参阅 <see cref="Object.MemberwiseClone"/>。</para></remarks>
+    /// <returns>一个与该实例相同的副本对象。</returns>
+    public override object Clone()
+    {
+        return new IntegerParameter(ComponentName, ComponentDescription, Value, DefaultValue,
+            LowerBound, UpperBound, Mode);
+    }
+
+    /// <summary>当用户更改参数的下限时发生。</summary>
+    /// <remarks><para>触发事件时，会通过委托调用事件处理程序。</para></remarks>
+    public event ParameterLowerBoundChangedHandler ParameterLowerBoundChanged;
+
+    /// <summary>当用户更改参数的下限时发生。</summary>
+    /// <remarks><para>触发事件时，会通过委托调用事件处理程序。</para>
+    /// <para><c>OnParameterLowerBoundChanged</c> 方法还允许派生类在不附加委托的情况下处理该事件。这是在派生类中处理该事件的首选方法。</para>
+    /// <para>致继承开发者的注意事项：</para>
+    /// <para>在派生类中重写 <c>OnParameterLowerBoundChanged</c> 方法时，
+    /// 请务必调用基类的 <c>OnComponentNameChanged</c> 方法，以便已注册的委托能够收到该事件。</para></remarks>
+    /// <param name="args">一个包含事件信息的 <see cref="ParameterValueChangedEventArgs"/>。</param>
+    protected void OnParameterLowerBoundChanged(ParameterLowerBoundChangedEventArgs args)
+    {
+        ParameterLowerBoundChanged?.Invoke(this, args);
+    }
+
+    /// <summary>当用户更改参数的上限时发生。</summary>
+    /// <remarks><para>触发事件时，会通过委托调用事件处理程序。</para></remarks>
+    public event ParameterUpperBoundChangedHandler ParameterUpperBoundChanged;
+
+    /// <summary>当用户更改参数的上限时发生。</summary>
+    /// <remarks><para>触发事件时，会通过委托调用事件处理程序。</para>
+    /// <para><c>OnParameterUpperBoundChanged</c> 方法还允许子类在不附加委托的情况下处理事件。这是子类处理事件的优选方法。</para>
+    /// <para>致继承开发者的注意事项：</para>
+    /// <para>在派生类中重写 <c>OnParameterUpperBoundChanged</c> 时，
+    /// 务必调用基类的 <c>OnParameterUpperBoundChanged</c> 方法，以便注册的委托能够接收到该事件。</para></remarks>
+    /// <param name="args">一个包含事件信息的 <see cref="ParameterUpperBoundChangedEventArgs"/>。</param>
+    protected void OnParameterUpperBoundChanged(ParameterUpperBoundChangedEventArgs args)
+    {
+        ParameterUpperBoundChanged?.Invoke(this, args);
+    }
+
+    // ICloneable
+    /// <summary>创建一份参数的副本。</summary>
+    /// <remarks>克隆方法用于创建参数的深度副本。</remarks>
+    /// <returns>当前参数的副本。</returns>
+    object ICloneable.Clone()
+    {
+        return new IntegerParameterWrapper(_mParameter);
+    }
+    
+    /// <summary>获取并设置此参数的值。</summary>
+    /// <remarks>参数的值。</remarks>
+    /// <value>参数的值。</value>
+    /// <exception cref ="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为 UNDEFINED。</exception>
+    [Category("ICapeParameter")]
+    public int Value
+    {
+        get => (int)_mParameter.value;
+        set
+        {
+            var args = new ParameterValueChangedEventArgs(ComponentName, _mParameter.value, value);
+            _mParameter.value = value;
+            OnParameterValueChanged(args);
+            NotifyPropertyChanged("Value");
+        }
+    }
+
+    /// <summary>根据参数的规范验证参数的当前值。</summary>
+    /// <remarks>如果当前值在上限和下限之间，则认为该参数有效。消息用于返回参数无效的原因。</remarks>
+    /// <returns>如果参数有效则为真，否则为假。</returns>
+    /// <param name="message">引用一个字符串，该字符串将包含关于参数验证的消息。</param>
+    /// <exception cref ="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为 UNDEFINED。</exception>
+    public override bool Validate(ref string message)
+    {
+        var valStatus = _mParameter.ValStatus;
+        var retVal = _mParameter.Validate(message);
+        // var args = new ParameterValidatedEventArgs(ComponentName, message, ValStatus, _mParameter.ValStatus);
+        var args = new ParameterValidatedEventArgs(ComponentName, message, ValStatus, valStatus);
+        OnParameterValidated(args);
+        NotifyPropertyChanged("ValStatus");
+        return retVal;
+    }
+
+    /// <summary>将参数的值设置为其默认值。</summary>
+    /// <remarks>此方法将参数的值设置为默认值。</remarks>
+    /// <exception cref ="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    public override void Reset()
+    {
+        var args = new ParameterResetEventArgs(ComponentName);
+        _mParameter.Reset();
+        OnParameterReset(args);
+        NotifyPropertyChanged("Value");
+    }
+
+    // ICapeParameterSpec
+    /// <summary>获取参数的类型。</summary>
+    /// <remarks>获取此参数对应的 <see cref="CapeParamType"/>：real (CAPE_REAL),
+    /// integer(CAPE_INT), option(CAPE_OPTION), boolean(CAPE_BOOLEAN) 
+    /// or array(CAPE_ARRAY).</remarks>
+    /// <value>参数的类型。</value>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用。</exception>
+    [Category("ICapeParameterSpec")]
+    public override CapeParamType Type => CapeParamType.CAPE_INT;
+
+    //ICapeIntegerParameterSpec
+    /// <summary>获取并设置参数的默认值。</summary>
+    /// <remarks>获取并设置参数的默认值。</remarks>
+    /// <value>参数的默认值。</value>
+    /// <exception cref ="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为 UNDEFINED。</exception>
+    [Category("ICapeIntegerParameterSpec")]
+    public int DefaultValue
+    {
+        get => ((ICapeIntegerParameterSpec)_mParameter.Specification).DefaultValue;
+        set { }
+    }
+
+    /// <summary>获取并设置参数的下限。</summary>
+    /// <remarks>下限可以是一个有效的整数。默认情况下，它设置为 Int32.MinValue，即 2,147,483,648；也就是十六进制 0x80000000。</remarks>
+    /// <value>参数的下限。</value>
+    /// <exception cref ="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为 UNDEFINED。</exception>
+    [Category("ICapeIntegerParameterSpec")]
+    public int LowerBound
+    {
+        get => ((ICapeIntegerParameterSpec)_mParameter.Specification).LowerBound;
+        set { }
+    }
+
+    /// <summary>获取并设置参数的上限。</summary>
+    /// <remarks>上限可以是一个有效的整数，默认情况下，它设置为 Int32.MaxValue，即 2,147,483,647；也就是十六进制 0x7FFFFFFF。</remarks>
+    /// <value>参数的上限。</value>
+    /// <exception cref ="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为 UNDEFINED。</exception>
+    [Category("ICapeIntegerParameterSpec")]
+    public int UpperBound
+    {
+        get => ((ICapeIntegerParameterSpec)_mParameter.Specification).UpperBound;
+        set { }
+    }
+
+    /// <summary>验证发送的值是否符合参数的规格。</summary>
+    /// <remarks>如果当前值在上限和下限之间，则认为该参数有效。消息用于返回参数无效的原因。</remarks>
+    /// <returns>如果参数有效则为真，否则为假。</returns>
+    /// <param name="pValue">将与参数当前规格进行验证的整数值。</param>
+    /// <param name="message">引用一个字符串，该字符串将包含关于参数验证的消息。</param>
+    /// <exception cref ="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为 UNDEFINED。</exception>
+    public bool Validate(int pValue, ref string message)
+    {
+        return ((ICapeIntegerParameterSpec)_mParameter.Specification).Validate(pValue, message);
+    }
+}
