@@ -424,30 +424,26 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
         }
     }
 
-    /// <summary>Get the independent variable for the state</summary>
-    /// <remarks>Sets the independent variable for a given Material Object.</remarks>
-    /// <param name="indVars">
-    /// Independent variables to be set (see names for state variables for list of 
-    /// valid variables).</param>
-    /// <returns>
-    /// Values of independent variables.
-    /// COM-based CAPE-OPEN. </returns>
+    /// <summary>获取状态的自变量。</summary>
+    /// <remarks>设置给定物流对象的自变量。</remarks>
+    /// <param name="indVars">需设置的自变量（请参阅状态变量名称以获取有效变量列表）。</param>
+    /// <returns>自变量的值。基于 COM 的 CAPE-OPEN。</returns>
     double[] ICapeThermoMaterialObject.GetIndependentVar(string[] indVars)
     {
         try
         {
             return (double[])_pMaterialObject.GetIndependentVar(indVars);
         }
-        catch (Exception p_Ex)
+        catch (Exception pEx)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, pEx);
         }
     }
     
-    /// <summary>Check a property is valid</summary>
-    /// <remarks>Checks to see if given properties can be calculated.</remarks>
-    /// <returns>Returns Boolean List associated to list of properties to be checked.</returns>
-    /// <param name="props">Properties to check.</param>
+    /// <summary>验证属性是否有效。</summary>
+    /// <remarks>检查给定属性是否可以计算。</remarks>
+    /// <returns>返回与要检查的属性列表相关联的布尔列表。</returns>
+    /// <param name="props">要检查的属性。</param>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     bool[] ICapeThermoMaterialObject.PropCheck(string[] props)
@@ -456,16 +452,15 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
         {
             return (bool[])_pMaterialObject.PropCheck(props);
         }
-        catch (Exception p_Ex)
+        catch (Exception pEx)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, pEx);
         }
     }
 
-    /// <summary>Check which properties are available</summary>
-    /// <remarks>Gets a list properties that have been calculated.</remarks>
-    /// <returns>
-    /// Properties for which results are available.</returns>
+    /// <summary>查看哪些属性可用。</summary>
+    /// <remarks>获取已计算的属性列表。</remarks>
+    /// <returns>有结果的属性。</returns>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     string[] ICapeThermoMaterialObject.AvailableProps()
@@ -474,34 +469,30 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
         {
             return (string[])_pMaterialObject.AvailableProps();
         }
-        catch (Exception p_Ex)
+        catch (Exception pEx)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, pEx);
         }
     }
 
-    /// <summary>Remove any previously calculated results for given properties</summary>
-    /// <remarks>Remove all or specified property results in the Material Object.</remarks>
-    /// <param name="props">
-    /// Properties to be removed. emptyObject to remove all properties.</param>
+    /// <summary>删除给定属性的任何先前计算的结果。</summary>
+    /// <remarks>删除物流对象中的所有或指定属性结果。</remarks>
+    /// <param name="props">要删除的属性。使用 emptyObject 删除所有属性。</param>
     void ICapeThermoMaterialObject.RemoveResults(string[] props)
     {
         try
         {
             _pMaterialObject.RemoveResults(props);
         }
-        catch (Exception p_Ex)
+        catch (Exception pEx)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, pEx);
         }
     }
     
-    /// <summary>Create another empty material object</summary>
-    /// <remarks>Create a Material Object from the parent Material Template of the current 
-    /// Material Object. This is the same as using the CreateMaterialObject method 
-    /// on the parent Material Template.</remarks> 
-    /// <returns>
-    /// The created/initialized Material Object.</returns>
+    /// <summary>创建另一个空的物流对象。</summary>
+    /// <remarks>从当前材质对象的父物流模板创建物流对象。这与在父物流模板上使用 CreateMaterialObject 方法相同。</remarks> 
+    /// <returns>已创建/初始化的物流对象。</returns>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
     /// <exception cref="ECapeOutOfResources">ECapeOutOfResources</exception>
     /// <exception cref="ECapeLicenceError">ECapeLicenceError</exception>
@@ -511,16 +502,15 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
         {
             return (ICapeThermoMaterialObject)_pMaterialObject.CreateMaterialObject();
         }
-        catch (Exception p_Ex)
+        catch (Exception pEx)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, pEx);
         }
     }
 
-    /// <summary>Duplicate this material object</summary>
-    /// <remarks>Create a duplicate of the current Material Object.</remarks>
-    /// <returns>
-    /// The created/initialized Material Object.</returns>
+    /// <summary>复制此物理对象。</summary>
+    /// <remarks>创建当前物流对象的副本。</remarks>
+    /// <returns>创建/初始化的物流对象。</returns>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
     /// <exception cref="ECapeOutOfResources">ECapeOutOfResources</exception>
     /// <exception cref="ECapeLicenceError">ECapeLicenceError</exception>
@@ -533,19 +523,16 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
         {
             return new MaterialObjectWrapper(_pMaterialObject.Duplicate());
         }
-        catch (Exception p_Ex)
+        catch (Exception pEx)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, pEx);
         }
     }
 
-    /// <summary>Check the validity of the given properties</summary>
-    /// <remarks>Checks the validity of the calculation.</remarks>
-    /// <returns>
-    /// Returns the reliability scale of the calculation.</returns>
-    /// <param name="props">
-    /// The properties for which reliability is checked. Null value to remove all 
-    /// properties. </param>
+    /// <summary>检查给定属性的有效性。</summary>
+    /// <remarks>检查计算的有效性。</remarks>
+    /// <returns>返回计算的可靠性比例。</returns>
+    /// <param name="props">要检查可靠性的属性。空值以删除所有属性。</param>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     ICapeThermoReliability[] ICapeThermoMaterialObject.ValidityCheck(string[] props)
@@ -554,39 +541,34 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
         {
             return (ICapeThermoReliability[])_pMaterialObject.ValidityCheck(props);
         }
-        catch (Exception p_Ex)
+        catch (Exception pEx)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, pEx);
         }
     }
 
-    /// <summary>Get the list of properties</summary>
-    /// <remarks>Returns list of properties supported by the property package and corresponding 
-    /// CO Calculation Routines. The properties TEMPERATURE, PRESSURE, FRACTION, FLOW, 
-    /// PHASEFRACTION, TOTALFLOW cannot be returned by GetPropList, since all 
-    /// components must support them. Although the property identifier of derivative 
-    /// properties is formed from the identifier of another property, the GetPropList 
-    /// method will return the identifiers of all supported derivative and 
-    /// non-derivative properties. For instance, a Property Package could return 
-    /// the following list: enthalpy, enthalpy.Dtemperature, entropy, entropy.Dpressure.</remarks>
-    /// <returns>
-    /// String list of all supported properties of the property package.</returns>
+    /// <summary>获取属性列表。</summary>
+    /// <remarks>返回由该属性包支持的属性及其对应的 CO 计算例程的列表。属性
+    /// TEMPERATURE、PRESSURE、FRACTION、FLOW、PHASE-FRACTION、TOTAL-FLOW 无法通过 GetPropList 方法获取，
+    /// 因为所有组件都必须支持这些属性。尽管衍生属性的属性标识符是由另一个属性的标识符构建的，但 GetPropList 方法
+    /// 仍会返回所有支持的衍生和非衍生属性的标识符。
+    /// 例如，一个属性包可能返回以下列表：enthalpy, enthalpy.Dtemperature, entropy, entropy.Dpressure。</remarks>
+    /// <returns>属性包的所有支持属性的字符串列表。</returns>
     string[] ICapeThermoMaterialObject.GetPropList()
     {
         try
         {
             return (string[])_pMaterialObject.GetPropList();
         }
-        catch (Exception p_Ex)
+        catch (Exception pEx)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, pEx);
         }
     }
 
-    /// <summary>Get the number of components in this material object</summary>
-    /// <remarks>Returns number of components in Material Object.</remarks>
-    /// <returns>
-    /// Number of components in the Material Object.</returns>
+    /// <summary>获取此物流对象中的组件数量。</summary>
+    /// <remarks>返回物流对象中组件的数量。</remarks>
+    /// <returns>物流对象中组件的数量。</returns>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
     int ICapeThermoMaterialObject.GetNumComponents()
     {
@@ -594,93 +576,60 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
         {
             return _pMaterialObject.GetNumComponents();
         }
-        catch (Exception p_Ex)
+        catch (Exception pEx)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, pEx);
         }
     }
     
     // ICapeThermoMaterial implementation
-    /// <summary>Remove all stored Physical Property values.</summary>
-    /// <remarks><para>ClearAllProps removes all stored Physical Properties that have been set 
-    /// using the SetSinglePhaseProp, SetTwoPhaseProp or SetOverallProp methods. 
-    /// This means that any subsequent call to retrieve Physical Properties will 
-    /// result in an exception until new values have been stored using one of the 
-    /// Set methods. ClearAllProps does not remove the configuration information 
-    /// for a Material, i.e. the list of Compounds and Phases.</para>
-    /// <para>Using the ClearAllProps method results in a Material Object that is in 
-    /// the same state as when it was first created. It is an alternative to using 
-    /// the CreateMaterial method but it is expected to have a smaller overhead in 
-    /// operating system resources.</para></remarks>
-    /// <exception cref="ECapeNoImpl">The operation is “not” 
-    /// implemented even if this method can be called for reasons of compatibility 
-    /// with the CAPE-OPEN standards. That is to say that the operation exists but 
-    /// it is not supported by the current implementation</exception>
-    /// <exception cref="ECapeUnknown">The error to be raised when 
-    /// other error(s), specified for this operation, are not suitable.</exception>
+    /// <summary>删除所有存储的物理属性值。</summary>
+    /// <remarks><para>ClearAllProps 删除所有已经使用 SetSinglePhaseProp，SetTwoPhaseProp 或
+    /// SetOverallProp 方法设置的存储的物理属性。这意味着，在使用 Set 方法之一存储新值之前，任何后续检索物理属性
+    /// 的调用都将导致异常。ClearAllProps 不会删除物流的配置信息，即化合物和相位的列表。</para>
+    /// <para>使用 ClearAllProps 方法会使材质对象处于与最初创建时相同的状态。它是使用 CreateMaterial 方法的
+    /// 一种替代方法，但它在操作系统资源方面的开销较小。</para></remarks>
+    /// <exception cref="ECapeNoImpl">即使由于与 CAPE-OPEN 标准兼容的原因可以调用该方法，也“不”执行该操作。
+    /// 也就是说，该操作存在，但当前实现不支持它</exception>
+    /// <exception cref="ECapeUnknown">当为此操作指定的其他错误不合适时将引发的错误。</exception>
     void ICapeThermoMaterial.ClearAllProps()
     {
         _pIMatObj.ClearAllProps();
     }
 
-    /// <summary>Copies all the stored non-constant Physical Properties (which have been set 
-    /// using the SetSinglePhaseProp, SetTwoPhaseProp or SetOverallProp) from the 
-    /// source Material Object to the current instance of the Material Object.</summary>
-    /// <remarks><para>Before using this method, the Material Object must have been configured 
-    /// with the same exact list of Compounds and Phases as the source one. Otherwise, 
-    /// calling the method will raise an exception. There are two ways to perform the 
-    /// configuration: through the PME proprietary mechanisms and with 
-    /// CreateMaterial. Calling CreateMaterial on a Material Object S and 
-    /// subsequently calling CopyFromMaterial(S) on the newly created Material 
-    /// Object N is equivalent to the deprecated method ICapeMaterialObject.Duplicate.</para>
-    /// <para>The method is intended to be used by a client, for example a Unit 
-    /// Operation that needs a Material Object to have the same state as one of the 
-    /// Material Objects it has been connected to. One example is the representation 
-    /// of an internal stream in a distillation column.</para></remarks>
-    /// <param name="source">Source Material Object from which stored properties will be copied.</param>
-    /// <exception cref="ECapeNoImpl">The operation is “not” implemented even 
-    /// if this method can be called for reasons of compatibility with the CAPE-OPEN 
-    /// standards. That is to say that the operation exists but it is not supported 
-    /// by the current implementation.</exception>
-    /// <exception cref="ECapeFailedInitialisation">The pre-requisites for copying 
-    /// the non-constant Physical Properties of the Material Object are not valid. 
-    /// The necessary initialisation, such as configuring the current Material with 
-    /// the same Compounds and Phases as the source, has not been performed or has 
-    /// failed.</exception>
-    /// <exception cref="ECapeOutOfResources">The physical resources necessary to 
-    /// copy the non-constant Physical Properties are out of limits.</exception>
-    /// <exception cref="ECapeNoMemory">The physical memory necessary to copy the 
-    /// non-constant Physical Properties is out of limit.</exception>
-    /// <exception cref="ECapeUnknown">The error to be raised when 
-    /// other error(s), specified for this operation, are not suitable.</exception>
+    /// <summary>将所有存储的非常量物理属性（使用 SetSinglePhaseProp， SetTwoPhaseProp 或 SetOverallProp 设置）
+    /// 从源物流对象复制到物流对象的当前实例。</summary>
+    /// <remarks><para>在使用此方法之前，材料对象必须与源对象具有完全相同的化合物和相列表。否则，调用此方法将引发异常。
+    /// 有两种方式进行配置：通过 PME 的专有机制，或使用 CreateMaterial 函数。在 Material Object S 上调用
+    /// CreateMaterial，然后在新建的 Material Object N 上调用 CopyFromMaterial(S)，
+    /// 等同于使用已弃用的方法 ICapeMaterialObject.Duplicate。</para>
+    /// <para>该方法旨在由客户端使用，例如，一个单元操作需要一个物质对象具有与它所连接的物质对象之一相同的状态。
+    /// 一个例子是精馏塔内部流的表示。</para></remarks>
+    /// <param name="source">将从中复制存储属性的源物流对象。</param>
+    /// <exception cref="ECapeNoImpl">即使由于与 CAPE-OPEN 标准兼容的原因可以调用该方法，也“不”执行该操作。
+    /// 也就是说，该操作存在，但当前实现不支持它。</exception>
+    /// <exception cref="ECapeFailedInitialisation">复制物质对象的非恒定物理属性的先决条件无效。必要的初始化，
+    /// 例如将当前物流配置为与源相同的化合物和相，尚未执行或已失败。</exception>
+    /// <exception cref="ECapeOutOfResources">复制非恒定物理属性所需的物理资源超出限制。</exception>
+    /// <exception cref="ECapeNoMemory">复制非恒定物理属性所需的物理内存已超出限制。</exception>
+    /// <exception cref="ECapeUnknown">当为此操作指定的其他错误不合适时将引发的错误。</exception>
     void ICapeThermoMaterial.CopyFromMaterial(ICapeThermoMaterial source)
     {
         _pIMatObj.CopyFromMaterial(((MaterialObjectWrapper)source).MaterialObject11);
     }
 
-    /// <summary>Creates a Material Object with the same configuration as the current 
-    /// Material Object.</summary>
-    /// <remarks>The Material Object created does not contain any non-constant Physical 
-    /// Property value but has the same configuration (Compounds and Phases) as 
-    /// the current Material Object. These Physical Property values must be set 
-    /// using SetSinglePhaseProp, SetTwoPhaseProp or SetOverallProp. Any attempt to 
-    /// retrieve Physical Property values before they have been set will result in 
-    /// an exception.</remarks>
-    /// <returns>The interface for the Material Object.</returns>
-    /// <exception cref="ECapeNoImpl">The operation is “not” implemented even if 
-    /// this method can be called for reasons of compatibility with the CAPE-OPEN 
-    /// standards. That is to say that the operation exists but it is not supported 
-    /// by the current implementation.</exception>
-    /// <exception cref="ECapeFailedInitialisation">The physical resources 
-    /// necessary to the creation of the Material Object are out of limits.</exception>
-    /// <exception cref="ECapeOutOfResources">The operation is “not” 
-    /// implemented even if this method can be called for reasons of compatibility 
-    /// with the CAPE-OPEN standards. That is to say that the operation exists but 
-    /// it is not supported by the current implementation</exception>
-    /// <exception cref="ECapeNoMemory">The physical memory necessary to the 
-    /// creation of the Material Object is out of limit.</exception>
-    /// <exception cref="ECapeUnknown">The error to be raised when 
-    /// other error(s), specified for this operation, are not suitable.</exception>
+    /// <summary>创建一个与当前材料对象具有相同配置的材料对象。</summary>
+    /// <remarks>创建的物流对象不包含任何非恒定的物理特性值，但具有与当前物流对象相同的配置（化合物和相）。
+    /// 必须使用 SetSinglePhaseProp、SetTwoPhaseProp 或 SetOverallProp 设置这些物理属性值。
+    /// 在设置物理属性值之前，任何检索物理属性值的尝试都会导致异常。</remarks>
+    /// <returns>物流对象的接口。</returns>
+    /// <exception cref="ECapeNoImpl">即使出于与 CAPE-OPEN 标准兼容的原因可以调用该方法，该操作“并未”被实现。
+    /// 也就是说，该操作是存在的，但当前实现并不支持它。</exception>
+    /// <exception cref="ECapeFailedInitialisation">创建该实体对象所需的物理资源超出了限制。</exception>
+    /// <exception cref="ECapeOutOfResources">即使由于与 CAPE-OPEN 标准兼容的原因可以调用该方法，也“不”执行该操作。
+    /// 也就是说，该操作存在，但当前实现不支持它</exception>
+    /// <exception cref="ECapeNoMemory">创建实体对象所需的物理内存超出了限制。</exception>
+    /// <exception cref="ECapeUnknown">当为此操作指定的其他错误不合适时将引发的错误。</exception>
     ICapeThermoMaterial ICapeThermoMaterial.CreateMaterial()
     {
         return new MaterialObjectWrapper(_pIMatObj.CreateMaterial());
@@ -725,8 +674,7 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// value was passed, for example UNDEFINED for property.</exception>
     /// <exception cref="ECapeFailedInitialisation">The pre-requisites are not 
     /// valid. The necessary initialisation has not been performed or has failed.</exception>
-    /// <exception cref="ECapeUnknown">The error to be raised when 
-    /// other error(s), specified for this operation, are not suitable.</exception>
+    /// <exception cref="ECapeUnknown">当为此操作指定的其他错误不合适时将引发的错误。</exception>
     void ICapeThermoMaterial.GetOverallProp(string property, string basis, ref double[] results)
     {
         object obj1 = null;
@@ -755,8 +703,7 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// been set following a call to the CreateMaterial or ClearAllProps methods.</exception>
     /// <exception cref="ECapeFailedInitialisation">The pre-requisites are not 
     /// valid. The necessary initialisation has not been performed or has failed.</exception>
-    /// <exception cref="ECapeUnknown">The error to be raised when 
-    /// other error(s), specified for this operation, are not suitable.</exception>
+    /// <exception cref="ECapeUnknown">当为此操作指定的其他错误不合适时将引发的错误。</exception>
     void ICapeThermoMaterial.GetOverallTPFraction(ref double temperature, ref double pressure, ref double[] composition)
     {
         object obj1 = null;
@@ -833,12 +780,8 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// <param name="phaseStatus">A CapeArrayEnumeration which is an array of 
     /// Phase status flags corresponding to each of the Phase labels. 
     /// See description below.</param>
-    /// <exception cref="ECapeNoImpl">The operation is “not” 
-    /// implemented even if this method can be called for reasons of compatibility 
-    /// with the CAPE-OPEN standards. That is to say that the operation exists but 
-    /// it is not supported by the current implementation</exception>
-    /// <exception cref="ECapeUnknown">The error to be raised when 
-    /// other error(s), specified for this operation, are not suitable.</exception>
+    /// <exception cref="ECapeNoImpl">即使由于与 CAPE-OPEN 标准兼容的原因可以调用该方法，也“不”执行该操作。也就是说，该操作存在，但当前实现不支持它</exception>
+    /// <exception cref="ECapeUnknown">当为此操作指定的其他错误不合适时将引发的错误。</exception>
     void ICapeThermoMaterial.GetPresentPhases(ref string[] phaseLabels, ref CapePhaseStatus[] phaseStatus)
     {
         object obj1 = null;
@@ -896,10 +839,7 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// <param name="results">CapeVariant Results vector (CapeArrayDouble) 
     /// containing Physical Property value(s) in SI units or CapeInterface (see 
     /// notes).	</param>
-    /// <exception cref="ECapeNoImpl">The operation is “not” 
-    /// implemented even if this method can be called for reasons of compatibility 
-    /// with the CAPE-OPEN standards. That is to say that the operation exists but 
-    /// it is not supported by the current implementation</exception>
+    /// <exception cref="ECapeNoImpl">即使由于与 CAPE-OPEN 标准兼容的原因可以调用该方法，也“不”执行该操作。也就是说，该操作存在，但当前实现不支持它</exception>
     /// <exception cref="ECapeThrmPropertyNotAvailable">The property required is 
     /// not available from the Material Object possibly for the Phase label or 
     /// basis requested. This exception is raised when a property value has not been 
@@ -911,8 +851,7 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// <exception cref="ECapeFailedInitialisation">The pre-requisites are not 
     /// valid. The necessary initialisation has not been performed, or has failed. 
     /// This exception is returned if the Phase specified does not exist.</exception>
-    /// <exception cref="ECapeUnknown">The error to be raised when 
-    /// other error(s), specified for this operation, are not suitable.</exception>
+    /// <exception cref="ECapeUnknown">当为此操作指定的其他错误不合适时将引发的错误。</exception>
     void ICapeThermoMaterial.GetSinglePhaseProp(string property, string phaseLabel, string basis, ref double[] results)
     {
         object obj1 = null;
@@ -950,8 +889,7 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// <exception cref="ECapeFailedInitialisation">The pre-requisites are not 
     /// valid. The necessary initialisation has not been performed, or has failed. 
     /// This exception is returned if the Phase specified does not exist.</exception>
-    /// <exception cref="ECapeUnknown">The error to be raised when 
-    /// other error(s), specified for this operation, are not suitable.</exception>
+    /// <exception cref="ECapeUnknown">当为此操作指定的其他错误不合适时将引发的错误。</exception>
     void ICapeThermoMaterial.GetTPFraction(string phaseLabel, ref double temperature, ref double pressure, ref double[] composition)
     {
         object obj1 = null;
@@ -1023,8 +961,7 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// <exception cref="ECapeInvalidArgument">To be used when an invalid argument 
     /// value was passed: for example, UNDEFINED for property, or an unrecognised 
     /// identifier in phaseLabels.</exception>
-    /// <exception cref="ECapeUnknown">The error to be raised when 
-    /// other error(s), specified for this operation, are not suitable.</exception>
+    /// <exception cref="ECapeUnknown">当为此操作指定的其他错误不合适时将引发的错误。</exception>
     void ICapeThermoMaterial.GetTwoPhaseProp(string property, string[] phaseLabels, string basis, ref double[] results)
     {
         object obj1 = null;
@@ -1126,8 +1063,7 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// value was passed, that is a value that does not belong to the valid list 
     /// described above, for example if phaseLabels contains UNDEFINED or 
     /// phaseStatus contains a value that is not in the above table.</exception>
-    /// <exception cref="ECapeUnknown">The error to be raised when 
-    /// other error(s), specified for this operation, are not suitable.</exception>
+    /// <exception cref="ECapeUnknown">当为此操作指定的其他错误不合适时将引发的错误。</exception>
     void ICapeThermoMaterial.SetPresentPhases(string[] phaseLabels, CapePhaseStatus[] phaseStatus)
     {
         int[] obj1 = new int[phaseStatus.Length];
