@@ -36,10 +36,10 @@ public enum CapeFugacityFlag
 }
 
 /// <summary>用于基于 COM 的 CAPE-OPEN ICapeThermoMaterialObject 物流对象的封装类。</summary>
-/// <remarks><para>此类是 COM 基底的 CAPE-OPEN ICapeThermoMaterialObject 材料对象的包装类。在使用此包装类时，
-/// COM 基底的材料的生命周期由我们管理，并且会在材料上调用 COM 的 Release() 方法。</para>
+/// <remarks><para>此类是 COM 基底的 CAPE-OPEN ICapeThermoMaterialObject 物流对象的包装类。在使用此包装类时，
+/// COM 基底的物流的生命周期由我们管理，并且会在物流上调用 COM 的 Release() 方法。</para>
 /// <para>此外，该方法会将 <see cref="ICapeThermoMaterialObject"/> 接口中使用的 COM变体转换为所需的 .Net 对象类型。
-/// 这样，在使用基于 COM 的 CAPE-OPEN 材料对象时，就不需要转换数据类型了。</para></remarks>
+/// 这样，在使用基于 COM 的 CAPE-OPEN 物流对象时，就不需要转换数据类型了。</para></remarks>
 [ComVisible(false)]
 [Guid("5A65B4B2-2FDD-4208-813D-7CC527FB91BD")]
 [Description("ICapeThermoMaterialObject Interface")]
@@ -201,13 +201,13 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     }
 
     /// <summary>提供有关对象是否支持热力学版本 1.0 的信息。</summary>
-    /// <remarks><see cref="MaterialObjectWrapper"/> 类用于检查所包装的材料对象是否支持 CAPE-OPEN 1.0 版本的热力学。
+    /// <remarks><see cref="MaterialObjectWrapper"/> 类用于检查所包装的物流对象是否支持 CAPE-OPEN 1.0 版本的热力学。
     /// 此属性表示该检查的结果。</remarks>
     /// <value>指示打包的物流对象是否支持 CAPE-OPEN 热力学版本 1.0 接口。</value>
     public bool SupportsThermo10 { get; }
 
     /// <summary>提供有关对象是否支持热力学版本 1.1 的信息。</summary>
-    /// <remarks><see cref="MaterialObjectWrapper1"/> 类用于检查所包裹的材料对象是否支持 CAPE-OPEN 1.1 版本的热力学。
+    /// <remarks><see cref="MaterialObjectWrapper1"/> 类用于检查所包裹的物流对象是否支持 CAPE-OPEN 1.1 版本的热力学。
     /// 此属性表示该检查的结果。</remarks>
     /// <value>指示打包的物流对象是否支持 CAPE-OPEN 热力学版本 1.1 接口。</value>
     public bool SupportsThermo11 { get; }
@@ -599,7 +599,7 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
 
     /// <summary>将所有存储的非常量物理属性（使用 SetSinglePhaseProp， SetTwoPhaseProp 或 SetOverallProp 设置）
     /// 从源物流对象复制到物流对象的当前实例。</summary>
-    /// <remarks><para>在使用此方法之前，材料对象必须与源对象具有完全相同的化合物和相列表。否则，调用此方法将引发异常。
+    /// <remarks><para>在使用此方法之前，物流对象必须与源对象具有完全相同的化合物和相列表。否则，调用此方法将引发异常。
     /// 有两种方式进行配置：通过 PME 的专有机制，或使用 CreateMaterial 函数。在 Material Object S 上调用
     /// CreateMaterial，然后在新建的 Material Object N 上调用 CopyFromMaterial(S)，
     /// 等同于使用已弃用的方法 ICapeMaterialObject.Duplicate。</para>
@@ -618,7 +618,7 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
         _pIMatObj.CopyFromMaterial(((MaterialObjectWrapper)source).MaterialObject11);
     }
 
-    /// <summary>创建一个与当前材料对象具有相同配置的材料对象。</summary>
+    /// <summary>创建一个与当前物流对象具有相同配置的物流对象。</summary>
     /// <remarks>创建的物流对象不包含任何非恒定的物理特性值，但具有与当前物流对象相同的配置（化合物和相）。
     /// 必须使用 SetSinglePhaseProp、SetTwoPhaseProp 或 SetOverallProp 设置这些物理属性值。
     /// 在设置物理属性值之前，任何检索物理属性值的尝试都会导致异常。</remarks>
@@ -650,7 +650,7 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// 对于不适用基准的物理性质，使用“UNDEFINED”作为占位符。详情请参阅第 7.5.5 节。</param>
     /// <exception cref="ECapeNoImpl">操作 GetOverallProp 尚未实现，即使出于与 CAPE-OPEN 标准兼容性的考虑，
     /// 该方法仍可被调用。也就是说，该操作虽然存在，但当前实现中并未提供支持。</exception>
-    /// <exception cref="ECapeThrmPropertyNotAvailable">所需的物理属性无法从材料对象中获取，可能是因为请求的基础属性不存在。
+    /// <exception cref="ECapeThrmPropertyNotAvailable">所需的物理属性无法从物流对象中获取，可能是因为请求的基础属性不存在。
     /// 当调用 CreateMaterial 或 ClearAllProps 方法后未设置物理属性值时，将引发此异常。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递了无效的参数值时使用，例如属性为 UNDEFINED。</exception>
     /// <exception cref="ECapeFailedInitialisation">先决条件无效。必要的初始化操作未执行或执行失败。</exception>
@@ -663,14 +663,14 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     }
 
     /// <summary>获取整体混合物的温度、压力和组成。</summary>
-    /// <remarks><para>该方法旨在帮助开发人员更高效地利用 CAPE-OPEN 接口。它通过单次调用即可返回材料对象中最常被请求的信息。</para>
+    /// <remarks><para>该方法旨在帮助开发人员更高效地利用 CAPE-OPEN 接口。它通过单次调用即可返回物流对象中最常被请求的信息。</para>
     /// <para>该方法不提供基准选择。组成始终以摩尔分数形式返回。</para></remarks>
     /// <param name="temperature">A reference to a double Temperature (in K)</param>
     /// <param name="pressure">A reference to a double Pressure (in Pa)</param>
     /// <param name="composition">一个指向包含“Composition”（摩尔分率）的 double 数组的引用。</param>
     /// <exception cref="ECapeNoImpl">操作 GetOverallProp 尚未实现，即使出于与 CAPE-OPEN 标准兼容性的考虑，
     /// 该方法仍可被调用。也就是说，该操作虽然存在，但当前实现尚未支持该功能。</exception>
-    /// <exception cref="ECapeThrmPropertyNotAvailable">所需的物理属性无法从材料对象中获取，可能是因为请求的基础属性不存在。
+    /// <exception cref="ECapeThrmPropertyNotAvailable">所需的物理属性无法从物流对象中获取，可能是因为请求的基础属性不存在。
     /// 当调用 CreateMaterial 或 ClearAllProps 方法后未设置物理属性值时，会触发此异常。</exception>
     /// <exception cref="ECapeFailedInitialisation">先决条件无效。必要的初始化操作未执行或执行失败。</exception>
     /// <exception cref="ECapeUnknown">当为此操作指定的其他错误不合适时将引发的错误。</exception>
@@ -696,22 +696,22 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// <para>4. CalcEquilibrium 方法使用 SetPresentPhases 方法来指示平衡计算后存在的相（并设置相属性）。</para>
     /// <para>5. PME 使用 GetPresentPhases 方法来找出计算后存在的相，
     /// 然后可以利用 GetSinglePhaseProp 或 GetTPFraction 方法获取相的属性。</para>
-    /// <para>为了表明某个阶段存在于一个实体对象（或其他实现 ICapeThermoMaterial 接口的组件）中，必须通过
-    /// ICapeThermoMaterial 接口的 SetPresentPhases 方法进行指定。即使某个阶段存在，也不意味着已经实际
-    /// 设定了任何物理属性，除非该阶段的阶段状态为 Cape_AtEquilibrium 或 Cape_Estimates（见下文）。</para>
-    /// <para>如果不存在任何阶段，则应为 phaseLabels 和 phaseStatus 参数返回 UNDEFINED。</para>
+    /// <para>为了表明某个相态存在于一个实体对象（或其他实现 ICapeThermoMaterial 接口的组件）中，必须通过
+    /// ICapeThermoMaterial 接口的 SetPresentPhases 方法进行指定。即使某个相态存在，也不意味着已经实际
+    /// 设定了任何物理属性，除非该相态的相态状态为 Cape_AtEquilibrium 或 Cape_Estimates（见下文）。</para>
+    /// <para>如果不存在任何相态，则应为 phaseLabels 和 phaseStatus 参数返回 UNDEFINED。</para>
     /// <para>phaseStatus 参数包含与 Phase 标签数量相同的条目。有效设置如下表所示：</para>
-    /// <para>Cape_UnknownPhaseStatus - 当指定某个阶段可用于进行平衡计算时，这是正常的设置。</para>
-    /// <para>Cape_AtEquilibrium - 由于进行了平衡计算，该阶段已设定为“当前”。</para>
+    /// <para>Cape_UnknownPhaseStatus - 当指定某个相态可用于进行平衡计算时，这是正常的设置。</para>
+    /// <para>Cape_AtEquilibrium - 由于进行了平衡计算，该相态已设定为“当前”。</para>
     /// <para>Cape_Estimates - 平衡状态的估算已设定在“物流对象”中。</para>
     /// <para>所有处于“Cape_AtEquilibrium”状态的相，其设定的温度、压力、成分和相分数值都对应于一种平衡状态，
     /// 即每种化合物的温度、压力和逸度相等。处于“Cape_Estimates”状态的相，其设定的温度值、压力值、成分值和相分
     /// 数值已存储在物流对象中。这些值可供“平衡计算器”组件使用，以启动平衡计算。虽然存储了这些值，但不能保证会被实际采用。</para>
     /// <para>使用 ClearAllProps 方法得到的材质对象，其状态与最初创建时相同。
     /// 它是使用 CreateMaterial 方法的替代方案，但预计它在操作系统资源上的开销较小。</para></remarks>
-    /// <param name="phaseLabels">一个引用，指向包含材料对象中阶段标签（标识符 - 名称）列表的字符串数组。
-    /// 物流对象中的阶段标签必须是 ICapeThermoPhases 接口的 GetPhaseList 方法返回的标签的子集。</param>
-    /// <param name="phaseStatus">CapeArrayEnumeration，它是由对应于每个阶段标签的相位状态标志组成的数组。请参阅下文描述。</param>
+    /// <param name="phaseLabels">一个引用，指向包含物流对象中相态标签（标识符 - 名称）列表的字符串数组。
+    /// 物流对象中的相态标签必须是 ICapeThermoPhases 接口的 GetPhaseList 方法返回的标签的子集。</param>
+    /// <param name="phaseStatus">CapeArrayEnumeration，它是由对应于每个相态标签的相位状态标志组成的数组。请参阅下文描述。</param>
     /// <exception cref="ECapeNoImpl">即使由于与 CAPE-OPEN 标准兼容的原因可以调用该方法，也“不”执行该操作。
     /// 也就是说，该操作存在，但当前实现不支持它。</exception>
     /// <exception cref="ECapeUnknown">当为此操作指定的其他错误不合适时将引发的错误。</exception>
@@ -736,8 +736,8 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// 也可以是 CapeInterface，后者可用于检索由更复杂数据结构描述的单一相物理属性，例如分布式属性。</para>
     /// <para>尽管某些调用 GetSinglePhaseProp 的结果可能是一个单一的数值，
     /// 但数值的返回类型是 CapeArrayDouble，在这种情况下，即使该方法只包含一个元素，也必须返回一个数组。</para>
-    /// <para>如果材料的标识符由“GetPresentPhases”方法返回，则该阶段“存在”于该材料中。如果指定的阶段不存在，
-    /// 则“GetSinglePhaseProp”方法将抛出一个异常。即使阶段存在，也不意味着可以获取任何物理属性。</para>
+    /// <para>如果物流的标识符由“GetPresentPhases”方法返回，则该相态“存在”于该物流中。如果指定的相态不存在，
+    /// 则“GetSinglePhaseProp”方法将抛出一个异常。即使相态存在，也不意味着可以获取任何物理属性。</para>
     /// <para>由 GetSinglePhaseProp 返回的物理属性值指的是一个单独的相。这些值可以通过直接调用 SetSinglePhaseProp 方法
     /// 来设置，或者通过其他方法，如 ICapeThermoPropertyRoutine 接口的 CalcSinglePhaseProp 方法或
     /// ICapeThermoEquilibriumRoutine 接口的 CalcEquilibrium 方法。注意：依赖于多个相的物理属性，
@@ -759,7 +759,7 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// <exception cref="ECapeInvalidArgument">当传递的参数值无效时使用：例如，属性值为 UNDEFINED，
     /// 或 phaseLabel 的标识符无法识别。</exception>
     /// <exception cref="ECapeFailedInitialisation">先决条件无效。必要的初始化尚未执行或已失败。
-    /// 如果指定的阶段不存在，将返回此异常。</exception>
+    /// 如果指定的相态不存在，将返回此异常。</exception>
     /// <exception cref="ECapeUnknown">当为此操作指定的其他错误不合适时将引发的错误。</exception>
     void ICapeThermoMaterial.GetSinglePhaseProp(string property, string phaseLabel, string basis, 
         ref double[] results)
@@ -775,7 +775,7 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// <para>在这种方法中，没有选择基点的选项。化合物的结果总是以摩尔分数的形式返回。</para>
     /// <para>为了获取整体混合物的等效信息，应使用 ICapeThermoMaterial 接口的 GetOverallTPFraction 方法。</para></remarks>
     /// <returns>没有返回值。</returns>
-    /// <param name="phaseLabel">所需属性的阶段标签。阶段标签必须是该接口的“GetPresentPhases”方法返回的标识符之一。</param>
+    /// <param name="phaseLabel">所需属性的相态标签。相态标签必须是该接口的“GetPresentPhases”方法返回的标识符之一。</param>
     /// <param name="temperature">温度 (in K)</param>
     /// <param name="pressure">压力 (in Pa)</param>
     /// <param name="composition">组成 (mole fractions)</param>
@@ -786,7 +786,7 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// <exception cref="ECapeInvalidArgument">当传递了无效的参数值时使用：例如，属性为“UNDEFINED”，
     /// 或者“phaseLabel”使用了未识别的标识符。</exception>
     /// <exception cref="ECapeFailedInitialisation">先决条件无效。必要的初始化尚未执行或已失败。
-    /// 如果指定的阶段不存在，将返回此异常。</exception>
+    /// 如果指定的相态不存在，将返回此异常。</exception>
     /// <exception cref="ECapeUnknown">当为此操作指定的其他错误不合适时将引发的错误。</exception>
     void ICapeThermoMaterial.GetTPFraction(string phaseLabel, ref double temperature, 
         ref double pressure, ref double[] composition)
@@ -801,7 +801,7 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// 也可能是用于获取由更复杂数据结构描述的两相物理性质（例如分布式物理性质）的 CapeInterface 类型。</para>
     /// <para>尽管某些对 GetTwoPhaseProp 的调用可能返回单个数值，但数值的返回类型为 CapeArrayDouble，因此在这种情况下，
     /// 该方法必须返回一个数组，即使该数组仅包含一个元素。</para>
-    /// <para>如果某个相的标识符被 GetPresentPhases 方法返回，则该相在材料中“存在”。如果 GetTwoPhaseProp 方法指定的
+    /// <para>如果某个相的标识符被 GetPresentPhases 方法返回，则该相在物流中“存在”。如果 GetTwoPhaseProp 方法指定的
     /// 任何相不存在，则会引发异常。即使所有相都存在，这并不意味着任何物理属性可用。</para>
     /// <para>GetTwoPhaseProp 方法返回的物理属性值取决于两个相，例如表面张力或 K 值。这些值可以通过直接调用的
     /// SetTwoPhaseProp 方法设置，也可以通过其他方法设置，例如 ICapeThermoPropertyRoutine 接口中的
@@ -810,11 +810,11 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// <para>预计该方法通常能够提供任何基准下的物理性质值，即应能够将存储基准下的值转换为请求的基准。此操作并非总是可行。
     /// 例如，如果一个或多个化合物的分子量未知，则无法在质量基准和摩尔基准之间进行转换。</para>
     /// <para>如果请求了组成导数，这意味着导数将按相标签指定的顺序分别返回给两个相。组成导数的返回值数量取决于该属性的维度。
-    /// 例如，如果存在 N 个化合物，则表面张力导数的返回向量将包含第一阶段的N个组成导数值，随后是第二阶段的N个组成导数值。
-    /// 对于 K 值导数，将包含第一阶段的 N² 个导数值，随后是第二阶段的 N² 个值，顺序如 7.6.2 节所定义。</para></remarks>
+    /// 例如，如果存在 N 个化合物，则表面张力导数的返回向量将包含第一相态的 N 个组成导数值，随后是第二相态的 N 个组成导数值。
+    /// 对于 K 值导数，将包含第一相态的 N² 个导数值，随后是第二相态的 N² 个值，顺序如 7.6.2 节所定义。</para></remarks>
     /// <param name="property">请求值的属性标识符。此标识符必须是第 7.5.6 节和第 7.6 节中
-    /// 列出的两阶段物理属性或物理属性衍生项之一。</param>
-    /// <param name="phaseLabels">需要该属性的阶段的阶段标签列表。阶段标签必须是 Material 对象的
+    /// 列出的两相态物理属性或物理属性衍生项之一。</param>
+    /// <param name="phaseLabels">需要该属性的相态的相态标签列表。相态标签必须是 Material 对象的
     /// GetPhaseList 方法返回的标识符中的两个。</param>
     /// <param name="basis">结果的基础。有效设置为：“质量”用于单位质量的物理性质，或“摩尔”用于摩尔性质。
     /// 对于不适用基础的物理性质，使用 UNDEFINED 作为占位符。详情请参阅第 7.5.5 节。</param>
@@ -826,7 +826,7 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// <exception cref="ECapeThrmPropertyNotAvailable">所需的属性可能无法从物流对象中获取，
     /// 可能是由于所请求的相态或基础设置。</exception>
     /// <exception cref="ECapeFailedInitialisation">先决条件无效。当调用 SetTwoPhaseProp 方法时，
-    /// 如果该方法未被调用、调用失败，或者所引用的一个或多个阶段不存在，则会引发此异常。</exception>
+    /// 如果该方法未被调用、调用失败，或者所引用的一个或多个相态不存在，则会引发此异常。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递了无效的参数值时使用：例如，属性为 UNDEFINED，
     /// 或 phaseLabels 中包含未识别的标识符。</exception>
     /// <exception cref="ECapeUnknown">当为此操作指定的其他错误不合适时将引发的错误。</exception>
@@ -870,8 +870,8 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// GetPresentPhases 方法将返回与 SetPresentPhases 指定的相同列表。</para>
     /// <para>phaseStatus 参数必须包含与 Phase 标签数量相同的条目。有效设置如下表所示：</para>
     /// <para>Cape_UnknownPhaseStatus - 这是在指定相位可用于平衡计算时的默认设置。</para>
-    /// <para>Cape_AtEquilibrium - 该阶段已通过平衡计算确定为当前阶段。</para>
-    /// <para>Cape_Estimates - 平衡状态的估计值已设置在材料对象中。</para>
+    /// <para>Cape_AtEquilibrium - 该相态已通过平衡计算确定为当前相态。</para>
+    /// <para>Cape_Estimates - 平衡状态的估计值已设置在物流对象中。</para>
     /// <para>所有状态为 Cape_AtEquilibrium 的相都必须具有符合平衡状态的物性参数，即各 Compound 的温度、压力和逸度相等
     /// （这并不意味着逸度是通过平衡计算设定的）。Cape_AtEquilibrium 状态应由实现
     /// <see cref="ICapeThermoEquilibriumRoutine"/>接口的组件在成功完成平衡计算后，通过其 CalcEquilibrium 方法进行设置。
@@ -879,7 +879,7 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// 该相已存储的其他物性参数值不应受到影响。</para>  
     /// <para>状态为"Estimates"的相必须已在物料对象中设置温度、压力、组成及相分数的数值。这些数值可供平衡计算器
     /// 组件 (Equilibrium Calculator) 用于初始化平衡计算。虽然存储的数值可用， 但并不保证它们一定会被采用。</para></remarks>
-    /// <param name="phaseLabels">CapeArrayString 当前存在的相的相标签列表。材料对象中的相标签必须是 ICapeThermoPhases
+    /// <param name="phaseLabels">CapeArrayString 当前存在的相的相标签列表。物流对象中的相标签必须是 ICapeThermoPhases
     /// 接口的 GetPhaseList 方法返回的标签的子集。</param>
     /// <param name="phaseStatus">与每个相位标签对应的相位状态标志数组。请参见下文描述。</param>
     /// <exception cref="ECapeNoImpl">即使出于与 CAPE-OPEN 标准兼容性的考虑，该方法可以被调用，但该操作“并未”实现。
@@ -909,7 +909,7 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// 则通过 Material 对象的 SetTwoPhaseProp 方法进行设置。</para>
     /// <para>在使用 SetSinglePhaseProp 之前，必须先使用 SetPresentPhases 方法创建所引用的相位。</para></remarks>
     /// <param name="prop">设置值的属性的标识符。这必须是单相属性或其衍生属性之一。标准标识符在第 7.5.5 节和第 7.6 节中列出。</param>
-    /// <param name="phaseLabel">设置该属性的阶段的阶段标签。阶段标签必须是本接口的 GetPresentPhases 方法返回的字符串之一。</param>
+    /// <param name="phaseLabel">设置该属性的相态的相态标签。相态标签必须是本接口的 GetPresentPhases 方法返回的字符串之一。</param>
     /// <param name="basis">结果的基础。有效设置为：“质量”用于单位质量的物理性质，或“摩尔”用于摩尔性质。
     /// 对于不适用基础的物理性质，使用 UNDEFINED 作为占位符。详情请参阅第 7.5.5 节。</param>
     /// <param name="values">需为该属性设置的值（CapeArrayDouble）或 CapeInterface（参见注释）。</param>
@@ -917,7 +917,7 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// 也就是说，该操作虽然存在，但当前实现不支持该操作。如果 PME 不处理任何单相属性，则可能不需要该方法。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递的参数值无效时使用，即该值不属于上述有效值列表，例如属性为 UNDEFINED 时。</exception> 
     /// <exception cref="ECapeOutOfBounds">值参数中的一个或多个条目超出了物流对象接受的值范围。</exception> 
-    /// <exception cref="ECapeFailedInitialisation">先决条件无效。所引用的阶段未通过 SetPresentPhases 方法创建。</exception>
+    /// <exception cref="ECapeFailedInitialisation">先决条件无效。所引用的相态未通过 SetPresentPhases 方法创建。</exception>
     /// <exception cref="ECapeUnknown">当为 SetSinglePhaseProp 操作指定的其他错误不适用时，将引发此错误。</exception>
     void ICapeThermoMaterial.SetSinglePhaseProp(string prop, string phaseLabel, string basis, double[] values)
     {
