@@ -879,20 +879,13 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// 该相已存储的其他物性参数值不应受到影响。</para>  
     /// <para>状态为"Estimates"的相必须已在物料对象中设置温度、压力、组成及相分数的数值。这些数值可供平衡计算器
     /// 组件 (Equilibrium Calculator) 用于初始化平衡计算。虽然存储的数值可用， 但并不保证它们一定会被采用。</para></remarks>
-    /// <param name="phaseLabels">CapeArrayString The list of Phase labels for 
-    /// the Phases present. The Phase labels in the Material Object must be a
-    /// subset of the labels returned by the GetPhaseList method of the 
-    /// ICapeThermoPhases interface.</param>
-    /// <param name="phaseStatus">Array of Phase status flags corresponding to 
-    /// each of the Phase labels. See description below.</param>
-    /// <exception cref="ECapeNoImpl">The operation is “not” implemented even if 
-    /// this method can be called for reasons of compatibility with the CAPE-OPEN 
-    /// standards. That is to say that the operation exists, but it is not supported 
-    /// by the current implementation.</exception>
-    /// <exception cref="ECapeInvalidArgument">To be used when an invalid argument 
-    /// value was passed, that is a value that does not belong to the valid list 
-    /// described above, for example if phaseLabels contains UNDEFINED or 
-    /// phaseStatus contains a value that is not in the above table.</exception>
+    /// <param name="phaseLabels">CapeArrayString 当前存在的相的相标签列表。材料对象中的相标签必须是 ICapeThermoPhases
+    /// 接口的 GetPhaseList 方法返回的标签的子集。</param>
+    /// <param name="phaseStatus">与每个相位标签对应的相位状态标志数组。请参见下文描述。</param>
+    /// <exception cref="ECapeNoImpl">即使出于与 CAPE-OPEN 标准兼容性的考虑，该方法可以被调用，但该操作“并未”实现。
+    /// 也就是说，该操作确实存在，但当前实现不支持该操作。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递的参数值无效时使用，即该值不属于上述有效值列表，例如当 phaseLabels 包含
+    /// UNDEFINED 或 phaseStatus 包含不在上述表格中的值时。</exception>
     /// <exception cref="ECapeUnknown">当为此操作指定的其他错误不合适时将引发的错误。</exception>
     void ICapeThermoMaterial.SetPresentPhases(string[] phaseLabels, CapePhaseStatus[] phaseStatus)
     {
@@ -906,42 +899,25 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
         _pIMatObj.SetPresentPhases(phaseLabels, pObj);
     }
 
-    /// <summary>Sets single-phase non-constant property values for a mixture.</summary>
-    /// <remarks><para>The values argument of SetSinglePhaseProp is either a CapeArrayDouble 
-    /// that contains one or more numerical values to be set for a property, e.g. 
-    /// temperature, or a CapeInterface that may be used to set single-phase 
-    /// properties described by a more complex data structure, e.g. distributed 
-    /// properties.</para>
-    /// <para>Although some properties set by calls to SetSinglePhaseProp will have a 
-    /// single numerical value, the type of the values argument for numerical values 
-    /// is CapeArrayDouble and in such a case the method must be called with values 
-    /// containing an array even if it contains only a single element.</para>
-    /// <para>The property values set by SetSinglePhaseProp refer to a single Phase. 
-    /// Properties that depend on more than one Phase, for example surface tension or 
-    /// K-values, are set by the SetTwoPhaseProp method of the Material Object.</para>
-    /// <para>Before SetSinglePhaseProp can be used, the phase referenced must have 
-    /// been created using the SetPresentPhases method.</para></remarks>
-    /// <param name="prop">The identifier of the property for which values are 
-    /// set. This must be one of the single-phase properties or derivatives. The 
-    /// standard identifiers are listed in sections 7.5.5 and 7.6.</param>
-    /// <param name="phaseLabel">Phase label of the Phase for which the property is 
-    /// set. The phase label must be one of the strings returned by the 
-    /// GetPresentPhases method of this interface.</param>
-    /// <param name="basis">Basis of the results. Valid settings are: “Mass” for
-    /// Physical Properties per unit mass or “Mole” for molar properties. Use 
-    /// UNDEFINED as a place holder for a Physical Property for which basis does not 
-    /// apply. See section 7.5.5 for details.</param>
-    /// <param name="values">Values to set for the property (CapeArrayDouble) or
-    /// CapeInterface (see notes). </param>
-    /// <exception cref="ECapeNoImpl">The operation is “not” implemented even if 
-    /// this method can be called for reasons of compatibility with the CAPE-OPEN 
-    /// standards. That is to say that the operation exists but it is not supported by
-    /// the current implementation. This method may not be required if the PME does 
-    /// not deal with any single-phase properties.</exception>
+    /// <summary>为混合物设置单相非恒定属性值。</summary>
+    /// <remarks><para>SetSinglePhaseProp 函数的 values 参数可以是包含一个或多个要设置的属性
+    /// 数值的 CapeArrayDouble 类型，例如温度，也可以是用于设置由更复杂数据结构描述的单相属性
+    /// 的 CapeInterface 类型，例如分布式属性。</para>
+    /// <para>尽管通过调用 SetSinglePhaseProp 设置的一些属性将具有单个数值，但数值参数的类型为 CapeArrayDouble。
+    /// 在这种情况下，即使数值数组仅包含一个元素，也必须以包含数组的形式调用该方法。</para>
+    /// <para>SetSinglePhaseProp 方法设置的属性值仅适用于单一相。依赖于多个相的属性（例如表面张力或 K 值）
+    /// 则通过 Material 对象的 SetTwoPhaseProp 方法进行设置。</para>
+    /// <para>在使用 SetSinglePhaseProp 之前，必须先使用 SetPresentPhases 方法创建所引用的相位。</para></remarks>
+    /// <param name="prop">设置值的属性的标识符。这必须是单相属性或其衍生属性之一。标准标识符在第 7.5.5 节和第 7.6 节中列出。</param>
+    /// <param name="phaseLabel">设置该属性的阶段的阶段标签。阶段标签必须是本接口的 GetPresentPhases 方法返回的字符串之一。</param>
+    /// <param name="basis">结果的基础。有效设置为：“质量”用于单位质量的物理性质，或“摩尔”用于摩尔性质。
+    /// 对于不适用基础的物理性质，使用 UNDEFINED 作为占位符。详情请参阅第 7.5.5 节。</param>
+    /// <param name="values">需为该属性设置的值（CapeArrayDouble）或 CapeInterface（参见注释）。</param>
+    /// <exception cref="ECapeNoImpl">即使出于与 CAPE-OPEN 标准兼容性的考虑，该方法可以被调用，但该操作“并未”实现。
+    /// 也就是说，该操作虽然存在，但当前实现不支持该操作。如果 PME 不处理任何单相属性，则可能不需要该方法。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递的参数值无效时使用，即该值不属于上述有效值列表，例如属性为 UNDEFINED 时。</exception> 
     /// <exception cref="ECapeOutOfBounds">值参数中的一个或多个条目超出了物流对象接受的值范围。</exception> 
-    /// <exception cref="ECapeFailedInitialisation">The pre-requisites are not 
-    /// valid. The phase referenced has not been created using SetPresentPhases.</exception>
+    /// <exception cref="ECapeFailedInitialisation">先决条件无效。所引用的阶段未通过 SetPresentPhases 方法创建。</exception>
     /// <exception cref="ECapeUnknown">当为 SetSinglePhaseProp 操作指定的其他错误不适用时，将引发此错误。</exception>
     void ICapeThermoMaterial.SetSinglePhaseProp(string prop, string phaseLabel, string basis, double[] values)
     {
