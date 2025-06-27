@@ -2,239 +2,156 @@
  * 原作者：wbarret1 (https://github.com/wbarret1/CapeOpen)
  * 重构 & 翻译：DaBaiLuoBo
  * 帮助社区：CEPD@BBS (https://bbs.imbhj.com)
- * 重构时间：2025.06.21
+ * 重构时间：2025.06.27
  */
 
-using System;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
 
 namespace CapeOpenCore.Class;
 
 internal partial class MaterialObjectWrapper
 {
-    /// <summary>Sets two-phase non-constant property values for a mixture.</summary>
-    /// <remarks><para>The values argument of SetTwoPhaseProp is either a CapeArrayDouble that 
-    /// contains one or more numerical values to be set for a property, e.g. kvalues, 
-    /// or a CapeInterface that may be used to set two-phase properties described by 
-    /// a more complex data structure, e.g. distributed properties.</para>
-    /// <para>Although some properties set by calls to SetTwoPhaseProp will have a 
-    /// single numerical value, the type of the values argument for numerical values 
-    /// is CapeArrayDouble and in such a case the method must be called with the 
-    /// values argument containing an array even if it contains only a single element.</para>
-    /// <para>The Physical Property values set by SetTwoPhaseProp depend on two 
-    /// Phases, for example surface tension or K-values. Properties that depend on a 
-    /// single Phase are set by the SetSinglePhaseProp method.</para>
-    /// <para>If a Physical Property with composition derivative is specified, the 
-    /// derivative values will be set for both Phases in the order in which the Phase 
-    /// labels are specified. The number of values returned for a composition 
-    /// derivative will depend on the property. For example, if there are N Compounds 
-    /// then the values vector for the surface tension derivative will contain N 
-    /// composition derivative values for the first Phase, followed by N composition 
-    /// derivative values for the second Phase. For K-values there will be N2 
-    /// derivative values for the first phase followed by N2 values for the second 
-    /// phase in the order defined in 7.6.2.</para>
-    /// <para>Before SetTwoPhaseProp can be used, all the Phases referenced must have 
-    /// been created using the SetPresentPhases method</para></remarks>
-    /// <param name = "property">The property for which values are set in the 
-    /// Material Object. This must be one of the two-phase properties or derivatives 
-    /// included in sections 7.5.6 and 7.6.</param>
-    /// <param name = "phaseLabels">Phase labels of the Phases for 
-    /// which the property is set. The Phase labels must be two of the identifiers 
-    /// returned by the GetPhaseList method of the ICapeThermoPhases interface.</param>
-    /// <param name = "basis">Basis of the results. Valid settings are: “Mass” for
-    /// Physical Properties per unit mass or “Mole” for molar properties. Use 
-    /// UNDEFINED as a place holder for a Physical Property for which basis does not 
-    /// apply. See section 7.5.5 for details.</param>
-    /// <param name = "values">Value(s) to set for the property (CapeArrayDouble) or
-    /// CapeInterface (see notes).</param>
-    /// <exception cref = "ECapeNoImpl">The operation is “not” implemented even if 
-    /// this method can be called for reasons of compatibility with the CAPE-OPEN 
-    /// standards. That is to say that the operation exists but it is not supported by
-    /// the current implementation. This method may not be required if the PME does 
-    /// not deal with any single-phase properties.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument 
-    /// value was passed, that is a value that does not belong to the valid list 
-    /// described above, for example UNDEFINED for property.</exception> 
-    /// <exception cref = "ECapeOutOfBounds">One or more of the entries in the 
-    /// values argument is outside of the range of values accepted by the Material 
-    /// Object.</exception> 
-    /// <exception cref = "ECapeFailedInitialisation">The pre-requisites are not 
-    /// valid. The phase referenced has not been created using SetPresentPhases.</exception>
-    /// <exception cref = "ECapeUnknown">The error to be raised when other error(s), 
-    /// specified for the SetSinglePhaseProp operation, are not suitable.</exception>
-    void ICapeThermoMaterial.SetTwoPhaseProp(String property, String[] phaseLabels, String basis, double[] values)
+    /// <summary>为混合物设置两相非恒定属性值。</summary>
+    /// <remarks><para>SetTwoPhaseProp 函数的 values 参数可以是包含一个或多个要设置的属性数值
+    /// 的 CapeArrayDouble 对象，例如 k 值，也可以是用于设置由更复杂数据结构描述的两相属性
+    /// 的 CapeInterface 对象，例如分布式属性。</para>
+    /// <para>尽管通过调用 SetTwoPhaseProp 设置的一些属性将具有单个数值，但数值类型的值参数类型
+    /// 为 CapeArrayDouble。在这种情况下，即使值参数仅包含一个元素，也必须以包含数组的形式调用该方法。</para>
+    /// <para>SetTwoPhaseProp 方法设置的物理属性值取决于两个相，例如表面张力或 K 值。
+    /// 取决于单一相的属性则通过 SetSinglePhaseProp 方法进行设置。</para>
+    /// <para>如果指定了具有组分导数的物理属性，则导数值将按相标签的指定顺序为两个相分别设置。组成导数的返回值数量取决于属性。
+    /// 例如，如果存在 N 种化合物，则表面张力导数的值向量将包含第一相的 N 个组成导数值， 随后第二相的 N 个组成导数值。
+    /// 对于 K 值，将包含第一相的 N² 个导数值，随后第二相的 N² 个值，顺序如 7.6.2 节所定义。</para>
+    /// <para>在使用 SetTwoPhaseProp 之前，所有引用的阶段都必须通过 SetPresentPhases 方法创建。</para></remarks>
+    /// <param name="property">在材料对象中设置值的属性。该属性必须是第 7.5.6 节和第 7.6 节中包含的两相属性或其衍生属性之一。</param>
+    /// <param name="phaseLabels">设置该属性的相的相标签。
+    /// 相标签必须是 ICapeThermoPhases 接口的 GetPhaseList 方法返回的两个标识符。</param>
+    /// <param name="basis">结果的基础。有效设置为：“质量”用于单位质量的物理性质，或“摩尔”用于摩尔性质。
+    /// 对于不适用基础的物理性质，使用 UNDEFINED 作为占位符。详情请参阅第 7.5.5 节。</param>
+    /// <param name="values">为该属性设置的值（CapeArrayDouble）或 CapeInterface（参见注释）。</param>
+    /// <exception cref="ECapeNoImpl">即使出于与 CAPE-OPEN 标准兼容性的考虑，该方法可以被调用，但该操作“并未”实现。
+    /// 也就是说，该操作虽然存在，但当前实现不支持该操作。如果 PME 不处理任何单相属性，则可能不需要该方法。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递的参数值无效时使用，
+    /// 即该值不属于上述有效值列表，例如属性为 UNDEFINED 时。</exception> 
+    /// <exception cref="ECapeOutOfBounds">值参数中的一个或多个条目超出了物流对象接受的值范围。</exception> 
+    /// <exception cref="ECapeFailedInitialisation">先决条件无效。所引用的阶段未通过 SetPresentPhases 方法创建。</exception>
+    /// <exception cref="ECapeUnknown">当为 SetSinglePhaseProp 操作指定的其他错误不适用时，将引发此错误。</exception>
+    void ICapeThermoMaterial.SetTwoPhaseProp(string property, string[] phaseLabels, string basis, double[] values)
     {
         _pIMatObj.SetTwoPhaseProp(property, phaseLabels, basis, values);
     }
 
-    /// <summary>Sets two-phase non-constant property values for a mixture.</summary>
-    /// <remarks><para>The values argument of SetTwoPhaseProp is either a CapeArrayDouble that 
-    /// contains one or more numerical values to be set for a property, e.g. kvalues, 
-    /// or a CapeInterface that may be used to set two-phase properties described by 
-    /// a more complex data structure, e.g. distributed properties.</para>
-    /// <para>Although some properties set by calls to SetTwoPhaseProp will have a 
-    /// single numerical value, the type of the values argument for numerical values 
-    /// is CapeArrayDouble and in such a case the method must be called with the 
-    /// values argument containing an array even if it contains only a single element.</para>
-    /// <para>The Physical Property values set by SetTwoPhaseProp depend on two 
-    /// Phases, for example surface tension or K-values. Properties that depend on a 
-    /// single Phase are set by the SetSinglePhaseProp method.</para>
-    /// <para>If a Physical Property with composition derivative is specified, the 
-    /// derivative values will be set for both Phases in the order in which the Phase 
-    /// labels are specified. The number of values returned for a composition 
-    /// derivative will depend on the property. For example, if there are N Compounds 
-    /// then the values vector for the surface tension derivative will contain N 
-    /// composition derivative values for the first Phase, followed by N composition 
-    /// derivative values for the second Phase. For K-values there will be N2 
-    /// derivative values for the first phase followed by N2 values for the second 
-    /// phase in the order defined in 7.6.2.</para>
-    /// <para>Before SetTwoPhaseProp can be used, all the Phases referenced must have 
-    /// been created using the SetPresentPhases method</para>
-    /// <para>The values argument of SetTwoPhaseProp is either a CapeArrayDouble that contains one or
-    /// more numerical values to be set for a property, e.g. kvalues, or a CapeInterused to set two-phase 
-    /// properties described by a more complex data structureproperties.</para></remarks>
-    /// <param name = "property">The property for which values are set in the 
-    /// Material Object. This must be one of the two-phase properties or derivatives 
-    /// included in sections 7.5.6 and 7.6.</param>
-    /// <param name = "phaseLabels">Phase labels of the Phases for 
-    /// which the property is set. The Phase labels must be two of the identifiers 
-    /// returned by the GetPhaseList method of the ICapeThermoPhases interface.</param>
-    /// <param name = "basis">Basis of the results. Valid settings are: “Mass” for
-    /// Physical Properties per unit mass or “Mole” for molar properties. Use 
-    /// UNDEFINED as a place holder for a Physical Property for which basis does not 
-    /// apply. See section 7.5.5 for details.</param>
-    /// <param name = "values">Value(s) to set for the property (CapeArrayDouble) or
-    /// CapeInterface (see remarks).</param>
-    /// <exception cref = "ECapeNoImpl">The operation is “not” implemented even if 
-    /// this method can be called for reasons of compatibility with the CAPE-OPEN 
-    /// standards. That is to say that the operation exists but it is not supported by
-    /// the current implementation. This method may not be required if the PME does 
-    /// not deal with any single-phase properties.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument 
-    /// value was passed, that is a value that does not belong to the valid list 
-    /// described above, for example UNDEFINED for property.</exception> 
-    /// <exception cref = "ECapeOutOfBounds">One or more of the entries in the 
-    /// values argument is outside of the range of values accepted by the Material 
-    /// Object.</exception> 
-    /// <exception cref = "ECapeFailedInitialisation">The pre-requisites are not 
-    /// valid. The phase referenced has not been created using SetPresentPhases.</exception>
-    /// <exception cref = "ECapeUnknown">The error to be raised when other error(s), 
-    /// specified for the SetSinglePhaseProp operation, are not suitable.</exception>
-    [System.ComponentModel.DescriptionAttribute("method SetTwoPhaseProp")]
-    void ICapeThermoMaterial.SetTwoPhaseProp(String property, string[] phaseLabels, String basis, object values)
+    /// <summary>为混合物设置两相非恒定属性值。</summary>
+    /// <remarks><para>SetTwoPhaseProp 函数的 values 参数可以是包含一个或多个要设置的属性数值
+    /// 的 CapeArrayDouble 对象，例如 k 值，也可以是用于设置由更复杂数据结构描述的两相属性
+    /// 的 CapeInterface 对象，例如分布式属性。</para>
+    /// <para>尽管通过调用 SetTwoPhaseProp 设置的一些属性将具有单个数值，但数值类型的值参数类型
+    /// 为 CapeArrayDouble。在这种情况下，即使值参数仅包含一个元素，也必须以包含数组的形式调用该方法。</para>
+    /// <para>SetTwoPhaseProp 方法设置的物理属性值取决于两个相，例如表面张力或 K 值。取决于单一相的属性则
+    /// 通过 SetSinglePhaseProp 方法进行设置。</para>
+    /// <para>如果指定了具有组分导数的物理属性，则导数值将按相标签的指定顺序为两个相分别设置。组成导数的返回值数量取决于属性。
+    /// 例如，如果存在 N 种化合物，则表面张力导数的值向量将包含第一相的 N 个组成导数值， 随后第二相的 N 个组成导数值。
+    /// 对于 K 值，将包含第一相的 N² 个导数值， 随后第二相的 N² 个值，顺序如 7.6.2 节所定义。</para>
+    /// <para>在使用 SetTwoPhaseProp 之前，所有引用的阶段都必须通过 SetPresentPhases 方法创建。</para>
+    /// <para>SetTwoPhaseProp 函数的 values 参数可以是包含一个或多个要设置的属性数值的 CapeArrayDouble 对象，例如 k 值，
+    /// 也可以是用于设置由更复杂数据结构描述的两相属性的 CapeInterested 对象。</para></remarks>
+    /// <param name="property">在材料对象中设置值的属性。该属性必须是第 7.5.6 节和第 7.6 节中包含的两相属性或其衍生属性之一。</param>
+    /// <param name="phaseLabels">设置该属性的相的相标签。
+    /// 相标签必须是 ICapeThermoPhases 接口的 GetPhaseList 方法返回的两个标识符。</param>
+    /// <param name="basis">结果的基础。有效设置为：“质量”用于单位质量的物理性质，或“摩尔”用于摩尔性质。
+    /// 对于不适用基础的物理性质，使用 UNDEFINED 作为占位符。详情请参阅第 7.5.5 节。</param>
+    /// <param name="values">为该属性设置的值（CapeArrayDouble）或 CapeInterface（参见备注）。</param>
+    /// <exception cref="ECapeNoImpl">即使出于与 CAPE-OPEN 标准兼容性的考虑，该方法可以被调用，但该操作“并未”实现。
+    /// 也就是说，该操作虽然存在，但当前实现不支持该操作。如果 PME 不处理任何单相属性，则可能不需要该方法。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递的参数值无效时使用，
+    /// 即该值不属于上述有效值列表，例如属性为 UNDEFINED 时。</exception> 
+    /// <exception cref="ECapeOutOfBounds">值参数中的一个或多个条目超出了物流对象接受的值范围。</exception> 
+    /// <exception cref="ECapeFailedInitialisation">先决条件无效。所引用的阶段未通过 SetPresentPhases 方法创建。</exception>
+    /// <exception cref="ECapeUnknown">当为 SetSinglePhaseProp 操作指定的其他错误不适用时，将引发此错误。</exception>
+    [Description("Method SetTwoPhaseProp")]
+    void ICapeThermoMaterial.SetTwoPhaseProp(string property, string[] phaseLabels, 
+        string basis, object values)
     {
         _pIMatObj.SetTwoPhaseProp(property, phaseLabels, basis, values);
     }
 
-    /// <summary>Retrieves the value of a Universal Constant.</summary>
-    /// <param name = "constantId">Identifier of Universal Constant. The list of 
-    /// constants supported should be obtained by using the GetUniversalConstList 
-    /// method.</param>
-    /// <returns>Value of Universal Constant. This could be a numeric or a string 
-    /// value. For numeric values the units of measurement are specified in section 
-    /// 7.5.1.</returns>
-    /// <remarks>Universal Constants (often called fundamental constants) are 
-    /// quantities like the gas constant, or the Avogadro constant.</remarks>
-    /// <exception cref = "ECapeNoImpl">The operation GetUniversalConstant is “not” 
-    /// implemented even if this method can be called for reasons of compatibility 
-    /// with the CAPE-OPEN standards. That is to say that the operation exists, but 
-    /// it is not supported by the current implementation.</exception>
-    /// <exception cref = "ECapeInvalidArgument">For example, UNDEFINED for constantId 
-    /// argument is used, or value for constantId argument does not belong to the 
-    /// list of recognised values.</exception>
-    /// <exception cref = "ECapeUnknown">The error to be raised when other error(s), 
-    /// specified for the GetUniversalConstant operation, are not suitable.</exception>	
-    object ICapeThermoUniversalConstant.GetUniversalConstant(String constantId)
+    /// <summary>获取一个通用常量的值。</summary>
+    /// <param name="constantId">通用常量标识符。支持的常量列表应通过调用 GetUniversalConstList 方法获取。</param>
+    /// <returns>普适常数的值。该值可以是数值或字符串。对于数值，其计量单位在第 7.5.1 节中规定。</returns>
+    /// <remarks>普适常数（常被称为基本常数）是一类量，例如气体常数或阿伏加德罗常数。</remarks>
+    /// <exception cref="ECapeNoImpl">操作 GetUniversalConstant 尚未实现，即使出于与 CAPE-OPEN 标准兼容性的考虑，
+    /// 该方法仍可被调用。也就是说，该操作确实存在，但当前实现尚未支持该功能。</exception>
+    /// <exception cref="ECapeInvalidArgument">例如，使用了 UNDEFINED 作为 constantId 参数的值，
+    /// 或者 constantId 参数的值不属于已识别的值列表。</exception>
+    /// <exception cref="ECapeUnknown">当为 GetUniversalConstant 操作指定的其他错误不适用时，应引发的错误。</exception>	
+    object ICapeThermoUniversalConstant.GetUniversalConstant(string constantId)
     {
         return (double)_pIUniversalConstant.GetUniversalConstant(constantId);
     }
 
-    /// <summary>Returns the identifiers of the supported Universal Constants.</summary>
-    /// <returns>List of identifiers of Universal Constants. The list of standard 
-    /// identifiers is given in section 7.5.1.</returns>
-    /// <remarks>A component may return Universal Constant identifiers that do not 
-    /// belong to the list defined in section 7.5.1. However, these proprietary 
-    /// identifiers may not be understood by most of the clients of this component.</remarks>
-    /// <exception cref = "ECapeNoImpl">The operation GetUniversalConstantList is 
-    /// “not” implemented even if this method can be called for reasons of 
-    /// compatibility with the CAPE-OPEN standards. That is to say that the operation 
-    /// exists, but it is not supported by the current implementation. This may occur 
-    /// when the Property Package does not support any Universal Constants, or if it
-    /// does not want to provide values for any Universal Constants which may be used 
-    /// within the Property Package.</exception>
-    /// <exception cref = "ECapeUnknown">The error to be raised when other error(s), 
-    /// specified for the GetUniversalConstantList operation, are not suitable.
-    /// </exception>
-    String[] ICapeThermoUniversalConstant.GetUniversalConstantList()
+    /// <summary>返回支持的通用常量的标识符。</summary>
+    /// <returns>通用常量的标识符列表。标准标识符的列表见第 7.5.1 节。</returns>
+    /// <remarks>组件可能返回不属于第 7.5.1 节中定义的列表的通用常量标识符。
+    /// 然而，这些专有标识符可能无法被该组件的大多数客户端理解。</remarks>
+    /// <exception cref="ECapeNoImpl">操作 GetUniversalConstantList 尚未实现，即使出于与 CAPE-OPEN 标准
+    /// 兼容性的考虑，该方法仍可被调用。也就是说，该操作确实存在，但当前实现不支持它。这种情况可能发生在属性包不支持任何
+    /// 通用常量，或者不希望为属性包内可能使用的任何通用常量提供值时。</exception>
+    /// <exception cref="ECapeUnknown">当为 GetUniversalConstantList 操作指定的其他错误不适用时，应引发的错误。</exception>
+    string[] ICapeThermoUniversalConstant.GetUniversalConstantList()
     {
-        return (String[])_pIUniversalConstant.GetUniversalConstantList();
+        return (string[])_pIUniversalConstant.GetUniversalConstantList();
     }
 
-    /// <summary>Returns the number of Phases.</summary>
-    /// <returns>The number of Phases supported.</returns>
-    /// <remarks>The number of Phases returned by this method must be equal to the 
-    /// number of Phase labels that are returned by the GetPhaseList method of this
-    /// interface. It must be zero, or a positive number.</remarks>
-    /// <exception cref = "ECapeNoImpl">The operation is “not” implemented even if 
-    /// this method can be called for reasons of compatibility with the CAPE-OPEN 
-    /// standards. That is to say that the operation exists, but it is not supported
-    /// by the current implementation.</exception>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s), 
-    /// specified for this operation, are not suitable.</exception>
+    /// <summary>返回相数。</summary>
+    /// <returns>支持的相态数量。</returns>
+    /// <remarks>此方法返回的相位数量必须等于此接口的 GetPhaseList 方法返回的相位标签数量。该值必须为零或正数。</remarks>
+    /// <exception cref="ECapeNoImpl">即使出于与CAPE-OPEN标准兼容性的考虑，该方法可以被调用，但该操作“并未”实现。
+    /// 也就是说，该操作确实存在，但当前实现不支持该操作。</exception>
+    /// <exception cref ="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
     int ICapeThermoPhases.GetNumPhases()
     {
         return _pIPhases.GetNumPhases();
     }
 
-    /// <summary>Returns information on an attribute associated with a Phase for the 
-    /// purpose of understanding what lies behind a Phase label.</summary>
-    /// <param name ="phaseLabel">A (single) Phase label. This must be one of the 
-    /// values returned by GetPhaseList method.</param>
-    /// <param name ="phaseAttribute">One of the Phase attribute identifiers from the 
-    /// table below.</param>
-    /// <returns>The value corresponding to the Phase attribute identifier – see 
-    /// table below.</returns>
-    /// <remarks><para>GetPhaseInfo is intended to allow a PME, or other client, to identify a
-    /// Phase with an arbitrary label. A PME, or other client, will need to do this 
-    /// to map stream data into a Material Object, or when importing a Property 
-    /// Package. If the client cannot identify the Phase, it can ask the user to 
-    /// provide a mapping based on the values of these properties.</para>
-    /// <para>The list of supported Phase attributes is defined in the following 
-    /// table:</para>
-    /// <para>For example, the following information might be returned by a Property 
-    /// Package component that supports a vapour Phase, an organic liquid Phase and 
-    /// an aqueous liquid Phase:
-    /// Phase label, Gas, Organic, Aqueous
-    /// StateOfAggregation, Vapor, Liquid, Liquid
-    /// KeyCompoundId, UNDEFINED, UNDEFINED, Water
-    /// ExcludedCompoundId, UNDEFINED, Water, UNDEFINED
-    /// DensityDescription, UNDEFINED, Light, Heavy
-    /// UserDescription, The gas Phase, The organic liquid Phase, The aqueous liquid Phase 
-    /// TypeOfSolid, UNDEFINED, UNDEFINED, UNDEFINED</para></remarks>
-    /// <exception cref ="ECapeNoImpl">The operation is “not” implemented even if 
-    /// this method can be called for reasons of compatibility with the CAPE-OPEN 
-    /// standards. That is to say that the operation exists but it is not supported 
-    /// by the current implementation..</exception>
-    /// <exception cref ="ECapeInvalidArgument"> – phaseLabel is not recognised, or 
-    /// UNDEFINED, or phaseAttribute is not recognised.</exception>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s), 
-    /// specified for this operation, are not suitable.</exception>
-    String[] ICapeThermoPhases.GetPhaseInfo(String phaseLabel, String phaseAttribute)
+    /// <summary>返回与某个阶段相关的属性信息，以便理解该阶段标签背后的含义。</summary>
+    /// <param name="phaseLabel">单相标签。此标签必须是 GetPhaseList 方法返回的值之一。</param>
+    /// <param name="phaseAttribute">下表中所列的相态属性标识符之一。</param>
+    /// <returns>与相态属性标识符对应的值 – 参见下表。</returns>
+    /// <remarks><para>GetPhaseInfo 旨在允许 PME 或其他客户端识别具有任意标签的阶段。
+    /// PME 或其他客户端需要执行此操作，以将流数据映射到材料对象，或在导入属性包时。如果客户端
+    /// 无法识别阶段，它可以要求用户根据这些属性的值提供映射。</para>
+    /// <para>支持的相态属性列表如下表所示：</para>
+    /// <para>例如，支持气相、有机液相和水相的属性包组件可能会返回以下信息：
+    /// <para>Phase label, Gas, Organic, Aqueous</para>
+    /// <para>StateOfAggregation, Vapor, Liquid, Liquid</para>
+    /// <para>KeyCompoundId, UNDEFINED, UNDEFINED, Water</para>
+    /// <para>ExcludedCompoundId, UNDEFINED, Water, UNDEFINED</para>
+    /// <para>DensityDescription, UNDEFINED, Light, Heavy</para>
+    /// <para>UserDescription, The gas Phase, The organic liquid Phase, The aqueous liquid Phase</para>
+    /// <para>TypeOfSolid, UNDEFINED, UNDEFINED, UNDEFINED</para>
+    /// </para></remarks>
+    /// <exception cref ="ECapeNoImpl">即使出于与 CAPE-OPEN 标准兼容性的考虑，该方法可以被调用，但该操作“并未”实现。
+    /// 也就是说，该操作虽然存在，但当前实现中并未支持该操作。</exception>
+    /// <exception cref ="ECapeInvalidArgument">phaseLabel 未被识别，或为未定义，或相位属性未被识别。</exception>
+    /// <exception cref ="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    string[] ICapeThermoPhases.GetPhaseInfo(string phaseLabel, string phaseAttribute)
     {
-        return (String[])_pIPhases.GetPhaseInfo(phaseLabel, phaseAttribute);
+        return (string[])_pIPhases.GetPhaseInfo(phaseLabel, phaseAttribute);
     }
 
     /// <summary>Returns Phase labels and other important descriptive information for all the 
     /// Phases supported.</summary>
-    /// <param name = "phaseLabels">The list of Phase labels for the Phases supported. 
+    /// <param name="phaseLabels">The list of Phase labels for the Phases supported. 
     /// A Phase label can be any string but each Phase must have a unique label. If, 
     /// for some reason, no Phases are supported an UNDEFINED value should be returned 
     /// for the phaseLabels. The number of Phase labels must also be equal to the 
     /// number of Phases returned by the GetNumPhases method.</param>
-    /// <param name = "stateOfAggregation">The physical State of Aggregation associated 
+    /// <param name="stateOfAggregation">The physical State of Aggregation associated 
     /// with each of the Phases. This must be one of the following strings: ”Vapor”, 
     /// “Liquid”, “Solid” or “Unknown”. Each Phase must have a single State of 
     /// Aggregation. The value must not be left undefined, but may be set to “Unknown”.</param>
-    /// <param name = "keyCompoundId">The key Compound for the Phase. This must be the
+    /// <param name="keyCompoundId">The key Compound for the Phase. This must be the
     /// Compound identifier (as returned by GetCompoundList), or it may be undefined 
     /// in which case a UNDEFINED value is returned. The key Compound is an indication 
     /// of the Compound that is expected to be present in high concentration in the 
@@ -248,13 +165,12 @@ internal partial class MaterialObjectWrapper
     /// <para>All arrays returned by this method must be of the same length, i.e. 
     /// equal to the number of Phase labels.</para>
     /// <para>To get further information about a Phase, use the GetPhaseInfo method.</para></remarks>
-    /// <exception cref = "ECapeNoImpl">The operation is “not” implemented even if this 
+    /// <exception cref="ECapeNoImpl">The operation is “not” implemented even if this 
     /// method can be called for reasons of compatibility with the CAPE-OPEN standards. 
     /// That is to say that the operation exists, but it is not supported by the 
     /// current implementation.</exception>
-    /// <exception cref = "ECapeUnknown">The error to be raised when other error(s), 
-    /// specified for this operation, are not suitable.</exception>
-    void ICapeThermoPhases.GetPhaseList(ref String[] phaseLabels, ref String[] stateOfAggregation, ref String[] keyCompoundId)
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    void ICapeThermoPhases.GetPhaseList(ref string[] phaseLabels, ref string[] stateOfAggregation, ref string[] keyCompoundId)
     {
         object obj1 = null;
         object obj2 = null;
@@ -288,36 +204,36 @@ internal partial class MaterialObjectWrapper
     /// ECapeThrmPropertyNotAvailable exception must be raised. If the exception is 
     /// raised, the client should check all the values returned to determine which 
     /// is undefined.</para></remarks>
-    /// <param name = "props">The list of Physical Property identifiers. Valid
+    /// <param name="props">The list of Physical Property identifiers. Valid
     /// identifiers for constant Physical Properties are listed in
     /// section 7.5.2.</param>
-    /// <param name = "compIds">List of Compound identifiers for which constants are 
+    /// <param name="compIds">List of Compound identifiers for which constants are 
     /// to be retrieved. Set compIds = UNDEFINED to denote all Compounds in the 
     /// component that implements the ICapeThermoCompounds interface.</param>
     /// <returns>Values of constants for the specified Compounds.</returns>
-    /// <exception cref = "ECapeNoImpl">The operation GetCompoundConstant is “not” 
+    /// <exception cref="ECapeNoImpl">The operation GetCompoundConstant is “not” 
     /// implemented even if this method can be called for reasons of compatibility 
     /// with the CAPE-OPEN standards. That is to say that the operation exists, but 
     /// it is not supported by the current implementation. This exception should be 
     /// raised if no compounds or no properties are supported.</exception>
-    /// <exception cref = "ECapeThrmPropertyNotAvailable">At least one item in the 
+    /// <exception cref="ECapeThrmPropertyNotAvailable">At least one item in the 
     /// list of Physical Properties is not available for a particular Compound. This 
     /// exception is meant to be treated as a warning rather than as an error.</exception>
-    /// <exception cref = "ECapeLimitedImpl">One or more Physical Properties are not 
+    /// <exception cref="ECapeLimitedImpl">One or more Physical Properties are not 
     /// supported by the component that implements this interface. This exception 
     /// should also be raised if any element of the props argument is not recognised 
     /// since the list of Physical Properties in section 7.5.2 is not intended to be 
     /// exhaustive and an unrecognised Physical Property identifier may be valid. If
     /// no Physical Properties at all are supported ECapeNoImpl should be raised 
     /// (see above).</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    /// <exception cref = "ECapeUnknown">The error to be raised when other error(s), 
+    /// <exception cref="ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">The error to be raised when other error(s), 
     /// specified for the operation, are not suitable.</exception>
-    /// <exception cref = "ECapeBadInvOrder">The error to be raised if the 
+    /// <exception cref="ECapeBadInvOrder">The error to be raised if the 
     /// Property Package required the SetMaterial method to be called before calling 
     /// the GetCompoundConstant method. The error would not be raised when the 
     /// GetCompoundConstant method is implemented by a Material Object.</exception>
-    object[] ICapeThermoCompounds.GetCompoundConstant(String[] props, String[] compIds)
+    object[] ICapeThermoCompounds.GetCompoundConstant(string[] props, string[] compIds)
     {
         return (object[])_pICompounds.GetCompoundConstant(props, compIds);
     }
@@ -355,38 +271,38 @@ internal partial class MaterialObjectWrapper
     /// by GetCompoundList can be used to distinguish the Compounds. It should be 
     /// noted, however, that for communication with a Property Package a client must 
     /// use the Compound identifiers returned in the compIds argument.</para></remarks>
-    /// <param name = "compIds">List of Compound identifiers</param>
-    /// <param name = "formulae">List of Compound formulae</param>
-    /// <param name = "names">List of Compound names.</param>
-    /// <param name = "boilTemps">List of boiling point temperatures.</param>
-    /// <param name = "molwts">List of molecular weights.</param>
-    /// <param name = "casnos">List of Chemical Abstract Service (CAS) Registry
+    /// <param name="compIds">List of Compound identifiers</param>
+    /// <param name="formulae">List of Compound formulae</param>
+    /// <param name="names">List of Compound names.</param>
+    /// <param name="boilTemps">List of boiling point temperatures.</param>
+    /// <param name="molwts">List of molecular weights.</param>
+    /// <param name="casnos">List of Chemical Abstract Service (CAS) Registry
     /// numbers.</param>
-    /// <exception cref = "ECapeNoImpl">The operation GetCompoundList is “not” 
+    /// <exception cref="ECapeNoImpl">The operation GetCompoundList is “not” 
     /// implemented even if this method can be called for reasons of compatibility
     /// with the CAPE-OPEN standards. That is to say that the operation exists, but 
     /// it is not supported by the current implementation.</exception>
-    /// <exception cref = "ECapeUnknown">The error to be raised when other error(s), 
+    /// <exception cref="ECapeUnknown">The error to be raised when other error(s), 
     /// specified for the GetCompoundList operation, are not suitable.</exception>
-    /// <exception cref = "ECapeBadInvOrder">The error to be raised if the Property 
+    /// <exception cref="ECapeBadInvOrder">The error to be raised if the Property 
     /// Package required the SetMaterial method to be called before calling the 
     /// GetCompoundList method. The error would not be raised when the 
     /// GetCompoundList method is implemented by a Material Object.</exception>
-    void ICapeThermoCompounds.GetCompoundList(ref String[] compIds, ref String[] formulae, ref String[] names, ref double[] boilTemps, ref double[] molwts, ref String[] casnos)
+    void ICapeThermoCompounds.GetCompoundList(ref string[] compIds, ref string[] formulae, ref string[] names, ref double[] boilTemps, ref double[] molwts, ref string[] casnos)
     {
-        Object obj1 = null;
-        Object obj2 = null;
-        Object obj3 = null;
-        Object obj4 = null;
-        Object obj5 = null;
-        Object obj6 = null;
+        object obj1 = null;
+        object obj2 = null;
+        object obj3 = null;
+        object obj4 = null;
+        object obj5 = null;
+        object obj6 = null;
         _pICompounds.GetCompoundList(ref obj1, ref obj2, ref obj3, ref obj4, ref obj5, ref obj6);
-        compIds = (String[])obj1;
-        formulae = (String[])obj2;
-        names = (String[])obj3;
+        compIds = (string[])obj1;
+        formulae = (string[])obj2;
+        names = (string[])obj3;
         boilTemps = (double[])obj4;
         molwts = (double[])obj5;
-        casnos = (String[])obj6;
+        casnos = (string[])obj6;
     }
 
     /// <summary>Returns the list of supported constant Physical Properties.</summary>
@@ -403,19 +319,19 @@ internal partial class MaterialObjectWrapper
     /// list defined in section 7.5.2.</para>
     /// <para>However, these proprietary identifiers may not be understood by most 
     /// of the clients of this component.</para></remarks>
-    /// <exception cref = "ECapeNoImpl">The operation GetConstPropList is “not” 
+    /// <exception cref="ECapeNoImpl">The operation GetConstPropList is “not” 
     /// implemented even if this method can be called for reasons of compatibility 
     /// with the CAPE-OPEN standards. That is to say that the operation exists, but 
     /// it is not supported by the current implementation.</exception>
-    /// <exception cref = "ECapeUnknown">The error to be raised when other error(s), 
+    /// <exception cref="ECapeUnknown">The error to be raised when other error(s), 
     /// specified for the Get-ConstPropList operation, are not suitable.</exception>
-    /// <exception cref = "ECapeBadInvOrder">The error to be raised if the 
+    /// <exception cref="ECapeBadInvOrder">The error to be raised if the 
     /// Property Package required the SetMaterial method to be called before calling 
     /// the GetConstPropList method. The error would not be raised when the 
     /// GetConstPropList method is implemented by a Material Object.</exception>
-    String[] ICapeThermoCompounds.GetConstPropList()
+    string[] ICapeThermoCompounds.GetConstPropList()
     {
-        return (String[])_pICompounds.GetConstPropList();
+        return (string[])_pICompounds.GetConstPropList();
     }
 
     /// <summary>Returns the number of Compounds supported.</summary>
@@ -423,12 +339,11 @@ internal partial class MaterialObjectWrapper
     /// <remarks>The number of Compounds returned by this method must be equal to 
     /// the number of Compound identifiers that are returned by the GetCompoundList 
     /// method of this interface. It must be zero or a positive number.</remarks>
-    /// <exception cref = "ECapeNoImpl">The operation is “not” implemented even if 
+    /// <exception cref="ECapeNoImpl">The operation is “not” implemented even if 
     /// this method can be called for reasons of compatibility with the CAPE-OPEN 
     /// standards. That is to say that the operation exists, but it is not supported 
     /// by the current implementation.</exception>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s), 
-    /// specified for this operation, are not suitable.</exception>
+    /// <exception cref ="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
     /// <exception cref ="ECapeBadInvOrder">The error to be raised if the 
     /// Property Package required the SetMaterial method to be called before calling 
     /// the GetNumCompounds method. The error would not be raised when the 
@@ -440,16 +355,16 @@ internal partial class MaterialObjectWrapper
 
     /// <summary>Returns the values of pressure-dependent Physical Properties for 
     /// the specified pure Compounds.</summary>
-    /// <param name = "props">The list of Physical Property identifiers. Valid
+    /// <param name="props">The list of Physical Property identifiers. Valid
     /// identifiers for pressure-dependent Physical Properties are listed in section 
     /// 7.5.4</param>
-    /// <param name ="pressure">Pressure (in Pa) at which Physical Properties are
+    /// <param name="pressure">Pressure (in Pa) at which Physical Properties are
     /// evaluated</param>
-    /// <param name ="compIds">List of Compound identifiers for which Physical
+    /// <param name="compIds">List of Compound identifiers for which Physical
     /// Properties are to be retrieved. Set compIds = UNDEFINED to denote all 
     /// Compounds in the component that implements the ICapeThermoCompounds 
     /// interface.</param>
-    /// <param name = "propVals">>Property values for the Compounds specified.</param>
+    /// <param name="propVals">>Property values for the Compounds specified.</param>
     /// <remarks><para>The GetPDependentPropList method can be used in order to 
     /// check which Physical Properties are available.</para>
     /// <para>If the number of requested Physical Properties is P and the number 
@@ -470,7 +385,7 @@ internal partial class MaterialObjectWrapper
     /// ECapeThrmPropertyNotAvailable exception must be raised. If the exception is 
     /// raised, the client should check all the values returned to determine which is 
     /// undefined.</para></remarks>
-    /// <exception cref = "ECapeNoImpl">The operation is “not” implemented even if 
+    /// <exception cref="ECapeNoImpl">The operation is “not” implemented even if 
     /// this method can be called for reasons of compatibility with the CAPE-OPEN 
     /// standards. That is to say that the operation exists, but it is not supported 
     /// by the current implementation. This exception should be raised if no Compounds 
@@ -482,21 +397,21 @@ internal partial class MaterialObjectWrapper
     /// in section 7.5.4 is not intended to be exhaustive and an unrecognised
     /// Physical Property identifier may be valid. If no Physical Properties at all 
     /// are supported, ECapeNoImpl should be raised (see above).</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument 
+    /// <exception cref="ECapeInvalidArgument">To be used when an invalid argument 
     /// value is passed, for example UNDEFINED for argument props.</exception>
-    /// <exception cref = "ECapeOutOfBounds">The value of the pressure is outside of
+    /// <exception cref="ECapeOutOfBounds">The value of the pressure is outside of
     /// the range of values accepted by the Property Package.</exception>
-    /// <exception cref = "ECapeThrmPropertyNotAvailable">At least one item in the 
+    /// <exception cref="ECapeThrmPropertyNotAvailable">At least one item in the 
     /// properties list is not available for a particular compound.</exception>
-    /// <exception cref = "ECapeUnknown">The error to be raised when other error(s), 
+    /// <exception cref="ECapeUnknown">The error to be raised when other error(s), 
     /// specified for the operation, are not suitable.</exception>
-    /// <exception cref = "ECapeBadInvOrder">The error to be raised if the 
+    /// <exception cref="ECapeBadInvOrder">The error to be raised if the 
     /// Property Package required the SetMaterial method to be called before calling 
     /// the GetPDependentProperty method. The error would not be raised when the 
     /// GetPDependentProperty method is implemented by a Material Object.</exception>
-    void ICapeThermoCompounds.GetPDependentProperty(String[] props, double pressure, String[] compIds, ref double[] propVals)
+    void ICapeThermoCompounds.GetPDependentProperty(string[] props, double pressure, string[] compIds, ref double[] propVals)
     {
-        Object obj1 = null;
+        object obj1 = null;
         _pICompounds.GetPDependentProperty(props, pressure, compIds, ref obj1);
         propVals = (double[])obj1;
     }
@@ -514,33 +429,33 @@ internal partial class MaterialObjectWrapper
     /// return identifiers which do not belong to the list defined in section 7.5.4. 
     /// However, these proprietary identifiers may not be understood by most of the 
     /// clients of this component.</para></remarks>
-    /// <exception cref = "ECapeNoImpl">The operation is “not” implemented even if 
+    /// <exception cref="ECapeNoImpl">The operation is “not” implemented even if 
     /// this method can be called for reasons of compatibility with the CAPE-OPEN 
     /// standards. That is to say that the operation exists, but it is not supported 
     /// by the current implementation.</exception>
-    /// <exception cref = "ECapeUnknown">The error to be raised when other error(s), 
+    /// <exception cref="ECapeUnknown">The error to be raised when other error(s), 
     /// specified for the operation, are not suitable.</exception>
     /// <exception cref ="ECapeBadInvOrder">The error to be raised if the Property 
     /// Package required the SetMaterial method to be called before calling the 
     /// GetPDependentPropList method. The error would not be raised when the 
     /// GetPDependentPropList method is implemented by a Material Object.</exception>
-    String[] ICapeThermoCompounds.GetPDependentPropList()
+    string[] ICapeThermoCompounds.GetPDependentPropList()
     {
-        return (String[])_pICompounds.GetPDependentPropList();
+        return (string[])_pICompounds.GetPDependentPropList();
     }
 
     /// <summary>Returns the values of temperature-dependent Physical Properties for 
     /// the specified pure Compounds.</summary>
-    /// <param name ="props">The list of Physical Property identifiers. Valid
+    /// <param name="props">The list of Physical Property identifiers. Valid
     /// identifiers for temperature-dependent Physical Properties are listed in 
     /// section 7.5.3</param>
-    /// <param name = "temperature">Temperature (in K) at which properties are 
+    /// <param name="temperature">Temperature (in K) at which properties are 
     /// evaluated.</param>
-    /// <param name ="compIds">List of Compound identifiers for which Physical
+    /// <param name="compIds">List of Compound identifiers for which Physical
     /// Properties are to be retrieved. Set compIds = UNDEFINED to denote all 
     /// Compounds in the component that implements the ICapeThermoCompounds 
     /// interface .</param>
-    /// <param name = "propVals">Physical Property values for the Compounds specified.</param>
+    /// <param name="propVals">Physical Property values for the Compounds specified.</param>
     /// <remarks> <para>The GetTDependentPropList method can be used in order to 
     /// check which Physical Properties are available.</para>
     /// <para>If the number of requested Physical Properties is P and the number of 
@@ -561,33 +476,33 @@ internal partial class MaterialObjectWrapper
     /// ECapeThrmPropertyNotAvailable exception must be raised. If the exception is 
     /// raised, the client should check all the values returned to determine which is 
     /// undefined.</para></remarks>
-    /// <exception cref = "ECapeNoImpl"> – The operation is “not” implemented even 
+    /// <exception cref="ECapeNoImpl"> – The operation is “not” implemented even 
     /// if this method can be called for reasons of compatibility with the CAPE-OPEN 
     /// standards. That is to say that the operation exists, but it is not supported 
     /// by the current implementation. This exception should be raised if no 
     /// Compounds or no Physical Properties are supported.</exception>
-    /// <exception cref = "ECapeLimitedImpl">One or more Physical Properties are not
+    /// <exception cref="ECapeLimitedImpl">One or more Physical Properties are not
     /// supported by the component that implements this interface. This exception 
     /// should also be raised (rather than ECapeInvalidArgument) if any element of 
     /// the props argument is not recognised since the list of properties in section 
     /// 7.5.3 is not intended to be exhaustive and an unrecognised Physical Property 
     /// identifier may be valid. If no properties at all are supported ECapeNoImpl 
     /// should be raised (see above).</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument 
+    /// <exception cref="ECapeInvalidArgument">To be used when an invalid argument 
     /// value is passed, for example UNDEFINED for argument props.</exception> 
-    /// <exception cref = "ECapeOutOfBounds">The value of the temperature is outside
+    /// <exception cref="ECapeOutOfBounds">The value of the temperature is outside
     /// of the range of values accepted by the Property Package.</exception>
-    /// <exception cref = "ECapeThrmPropertyNotAvailable">At least one item in the 
+    /// <exception cref="ECapeThrmPropertyNotAvailable">At least one item in the 
     /// properties list is not available for a particular compound.</exception>
-    /// <exception cref = "ECapeUnknown">The error to be raised when other error(s), 
+    /// <exception cref="ECapeUnknown">The error to be raised when other error(s), 
     /// specified for the operation, are not suitable.</exception>
-    /// <exception cref = "ECapeBadInvOrder"> The error to be raised if the 
+    /// <exception cref="ECapeBadInvOrder"> The error to be raised if the 
     /// Property Package required the SetMaterial method to be called before calling 
     /// the GetTDependentProperty method. The error would not be raised when the 
     /// GetTDependentProperty method is implemented by a Material Object.</exception>
-    void ICapeThermoCompounds.GetTDependentProperty(String[] props, double temperature, String[] compIds, ref double[] propVals)
+    void ICapeThermoCompounds.GetTDependentProperty(string[] props, double temperature, string[] compIds, ref double[] propVals)
     {
-        Object obj1 = null;
+        object obj1 = null;
         _pICompounds.GetTDependentProperty(props, temperature, compIds, ref obj1);
         propVals = (double[])obj1;
     }
@@ -607,41 +522,41 @@ internal partial class MaterialObjectWrapper
     /// return identifiers which do not belong to the list defined in section 
     /// 7.5.3. However, these proprietary identifiers may not be understood by most 
     /// of the clients of this component.</para></remarks>
-    /// <exception cref = "ECapeNoImpl">The operation is “not” implemented even if 
+    /// <exception cref="ECapeNoImpl">The operation is “not” implemented even if 
     /// this method can be called for reasons of compatibility with the CAPE-OPEN 
     /// standards. That is to say that the operation exists, but it is not supported
     /// by the current implementation.</exception>
-    /// <exception cref = "ECapeUnknown">The error to be raised when other error(s),
+    /// <exception cref="ECapeUnknown">The error to be raised when other error(s),
     /// specified for the operation, are not suitable.</exception>
-    /// <exception cref = "ECapeBadInvOrder">The error to be raised if the Property 
+    /// <exception cref="ECapeBadInvOrder">The error to be raised if the Property 
     /// Package required the SetMaterial method to be called before calling the 
     /// GetTDependentPropList method. The error would not be raised when the 
     /// GetTDependentPropList method is implemented by a Material Object.</exception>
-    String[] ICapeThermoCompounds.GetTDependentPropList()
+    string[] ICapeThermoCompounds.GetTDependentPropList()
     {
-        return (String[])_pICompounds.GetTDependentPropList();
+        return (string[])_pICompounds.GetTDependentPropList();
     }
     /// <summary>This method is used to calculate the natural logarithm of the 
     /// fugacity coefficients (and optionally their derivatives) in a single Phase 
     /// mixture. The values of temperature, pressure and composition are specified in 
     /// the argument list and the results are also returned through the argument list.</summary>
-    /// <param name ="phaseLabel">Phase label of the Phase for which the properties 
+    /// <param name="phaseLabel">Phase label of the Phase for which the properties 
     /// are to be calculated. The Phase label must be one of the strings returned by 
     /// the GetPhaseList method on the ICapeThermoPhases interface.</param>
-    /// <param name = "temperature">The temperature (K) for the calculation.</param>
-    /// <param name = "pressure">The pressure (Pa) for the calculation.</param>
-    /// <param name ="lnPhiDT">Derivatives of natural logarithm of the fugacity
+    /// <param name="temperature">The temperature (K) for the calculation.</param>
+    /// <param name="pressure">The pressure (Pa) for the calculation.</param>
+    /// <param name="lnPhiDT">Derivatives of natural logarithm of the fugacity
     /// coefficients w.r.t. temperature (if requested).</param>
-    /// <param name ="moleNumbers">Number of moles of each Compound in the mixture.</param>
-    /// <param name = "fFlags">Code indicating whether natural logarithm of the 
+    /// <param name="moleNumbers">Number of moles of each Compound in the mixture.</param>
+    /// <param name="fFlags">Code indicating whether natural logarithm of the 
     /// fugacity coefficients and/or derivatives should be calculated (see notes).</param>
-    /// <param name = "lnPhi">Natural logarithm of the fugacity coefficients (if
+    /// <param name="lnPhi">Natural logarithm of the fugacity coefficients (if
     /// requested).</param>
     /// <param anem = "lnPhiDT">Derivatives of natural logarithm of the fugacity
     /// coefficients w.r.t. temperature (if requested).</param>
-    /// <param name ="lnPhiDP">Derivatives of natural logarithm of the fugacity
+    /// <param name="lnPhiDP">Derivatives of natural logarithm of the fugacity
     /// coefficients w.r.t. pressure (if requested).</param>
-    /// <param name ="lnPhiDn">Derivatives of natural logarithm of the fugacity
+    /// <param name="lnPhiDn">Derivatives of natural logarithm of the fugacity
     /// coefficients w.r.t. mole numbers (if requested).</param>
     /// <remarks><para>This method is provided to allow the natural logarithm of the fugacity 
     /// coefficient, which is the most commonly used thermodynamic property, to be 
@@ -686,43 +601,37 @@ internal partial class MaterialObjectWrapper
     /// <para>- Calculate the requested properties/derivatives at the T/P/composition specified in the argument list.</para>
     /// <para>- Store values for the properties/derivatives in the corresponding arguments.</para>
     /// <para>Note that this calculation can be carried out irrespective of whether the Phase actually exists in the Material Object.</para></remarks>
-    /// <exception cref = "ECapeNoImpl">The operation is “not” implemented even if 
+    /// <exception cref="ECapeNoImpl">The operation is “not” implemented even if 
     /// this method can be called for reasons of compatibility with the CAPE-OPEN 
     /// standards. That is to say that the operation exists, but it is not supported by 
     /// the current implementation.</exception>
     /// <exception cref ="ECapeLimitedImpl">Would be raised if the one or more of the 
     /// properties requested cannot be returned because the calculation is not 
     /// implemented.</exception>
-    /// <exception cref = "ECapeBadInvOrder">The necessary pre-requisite operation has 
+    /// <exception cref="ECapeBadInvOrder">The necessary pre-requisite operation has 
     /// not been called prior to the operation request. For example, the 
     /// ICapeThermoMaterial interface has not been passed via a SetMaterial call prior
     /// to calling this method.</exception>
-    /// <exception cref = "ECapeFailedInitialisation">The pre-requisites for the 
+    /// <exception cref="ECapeFailedInitialisation">The pre-requisites for the 
     ///	Property Calculation are not valid. Forexample, the composition of the phase is 
     /// not defined, the number of Compounds in the Material Object is zero or not 
     /// consistent with the moleNumbers argument or any other necessary input information 
     /// is not available.</exception>
-    /// <exception cref = "ECapeThrmPropertyNotAvailable">At least one item in the 
+    /// <exception cref="ECapeThrmPropertyNotAvailable">At least one item in the 
     /// requested properties cannot be returned. This could be because the property 
     /// cannot be calculated at the specified conditions or for the specified Phase. 
     /// If the property calculation is not implemented then ECapeLimitedImpl should 
     /// be returned.</exception>
-    /// <exception cref = "ECapeSolvingError">One of the property calculations has 
+    /// <exception cref="ECapeSolvingError">One of the property calculations has 
     /// failed. For example if one of the iterative solution procedures in the model 
     /// has run out of iterations, or has converged to a wrong solution.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument 
+    /// <exception cref="ECapeInvalidArgument">To be used when an invalid argument 
     /// value is passed, for example an unrecognised value, or UNDEFINED for the 
     /// phaseLabel argument.</exception>
-    /// <exception cref = "ECapeUnknown">The error to be raised when other error(s), 
-    /// specified for this operation, are not suitable.</exception>
-    void ICapeThermoPropertyRoutine.CalcAndGetLnPhi(String phaseLabel, double temperature,
-        double pressure,
-        double[] moleNumbers,
-        CapeFugacityFlag fFlags,
-        ref double[] lnPhi,
-        ref double[] lnPhiDT,
-        ref double[] lnPhiDP,
-        ref double[] lnPhiDn)
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    void ICapeThermoPropertyRoutine.CalcAndGetLnPhi(string phaseLabel, double temperature,
+        double pressure, double[] moleNumbers, CapeFugacityFlag fFlags,
+        ref double[] lnPhi, ref double[] lnPhiDT, ref double[] lnPhiDP, ref double[] lnPhiDn)
     {
         object obj1 = null;
         object obj2 = null;
@@ -740,10 +649,10 @@ internal partial class MaterialObjectWrapper
     /// derivatives of a mixture in a single Phase at the current values of 
     /// temperature, pressure and composition set in the Material Object. 
     /// CalcSinglePhaseProp does not perform phase Equilibrium Calculations.</summary>
-    /// <param name = "props">The list of identifiers for the single-phase properties 
+    /// <param name="props">The list of identifiers for the single-phase properties 
     /// or derivatives to be calculated. See sections 7.5.5 and 7.6 for the standard 
     /// identifiers.</param>
-    /// <param name = "phaseLabel">Phase label of the Phase for which the properties 
+    /// <param name="phaseLabel">Phase label of the Phase for which the properties 
     /// are to be calculated. The Phase label must be one of the strings returned by 
     /// the GetPhaseList method on the ICapeThermoPhases interface.</param>
     /// <remarks><para>CalcSinglePhaseProp calculates properties, such as enthalpy or viscosity 
@@ -817,9 +726,9 @@ internal partial class MaterialObjectWrapper
     /// cannot be calculated at the specified conditions or for the specified phase. 
     /// If the property calculation is not implemented then ECapeLimitedImpl should be 
     /// returned.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(0x00000002)]
-    [System.ComponentModel.DescriptionAttribute("method CalcSinglePhaseProp")]
-    void ICapeThermoPropertyRoutine.CalcSinglePhaseProp(string[] props, String phaseLabel)
+    [DispId(0x00000002)]
+    [Description("Method CalcSinglePhaseProp")]
+    void ICapeThermoPropertyRoutine.CalcSinglePhaseProp(string[] props, string phaseLabel)
     {
         _pIPropertyRoutine.CalcSinglePhaseProp(props, phaseLabel);
     }
@@ -828,11 +737,11 @@ internal partial class MaterialObjectWrapper
     /// derivatives that depend on two Phases at the current values of temperature, 
     /// pressure and composition set in the Material Object. It does not perform 
     /// Equilibrium Calculations.</summary>
-    /// <param name ="props">The list of identifiers for properties to be calculated.
+    /// <param name="props">The list of identifiers for properties to be calculated.
     /// This must be one or more of the supported two-phase properties and derivatives 
     /// (as given by the GetTwoPhasePropList method). The standard identifiers for 
     /// two-phase properties are given in section 7.5.6 and 7.6.</param>
-    /// <param name = "phaseLabels">Phase labels of the phases for which the properties 
+    /// <param name="phaseLabels">Phase labels of the phases for which the properties 
     /// are to be calculated. The phase labels must be two of the strings returned by 
     /// the GetPhaseList method on the ICapeThermoPhases interface.</param>
     /// <remarks><para>CalcTwoPhaseProp calculates the values of properties such as surface 
@@ -886,40 +795,39 @@ internal partial class MaterialObjectWrapper
     /// represent properties). The exception ECapeThrmPropertyNotAvailable may be 
     /// raised or an extrapolated value may be returned. It is responsibility of the 
     /// implementer to decide how to handle this circumstance.</para></remarks>
-    /// <exception cref = "ECapeNoImpl">The operation is “not” implemented even if this 
+    /// <exception cref="ECapeNoImpl">The operation is “not” implemented even if this 
     /// method can be called for reasons of compatibility with the CAPE-OPEN standards. 
     /// That is to say that the operation exists, but it is not supported by the 
     /// current implementation.</exception>
-    /// <exception cref = "ECapeLimitedImpl">Would be raised if the one or more of the 
+    /// <exception cref="ECapeLimitedImpl">Would be raised if the one or more of the 
     /// properties requested cannot be returned because the calculation (of the 
     /// particular property) is not implemented. This exception should also be raised 
     /// (rather than ECapeInvalidArgument) if the props argument is not recognised 
     /// because the list of properties in section 7.5.6 is not intended to be 
     /// exhaustive and an unrecognised property identifier may be valid. If no 
     /// properties at all are supported ECapeNoImpl should be raised (see above).</exception>
-    /// <exception cref = "ECapeBadInvOrder">The necessary pre-requisite operation has 
+    /// <exception cref="ECapeBadInvOrder">The necessary pre-requisite operation has 
     /// not been called prior to the operation request. For example, the 
     /// ICapeThermoMaterial interface has not been passed via a SetMaterial call 
     /// prior to calling this method.</exception>
-    /// <exception cref = "ECapeFailedInitialisation">The pre-requisites for the 
+    /// <exception cref="ECapeFailedInitialisation">The pre-requisites for the 
     /// property calculation are not valid. For example, the composition of one of the 
     /// Phases is not defined, or any other necessary input information is not 
     /// available.</exception>
-    /// <exception cref = "ECapeThrmPropertyNotAvailable">At least one item in the 
+    /// <exception cref="ECapeThrmPropertyNotAvailable">At least one item in the 
     /// requested properties cannot be returned. This could be because the property 
     /// cannot be calculated at the specified conditions or for the specified Phase. 
     /// If the property calculation is not implemented then ECapeLimitedImpl should be 
     /// returned.</exception>
-    /// <exception cref = "ECapeSolvingError">One of the property calculations has 
+    /// <exception cref="ECapeSolvingError">One of the property calculations has 
     /// failed. For example if one of the iterative solution procedures in the model 
     /// has run out of iterations, or has converged to a wrong solution.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument 
+    /// <exception cref="ECapeInvalidArgument">To be used when an invalid argument 
     /// value is passed, for example an unrecognised value or UNDEFINED for the 
     /// phaseLabels argument or UNDEFINED for the props argument.</exception>
-    /// <exception cref = "ECapeUnknown">The error to be raised when other error(s), 
-    /// specified for this operation, are not suitable.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(0x00000003)]
-    [System.ComponentModel.DescriptionAttribute("method CalcTwoPhaseProp")]
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    [DispId(0x00000003)]
+    [Description("Method CalcTwoPhaseProp")]
     void ICapeThermoPropertyRoutine.CalcTwoPhaseProp(string[] props, string[] phaseLabels)
     {
         _pIPropertyRoutine.CalcTwoPhaseProp(props, phaseLabels);
@@ -927,10 +835,10 @@ internal partial class MaterialObjectWrapper
 
     /// <summary>Checks whether it is possible to calculate a property with the 
     /// CalcSinglePhaseProp method for a given Phase.</summary>
-    /// <param name = "property">The identifier of the property to check. To be valid 
+    /// <param name="property">The identifier of the property to check. To be valid 
     /// this must be one of the supported single-phase properties or derivatives (as 
     /// given by the GetSinglePhasePropList method).</param>
-    /// <param name = "phaseLabel">The Phase label for the calculation check. This must
+    /// <param name="phaseLabel">The Phase label for the calculation check. This must
     /// be one of the labels returned by the GetPhaseList method on the 
     /// ICapeThermoPhases interface.</param>
     /// <returns> A boolean set to True if the combination of property and phaseLabel
@@ -948,34 +856,34 @@ internal partial class MaterialObjectWrapper
     /// <para>If either the property or the phaseLabel arguments are not recognised by 
     /// the component that implements the ICapeThermoPropertyRoutine interface this 
     /// method should return False.</para></remarks>
-    /// <exception cref = "ECapeNoImpl">The operation CheckSinglePhasePropSpec is 
+    /// <exception cref="ECapeNoImpl">The operation CheckSinglePhasePropSpec is 
     /// “not” implemented even if this method can be called for reasons of 
     /// compatibility with the CAPE-OPEN standards. That is to say that the operation 
     /// exists, but it is not supported by the current implementation.</exception>
-    /// <exception cref = "ECapeBadInvOrder">The necessary pre-requisite operation has
+    /// <exception cref="ECapeBadInvOrder">The necessary pre-requisite operation has
     /// not been called prior to the operation request. The ICapeThermoMaterial 
     /// interface has not been passed via a SetMaterial call prior to calling this 
     /// method.</exception>
-    /// <exception cref = "ECapeFailedInitialisation">The pre-requisites for the 
+    /// <exception cref="ECapeFailedInitialisation">The pre-requisites for the 
     /// property calculation are not valid. For example, if a prior call to the 
     /// SetMaterial method of the ICapeThermoMaterialContext interface has failed to 
     /// provide a valid Material Object.</exception>
-    /// <exception cref = "ECapeInvalidArgument">One or more of the input arguments is 
+    /// <exception cref="ECapeInvalidArgument">One or more of the input arguments is 
     /// not valid: for example, UNDEFINED value for the property argument or the 
     /// phaseLabel argument.</exception>
-    /// <exception cref = "ECapeUnknown">The error to be raised when other error(s), 
+    /// <exception cref="ECapeUnknown">The error to be raised when other error(s), 
     /// specified for the CheckSinglePhasePropSpec operation, are not suitable.</exception>
-    bool ICapeThermoPropertyRoutine.CheckSinglePhasePropSpec(String property, String phaseLabel)
+    bool ICapeThermoPropertyRoutine.CheckSinglePhasePropSpec(string property, string phaseLabel)
     {
         return _pIPropertyRoutine.CheckSinglePhasePropSpec(property, phaseLabel);
     }
 
     /// <summary>Checks whether it is possible to calculate a property with the 
     /// CalcTwoPhaseProp method for a given set of Phases.</summary>
-    /// <param name = "property">The identifier of the property to check. To be valid 
+    /// <param name="property">The identifier of the property to check. To be valid 
     /// this must be one of the supported two-phase properties (including derivatives), 
     /// as given by the GetTwoPhasePropList method.</param>
-    /// <param name ="phaseLabels">Phase labels of the Phases for which the properties 
+    /// <param name="phaseLabels">Phase labels of the Phases for which the properties 
     /// are to be calculated. The Phase labels must be two of the identifiers returned 
     /// by the GetPhaseList method on the ICapeThermoPhases interface.</param>
     /// <returns> A boolean Set to True if the combination of property and
@@ -993,26 +901,26 @@ internal partial class MaterialObjectWrapper
     /// <para>If either the property argument or the values in the phaseLabels 
     /// arguments are not recognised by the component that implements the 
     /// ICapeThermoPropertyRoutine interface this method should return False.</para></remarks>
-    /// <exception cref = "ECapeNoImpl">The operation CheckTwoPhasePropSpec is “not” 
+    /// <exception cref="ECapeNoImpl">The operation CheckTwoPhasePropSpec is “not” 
     /// implemented even if this method can be called for reasons of compatibility with 
     /// the CAPE-OPEN standards. That is to say that the operation exists, but it is 
     /// not supported by the current implementation. This may be the case if no 
     /// two-phase property is supported.</exception>
-    /// <exception cref = "ECapeBadInvOrder">The necessary pre-requisite operation has 
+    /// <exception cref="ECapeBadInvOrder">The necessary pre-requisite operation has 
     /// not been called prior to the operation request. The ICapeThermoMaterial 
     /// interface has not been passed via a SetMaterial call prior to calling this 
     /// method.</exception>
-    /// <exception cref = "ECapeFailedInitialisation">The pre-requisites for the 
+    /// <exception cref="ECapeFailedInitialisation">The pre-requisites for the 
     /// property calculation are not valid. For example, if a prior call to the 
     /// SetMaterial method of the ICapeThermoMaterialContext interface has failed to 
     /// provide a valid Material Object.</exception>
-    /// <exception cref = "ECapeInvalidArgument">One or more of the input arguments is 
+    /// <exception cref="ECapeInvalidArgument">One or more of the input arguments is 
     /// not valid. For example, UNDEFINED value for the property argument or the 
     /// phaseLabels argument or number of elements in phaseLabels array not equal to 
     /// two.</exception>
-    /// <exception cref = "ECapeUnknown">The error to be raised when other error(s), 
+    /// <exception cref="ECapeUnknown">The error to be raised when other error(s), 
     /// specified for the CheckTwoPhasePropSpec operation, are not suitable.</exception>
-    bool ICapeThermoPropertyRoutine.CheckTwoPhasePropSpec(String property, string[] phaseLabels)
+    bool ICapeThermoPropertyRoutine.CheckTwoPhasePropSpec(string property, string[] phaseLabels)
     {
         return _pIPropertyRoutine.CheckTwoPhasePropSpec(property, phaseLabels);
     }
@@ -1034,14 +942,14 @@ internal partial class MaterialObjectWrapper
     /// single-phase property identifiers which do not belong to the list defined in 
     /// section 7.5.5. However, these proprietary identifiers may not be understood by 
     /// most of the clients of this component.</para></remarks>
-    /// <exception cref = "ECapeNoImpl">The operation is “not” implemented even if 
+    /// <exception cref="ECapeNoImpl">The operation is “not” implemented even if 
     /// this method can be called for reasons of compatibility with the CAPE-OPEN 
     /// standards. That is to say that the operation exists, but it is not supported by 
     /// the current implementation.</exception>
-    /// <exception cref = "ECapeUnknown">The error to be raised when other error(s), 
+    /// <exception cref="ECapeUnknown">The error to be raised when other error(s), 
     /// specified for the GetSinglePhasePropList operation, are not suitable.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(0x00000006)]
-    [System.ComponentModel.DescriptionAttribute("method GetSinglePhasePropList")]
+    [DispId(0x00000006)]
+    [Description("Method GetSinglePhasePropList")]
     string[] ICapeThermoPropertyRoutine.GetSinglePhasePropList()
     {
         return (string[])_pIPropertyRoutine.GetSinglePhasePropList();
@@ -1066,14 +974,14 @@ internal partial class MaterialObjectWrapper
     /// most of the clients of this component.</para>
     /// <para>To get the list of supported single-phase properties, use 
     /// GetSinglePhasePropList.</para></remarks>
-    /// <exception cref = "ECapeNoImpl">The operation is “not” implemented even if this
+    /// <exception cref="ECapeNoImpl">The operation is “not” implemented even if this
     /// method can be called for reasons of compatibility with the CAPE-OPEN standards. 
     /// That is to say that the operation exists, but it is not supported by the 
     /// current implementation.</exception>
-    /// <exception cref = "ECapeUnknown">The error to be raised when other error(s), 
+    /// <exception cref="ECapeUnknown">The error to be raised when other error(s), 
     /// specified for the GetTwoPhasePropList operation, are not suitable.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(0x00000007)]
-    [System.ComponentModel.DescriptionAttribute("method GetTwoPhasePropList")]
+    [DispId(0x00000007)]
+    [Description("Method GetTwoPhasePropList")]
     string[] ICapeThermoPropertyRoutine.GetTwoPhasePropList()
     {
         return (string[])_pIPropertyRoutine.GetTwoPhasePropList();
@@ -1157,12 +1065,12 @@ internal partial class MaterialObjectWrapper
     /// set the Phase status flags to Cape_AtEquilibrium.</para>
     /// <para>- Use SetSinglePhaseProp to set pressure, temperature, Phase amount 
     /// (or Phase fraction) and composition for all Phases present.</para></remarks>
-    /// <param name = "specification1">First specification for the Equilibrium 
+    /// <param name="specification1">First specification for the Equilibrium 
     /// Calculation. The specification information is used to retrieve the value of
     /// the specification from the Material Object. See below for details.</param>
-    /// <param name = "specification2">Second specification for the Equilibrium 
+    /// <param name="specification2">Second specification for the Equilibrium 
     /// Calculation in the same format as specification1.</param>
-    /// <param name = "solutionType"><para>The identifier for the required solution type. 
+    /// <param name="solutionType"><para>The identifier for the required solution type. 
     /// The standard identifiers are given in the following list:</para>
     /// <para>Unspecified</para>
     /// <para>Normal</para>
@@ -1200,9 +1108,8 @@ internal partial class MaterialObjectWrapper
     /// Phases are present or because the Phases present are not recognised by the
     /// component that implements the ICapeThermoEquilibriumRoutine interface.</para>
     /// <para>• Any other necessary input information is not available.</para></exception>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s), 
-    /// specified for this operation, are not suitable.</exception>
-    void ICapeThermoEquilibriumRoutine.CalcEquilibrium(string[] specification1, string[] specification2, String solutionType)
+    /// <exception cref ="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    void ICapeThermoEquilibriumRoutine.CalcEquilibrium(string[] specification1, string[] specification2, string solutionType)
     {
         _pIEquilibriumRoutine.CalcEquilibrium(specification1, specification2, solutionType);
     }
@@ -1220,23 +1127,22 @@ internal partial class MaterialObjectWrapper
     /// <para>If solutionType, specification1 and specification2 arguments appear 
     /// valid but the actual specifications are not supported or not recognised a 
     /// False value should be returned.</para></remarks>
-    /// <param name = "specification1">First specification for the Equilibrium 
+    /// <param name="specification1">First specification for the Equilibrium 
     /// Calculation.</param>
-    /// <param name = "specification2">Second specification for the Equilibrium 
+    /// <param name="specification2">Second specification for the Equilibrium 
     /// Calculation.</param>
-    /// <param name = "solutionType">The required solution type.</param>
+    /// <param name="solutionType">The required solution type.</param>
     /// <returns>Set to True if the combination of specifications and solutionType is 
     /// supported or False if not supported.</returns>
     /// <exception cref ="ECapeNoImpl">The operation is “not” implemented even if this 
     /// method can be called for reasons of compatibility with the CAPE-OPEN standards. 
     /// That is to say that the operation exists, but it is not supported by the 
     /// current implementation.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument 
+    /// <exception cref="ECapeInvalidArgument">To be used when an invalid argument 
     /// value is passed, for example UNDEFINED for solutionType, specification1 or 
     /// specification2 argument.</exception>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s), 
-    /// specified for this operation, are not suitable.</exception>
-    bool ICapeThermoEquilibriumRoutine.CheckEquilibriumSpec(string[] specification1, string[] specification2, String solutionType)
+    /// <exception cref ="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    bool ICapeThermoEquilibriumRoutine.CheckEquilibriumSpec(string[] specification1, string[] specification2, string solutionType)
     {
         return _pIEquilibriumRoutine.CheckEquilibriumSpec(specification1, specification2, solutionType);
     }
