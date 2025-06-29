@@ -27,7 +27,7 @@ internal class MaterialObjectWrapper1 : CapeObjectBase, ICapeThermoMaterialObjec
     private bool _disposed;
 
     /// <summary>创建 MaterialObjectWrapper 类的实例</summary>
-    /// <param name="materialObject">待打包的物品。</param>
+    /// <param name="materialObject">待封装的物流对象。</param>
     public MaterialObjectWrapper1(object materialObject)
     {
         _disposed = false;
@@ -113,9 +113,9 @@ internal class MaterialObjectWrapper1 : CapeObjectBase, ICapeThermoMaterialObjec
     }
 
     /// <summary>提供有关对象是否支持热力学版本 1.0 的信息。</summary>
-    /// <remarks><see cref="MaterialObjectWrapper1"/> 类用于检查所打包的物流对象是否支持
+    /// <remarks><see cref="MaterialObjectWrapper1"/> 类用于检查所封装的物流对象是否支持
     /// CAPE-OPEN 1.0 版本的热力学。此属性表示该检查的结果。</remarks>
-    /// <value>指示打包的物流对象是否支持CAPE-OPEN热力学版本1.0接口。</value>
+    /// <value>指示封装的物流对象是否支持CAPE-OPEN热力学版本1.0接口。</value>
     public bool SupportsThermo10 => true;
 
     /// <summary>提供有关对象是否支持热力学版本 1.1 的信息。</summary>
@@ -124,10 +124,10 @@ internal class MaterialObjectWrapper1 : CapeObjectBase, ICapeThermoMaterialObjec
     /// <value>指示包裹的物流对象是否支持 CAPE-OPEN 热力学版本 1.1 接口。</value>
     public bool SupportsThermo11 => false;
 
-    /// <summary>获取打包的热力学版本 1.0 物流对象。</summary>
+    /// <summary>获取封装的热力学版本 1.0 物流对象。</summary>
     /// <remarks><para>提供对热力学版本 1.0 物流对象的直接访问。</para>
     /// <para>该物流对象实现了 ICapeThermoMaterialObject 接口的 COM 版本。</para></remarks>
-    /// <value>打包的热力学版本 1.0 物流对象。</value>
+    /// <value>封装的热力学版本 1.0 物流对象。</value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
     [Description("Unit Operation Parameter Collection. Click on the (...) button to edit collection.")]
     [Category("CapeIdentification")]

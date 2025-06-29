@@ -65,7 +65,7 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     private bool _disposed;
 
     /// <summary>创建 MaterialObjectWrapper 类的实例。</summary>
-    /// <param name="materialObject">要打包的物流对象。</param>
+    /// <param name="materialObject">要封装的物流对象。</param>
     public MaterialObjectWrapper(object materialObject)
     {
         _disposed = false;
@@ -203,19 +203,19 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// <summary>提供有关对象是否支持热力学版本 1.0 的信息。</summary>
     /// <remarks><see cref="MaterialObjectWrapper"/> 类用于检查所包装的物流对象是否支持 CAPE-OPEN 1.0 版本的热力学。
     /// 此属性表示该检查的结果。</remarks>
-    /// <value>指示打包的物流对象是否支持 CAPE-OPEN 热力学版本 1.0 接口。</value>
+    /// <value>指示封装的物流对象是否支持 CAPE-OPEN 热力学版本 1.0 接口。</value>
     public bool SupportsThermo10 { get; }
 
     /// <summary>提供有关对象是否支持热力学版本 1.1 的信息。</summary>
     /// <remarks><see cref="MaterialObjectWrapper1"/> 类用于检查所包裹的物流对象是否支持 CAPE-OPEN 1.1 版本的热力学。
     /// 此属性表示该检查的结果。</remarks>
-    /// <value>指示打包的物流对象是否支持 CAPE-OPEN 热力学版本 1.1 接口。</value>
+    /// <value>指示封装的物流对象是否支持 CAPE-OPEN 热力学版本 1.1 接口。</value>
     public bool SupportsThermo11 { get; }
 
     /// <summary>获取包装后的热力学版本 1.0 物流对象。</summary>
     /// <remarks><para>提供对热力学版本 1.0 物流对象的直接访问。</para>
     /// <para>该物流对象暴露了 ICapeThermoMaterialObject 接口的 COM 版本。</para></remarks>
-    /// <value>打包的热力学版本 1.0 物流对象。</value>
+    /// <value>封装的热力学版本 1.0 物流对象。</value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
     [Description("Unit Operation Parameter Collection. Click on the (...) button to edit collection.")]
     [Category("CapeIdentification")]
@@ -224,7 +224,7 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     /// <summary>获取包装后的热力学版本 1.1 物流对象。</summary>
     /// <remarks><para>提供对热力学版本 1.1 物流对象的直接访问。</para>
     /// <para>该物流对象暴露了热力学 1.1 接口的 COM 版本。</para></remarks>
-    /// <value>打包的热力学版本 1.1 物流对象。</value>
+    /// <value>封装的热力学版本 1.1 物流对象。</value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
     [Description("Unit Operation Parameter Collection. Click on the (...) button to edit collection.")]
     [Category("CapeIdentification")]
