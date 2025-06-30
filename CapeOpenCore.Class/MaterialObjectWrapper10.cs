@@ -133,625 +133,209 @@ internal class MaterialObjectWrapper1 : CapeObjectBase, ICapeThermoMaterialObjec
     [Category("CapeIdentification")]
     public object MaterialObject10 => _pMaterialObject;
     
-    /// <summary> Gets the wrapped Thermo Version 1.1 Material Object.</summary>
-    /// <remarks><para>Provides direct access to the Thermo Version 1.1 material object.</para>
-    /// <para>The material object exposes the COM version of the Thermo 1.1 interfaces.</para></remarks>
-    /// <value>The wrapped Thermo Version 1.1 Material Object.</value>
+    /// <summary>获取封装的热力学版本 1.1 物流对象。</summary>
+    /// <remarks><para>提供对热力学版本 1.1 物流对象的直接访问。</para>
+    /// <para>该物流对象暴露了热力学 1.1 接口的 COM 版本。</para></remarks>
+    /// <value>封装了热力学 1.1 的物流对象</value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
     [Description("Unit Operation Parameter Collection. Click on the (...) button to edit collection.")]
     [Category("CapeIdentification")]
-    public object MaterialObject11
-    {
-        get { return null; }
-    }
+    public object MaterialObject11 => null;
 
-    /// <summary>Get the component ids for this MO</summary>
-    /// <remarks>Returns the list of components Ids of a given Material Object.</remarks>
-    /// <value>
-    /// Te names of the compounds in the matieral object.
-    /// </value>
+    /// <summary>获取此 MO 的组件 ID。</summary>
+    /// <remarks>返回指定物流对象的组件 ID 列表。</remarks>
+    /// <value>物流对象中化合物的名称。</value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
-    String[] ICapeThermoMaterialObject.ComponentIds
+    string[] ICapeThermoMaterialObject.ComponentIds
     {
         get
         {
             try
             {
-                return (String[])_pMaterialObject.ComponentIds;
+                return (string[])_pMaterialObject.ComponentIds;
             }
-            catch (Exception p_Ex)
+            catch (Exception pEx)
             {
-                throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
+                throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, pEx);
             }
         }
     }
 
-    ///// <summary>
-    ///// Get the component ids for this MO
-    ///// </summary>
-    ///// <remarks>
-    ///// Returns the list of components Ids of a given Material Object.
-    ///// </remarks>
-    ///// <returns>
-    ///// Te names of the compounds in the matieral object.
-    ///// </returns>
-    ///// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
-    //object ICapeThermoMaterialObjectCOM.ComponentIds
-    //{
-    //    get
-    //    {
-    //        try
-    //        {
-    //            return p_MaterialObject.ComponentIds;
-    //        }
-    //        catch (System.Exception p_Ex)
-    //        {
-    //            throw CapeOpen.COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
-    //        }
-    //    }
-    //}
-
-    /// <summary>Get the phase ids for this MO</summary>
-    /// <remarks>It returns the phases existing in the MO at that moment. The Overall phase 
-    /// and multiphase identifiers cannot be returned by this method. See notes on 
-    /// Existence of a phase for more information.</remarks>
-    /// <value>
-    /// The phases present in the material.
-    /// </value>
+    /// <summary>获取此 MO 的相态 ID</summary>
+    /// <remarks>它返回该时刻 MO 中存在的相位。该方法无法返回整体相位和多相位标识符。
+    /// 有关相位存在性的更多信息，请参阅相关说明。</remarks>
+    /// <value>物流对象中存在的相。</value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
-    String[] ICapeThermoMaterialObject.PhaseIds
+    string[] ICapeThermoMaterialObject.PhaseIds
     {
         get
         {
             try
             {
-                return (String[])_pMaterialObject.PhaseIds;
+                return (string[])_pMaterialObject.PhaseIds;
             }
-            catch (Exception p_Ex)
+            catch (Exception pEx)
             {
-                throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
+                throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, pEx);
             }
         }
     }
 
-    ///// <summary>
-    ///// Get the phase ids for this MO
-    ///// </summary>
-    ///// <remarks>
-    ///// It returns the phases existing in the MO at that moment. The Overall phase 
-    ///// and multiphase identifiers cannot be returned by this method. See notes on 
-    ///// Existence of a phase for more information.
-    ///// </remarks>
-    ///// <returns>
-    ///// The phases present in the material.
-    ///// </returns>
-    ///// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
-    //object ICapeThermoMaterialObjectCOM.PhaseIds
-    //{
-    //    get
-    //    {
-    //        try
-    //        {
-    //            return p_MaterialObject.PhaseIds;
-    //        }
-    //        catch (System.Exception p_Ex)
-    //        {
-    //            throw CapeOpen.COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
-    //        }
-    //    }
-    //}
-
-    /// <summary>Get some universal constant(s)</summary>
-    /// <remarks>Retrieves universal constants from the Property Package.</remarks>
-    /// <returns>
-    /// Values of the requested universal constants.
-    /// </returns>
-    /// <param name="props">
-    /// List of universal constants to be retrieved.
-    /// </param>
+    /// <summary>获取一些普适常数。</summary>
+    /// <remarks>从属性包中获取通用常量。</remarks>
+    /// <returns>请求的普适常数值。</returns>
+    /// <param name="props">需检索的普适常数列表。</param>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    /// <exception cref = "ECapeNoImpl">ECapeNoImpl</exception>
-    double[] ICapeThermoMaterialObject.GetUniversalConstant(String[] props)
+    /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为 UNDEFINED。</exception>
+    /// <exception cref="ECapeNoImpl">ECapeNoImpl</exception>
+    double[] ICapeThermoMaterialObject.GetUniversalConstant(string[] props)
     {
         try
         {
             return (double[])_pMaterialObject.GetUniversalConstant(props);
         }
-        catch (Exception p_Ex)
+        catch (Exception pEx)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, pEx);
         }
     }
 
-    ///// <summary>
-    ///// Get some universal constant(s)
-    ///// </summary>
-    ///// <remarks>
-    ///// Retrieves universal constants from the Property Package.
-    ///// </remarks>
-    ///// <returns>
-    ///// Values of the requested universal constants.
-    ///// </returns>
-    ///// <param name="props">
-    ///// List of universal constants to be retrieved.
-    ///// </param>
-    ///// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
-    ///// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    ///// <exception cref = "ECapeNoImpl">ECapeNoImpl</exception>
-    //object ICapeThermoMaterialObjectCOM.GetUniversalConstant(object props)
-    //{
-    //    try
-    //    {
-    //        return p_MaterialObject.GetUniversalConstant(props);
-    //    }
-    //    catch (System.Exception p_Ex)
-    //    {
-    //        throw CapeOpen.COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
-    //    }
-    //}
-
-    /// <summary>Get some pure component constant(s)</summary>
-    /// <remarks>Retrieve component constants from the Property Package. See Notes for more 
-    /// information.</remarks>
-    /// <returns>
-    /// Component Constant values returned from the Property Package for all the 
-    /// components in the Material Object It is a Object containing a 1 dimensional 
-    /// array of Objects. If we call P to the number of requested properties and C to 
-    /// the number requested components the array will contain C*P Objects. The C 
-    /// first ones (from position 0 to C-1) will be the values for the first requested 
-    /// property (one Object for each component). After them (from position C to 2*C-1) 
-    /// there will be the values of constants for the second requested property, and 
-    /// so on.
-    /// </returns>
-    /// <param name="props">
-    /// List of component constants.
-    /// </param>
-    /// <param name="compIds">
-    /// List of component IDs for which constants are to be retrieved. Use a null value 
-    /// for all components in the Material Object. 
-    /// </param>
+    /// <summary>获取一些纯组分的常数值。</summary>
+    /// <remarks>从属性包中获取组件常量。请参阅备注以获取更多信息。</remarks>
+    /// <returns>组件常量值，由属性包返回给物流对象中的所有组件这是一个包含一维对象数组的对象。如果我们将请求的
+    /// 属性数量表示为 P，请求的组件数量表示为 C，那么该数组将包含 C*P 个对象。前 C 个对象（从位置 0 到 C-1）
+    /// 将是第一个请求属性的值（每个组件对应一个对象）。随后（从位置 C 到 2*C-1）将包含第二个请求属性的常量值，依此类推。</returns>
+    /// <param name="props">组件常量列表。</param>
+    /// <param name="compIds">需要检索常量的组件 ID 列表。对于物流对象中的所有组件，请使用空值。</param>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    /// <exception cref = "ECapeNoImpl">ECapeNoImpl</exception>
-    object[] ICapeThermoMaterialObject.GetComponentConstant(String[] props, String[] compIds)
+    /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为 UNDEFINED。</exception>
+    /// <exception cref="ECapeNoImpl">ECapeNoImpl</exception>
+    object[] ICapeThermoMaterialObject.GetComponentConstant(string[] props, string[] compIds)
     {
         try
         {
             return (object[])_pMaterialObject.GetComponentConstant(props, compIds);
         }
-        catch (Exception p_Ex)
+        catch (Exception pEx)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, pEx);
         }
     }
 
-    ///// <summary>
-    ///// Get some pure component constant(s)
-    ///// </summary>
-    ///// <remarks>
-    ///// Retrieve component constants from the Property Package. See Notes for more 
-    ///// information.
-    ///// </remarks>
-    ///// <returns>
-    ///// Component Constant values returned from the Property Package for all the 
-    ///// components in the Material Object It is a Object containing a 1 dimensional 
-    ///// array of Objects. If we call P to the number of requested properties and C to 
-    ///// the number requested components the array will contain C*P Objects. The C 
-    ///// first ones (from position 0 to C-1) will be the values for the first requested 
-    ///// property (one Object for each component). After them (from position C to 2*C-1) 
-    ///// there will be the values of constants for the second requested property, and 
-    ///// so on.
-    ///// </returns>
-    ///// <param name="props">
-    ///// List of component constants.
-    ///// </param>
-    ///// <param name="compIds">
-    ///// List of component IDs for which constants are to be retrieved. Use a null value 
-    ///// for all components in the Material Object. 
-    ///// </param>
-    ///// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
-    ///// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    ///// <exception cref = "ECapeNoImpl">ECapeNoImpl</exception>
-    //object ICapeThermoMaterialObjectCOM.GetComponentConstant(object props, object compIds)
-    //{
-    //    try
-    //    {
-    //        return p_MaterialObject.GetComponentConstant(props, compIds);
-    //    }
-    //    catch (System.Exception p_Ex)
-    //    {
-    //        throw CapeOpen.COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
-    //    }
-    //}
-
-    /// <summary>Calculate some properties</summary>
-    /// <remarks>This method is responsible for doing all property calculations and delegating 
-    /// these calculations to the associated thermo system. This method is further 
-    /// defined in the descriptions of the CAPE-OPEN Calling Pattern and the User 
-    /// Guide Section. See Notes for a more detailed explanation of the arguments and 
-    /// CalcProp description in the notes for a general discussion of the method.</remarks>
-    /// <param name="props">
-    /// The List of Properties to be calculated.
-    /// </param>
-    /// <param name="phases">
-    /// List of phases for which the properties are to be calculated.
-    /// </param>
-    /// <param name="calcType">
-    /// Type of calculation: Mixture Property or Pure Component Property. For partial 
-    /// property, such as fugacity coefficients of components in a mixture, use 
-    /// “Mixture” CalcType. For pure component fugacity coefficients, use “Pure” 
-    /// CalcType.
-    /// </param>
+    /// <summary>计算一些属性。</summary>
+    /// <remarks>该方法负责执行所有属性计算，并将这些计算委托给关联的热力系统。该方法在 CAPE-OPEN 调用模式和用户指南
+    /// 章节的描述中进一步定义。请参阅注释以获取有关参数和CalcProp描述的更详细说明，以及对该方法的一般讨论。</remarks>
+    /// <param name="props">待计算的属性列表。</param>
+    /// <param name="phases">需要计算属性的相态列表。</param>
+    /// <param name="calcType">计算类型：混合性质或纯成分性质。对于部分属性，例如混合物中组分的逸度系数，
+    /// 使用“混合物” CalcType。对于纯组件逸度系数，使用“pure” CalcType。</param>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    /// <exception cref = "ECapeSolvingError">ECapeSolvingError</exception>
-    /// <exception cref = "ECapeOutOfBounds">ECapeOutOfBounds</exception>
-    /// <exception cref = "ECapeLicenceError">ECapeLicenceError</exception>
-    void ICapeThermoMaterialObject.CalcProp(String[] props, String[] phases, String calcType)
+    /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为 UNDEFINED。</exception>
+    /// <exception cref="ECapeSolvingError">ECapeSolvingError</exception>
+    /// <exception cref="ECapeOutOfBounds">ECapeOutOfBounds</exception>
+    /// <exception cref="ECapeLicenceError">ECapeLicenceError</exception>
+    void ICapeThermoMaterialObject.CalcProp(string[] props, string[] phases, string calcType)
     {
         try
         {
             _pMaterialObject.CalcProp(props, phases, calcType);
         }
-        catch (Exception p_Ex)
+        catch (Exception pEx)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, pEx);
         }
     }
 
-
-    ///// <summary>
-    ///// Calculate some properties
-    ///// </summary>
-    ///// <remarks>
-    ///// This method is responsible for doing all property calculations and delegating 
-    ///// these calculations to the associated thermo system. This method is further 
-    ///// defined in the descriptions of the CAPE-OPEN Calling Pattern and the User 
-    ///// Guide Section. See Notes for a more detailed explanation of the arguments and 
-    ///// CalcProp description in the notes for a general discussion of the method.
-    ///// </remarks>
-    ///// <param name="props">
-    ///// The List of Properties to be calculated.
-    ///// </param>
-    ///// <param name="phases">
-    ///// List of phases for which the properties are to be calculated.
-    ///// </param>
-    ///// <param name="calcType">
-    ///// Type of calculation: Mixture Property or Pure Component Property. For partial 
-    ///// property, such as fugacity coefficients of components in a mixture, use 
-    ///// “Mixture” CalcType. For pure component fugacity coefficients, use “Pure” 
-    ///// CalcType.
-    ///// </param>
-    ///// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
-    ///// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    ///// <exception cref = "ECapeSolvingError">ECapeSolvingError</exception>
-    ///// <exception cref = "ECapeOutOfBounds">ECapeOutOfBounds</exception>
-    ///// <exception cref = "ECapeLicenceError">ECapeLicenceError</exception>
-    //void ICapeThermoMaterialObjectCOM.CalcProp(object props, object phases, String calcType)
-    //{
-    //    try
-    //    {
-    //        p_MaterialObject.CalcProp(props, phases, calcType);
-    //    }
-    //    catch (System.Exception p_Ex)
-    //    {
-    //        throw CapeOpen.COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
-    //    }
-    //}
-
-    /// <summary>Get some pure component constant(s)</summary>
-    /// <remarks>This method is responsible for retrieving the results from calculations from 
-    /// the MaterialObject. See Notesfor a more detailed explanation of the arguments.</remarks>
-    /// <returns>
-    /// Results vector containing property values in SI units arranged by the defined 
-    /// qualifiers. The array is one dimensional containing the properties, in order 
-    /// of the "props" array for each of the compounds, in order of the compIds array. 
-    /// </returns>
-    /// <param name="property">
-    /// The Property for which results are requested from the MaterialObject.
-    /// </param>
-    /// <param name="phase">
-    /// The qualified phase for the results.
-    /// </param>
-    /// <param name="compIds">
-    /// The qualified components for the results. Use a null value to specify all 
-    /// components in the Material Object. For mixture property such as liquid 
-    /// enthalpy, this qualifier is not required. Use emptyObject as place holder.
-    /// </param>
-    /// <param name="calcType">
-    /// The qualified type of calculation for the results. (valid Calculation Types: 
-    /// Pure and Mixture)
-    /// </param>
-    /// <param name="basis">
-    /// Qualifies the basis of the result (i.e., mass /mole). Default is mole. Use 
-    /// NULL for default or as place holder for property for which basis does not 
-    /// apply (see also Specific properties.
-    /// </param>
+    /// <summary>获取一些纯组分的常数值。</summary>
+    /// <remarks>这个方法负责从物流对象的计算中检索结果。有关参数的更详细解释，请参见注释。</remarks>
+    /// <returns>结果向量，包含按定义的限定符排列的 SI 单位的属性值。该数组是一维的，包含属性，
+    /// 按照每个化合物的 props 数组的顺序，按照 compIds 数组的顺序。</returns>
+    /// <param name="property">从物流对象请求其结果的属性。</param>
+    /// <param name="phase">结果的限定相态。</param>
+    /// <param name="compIds">结果的合格组件。使用空值指定材质对象中的所有组件。
+    /// 对于混合性质，如液体焓，这个限定符是不需要的。使用 emptyObject 作为占位符。</param>
+    /// <param name="calcType">结果的限定计算类型。（有效计算类型：纯和混合）。</param>
+    /// <param name="basis">限定结果的基础（即质量/摩尔）。默认值是摩尔。
+    /// 使用 NULL 作为默认值，或者作为不适用基的属性的占位符（参见 Specific properties）。</param>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    double[] ICapeThermoMaterialObject.GetProp(String property,
-        String phase,
-        String[] compIds,
-        String calcType,
-        String basis)
+    /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为 UNDEFINED。</exception>
+    double[] ICapeThermoMaterialObject.GetProp(string property,
+        string phase, string[] compIds, string calcType, string basis)
     {
         try
         {
             return (double[])_pMaterialObject.GetProp(property, phase, compIds, calcType, basis);
         }
-        catch (Exception p_Ex)
+        catch (Exception pEx)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, pEx);
         }
     }
 
-
-    ///// <summary>
-    ///// Get some pure component constant(s)
-    ///// </summary>
-    ///// <remarks>
-    ///// This method is responsible for retrieving the results from calculations from 
-    ///// the MaterialObject. See Notesfor a more detailed explanation of the arguments.
-    ///// </remarks>
-    ///// <returns>
-    ///// Results vector containing property values in SI units arranged by the defined 
-    ///// qualifiers. The array is one dimensional containing the properties, in order 
-    ///// of the "props" array for each of the compounds, in order of the compIds array. 
-    ///// </returns>
-    ///// <param name="property">
-    ///// The Property for which results are requested from the MaterialObject.
-    ///// </param>
-    ///// <param name="phase">
-    ///// The qualified phase for the results.
-    ///// </param>
-    ///// <param name="compIds">
-    ///// The qualified components for the results. Use a null value to specify all 
-    ///// components in the Material Object. For mixture property such as liquid 
-    ///// enthalpy, this qualifier is not required. Use emptyObject as place holder.
-    ///// </param>
-    ///// <param name="calcType">
-    ///// The qualified type of calculation for the results. (valid Calculation Types: 
-    ///// Pure and Mixture)
-    ///// </param>
-    ///// <param name="basis">
-    ///// Qualifies the basis of the result (i.e., mass /mole). Default is mole. Use 
-    ///// NULL for default or as place holder for property for which basis does not 
-    ///// apply (see also Specific properties.
-    ///// </param>
-    ///// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
-    ///// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    //object ICapeThermoMaterialObject.GetProp(System.String property,
-    //    System.String phase,
-    //    object compIds,
-    //    System.String calcType,
-    //    System.String basis)
-    //{
-    //    try
-    //    {
-    //        return p_MaterialObject.GetProp(property, phase, compIds, calcType, basis);
-    //    }
-    //    catch (System.Exception p_Ex)
-    //    {
-    //        throw CapeOpen.COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
-    //    }
-    //}
-
-    /// <summary>Get some pure component constant(s)</summary>
-    /// <remarks>This method is responsible for setting the values for properties of the 
-    /// Material Object. See Notes for a more detailed explanation of the arguments.</remarks>
-    /// <param name="property">
-    /// The Property for which results are requested from the MaterialObject.
-    /// </param>
-    /// <param name="phase">
-    /// The qualified phase for the results.
-    /// </param>
-    /// <param name="compIds">
-    /// The qualified components for the results. emptyObject to specify all 
-    /// components in the Material Object. For mixture property such as liquid 
-    /// enthalpy, this qualifier is not required. Use emptyObject as place holder.
-    /// </param>
-    /// <param name="calcType">
-    /// The qualified type of calculation for the results. (valid Calculation Types: 
-    /// Pure and Mixture)
-    /// </param>
-    /// <param name="basis">
-    /// Qualifies the basis of the result (i.e., mass /mole). Default is mole. Use 
-    /// NULL for default or as place holder for property for which basis does not 
-    /// apply (see also Specific properties.
-    /// </param>
-    /// <param name="values">
-    /// Values to set for the property.
-    /// </param>
+    /// <summary>获取一些纯组分的常数值。</summary>
+    /// <remarks>此方法负责设置材质对象的属性值。有关参数的更详细解释，请参见注释。</remarks>
+    /// <param name="property">从物流对象请求其结果的属性。</param>
+    /// <param name="phase">结果的限定相态。</param>
+    /// <param name="compIds">结果的合格组件。指定材质对象中的所有组件。对于混合性质，
+    /// 如液体焓，这个限定符是不需要的。使用 emptyObject 作为占位符。</param>
+    /// <param name="calcType">结果的限定计算类型。（有效计算类型：纯和混合）。</param>
+    /// <param name="basis">限定结果的基础（即质量/摩尔）。默认值是摩尔。使用 NULL 作为默认值，
+    /// 或者作为不适用基的属性的占位符（参见 Specific properties）。</param>
+    /// <param name="values">要为属性设置的值。</param>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    void ICapeThermoMaterialObject.SetProp(String property,
-        String phase,
-        String[] compIds,
-        String calcType,
-        String basis,
-        double[] values)
+    /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为 UNDEFINED。</exception>
+    void ICapeThermoMaterialObject.SetProp(string property,
+        string phase, string[] compIds, string calcType, string basis, double[] values)
     {
         try
         {
             _pMaterialObject.SetProp(property, phase, compIds, calcType, basis, values);
         }
-        catch (Exception p_Ex)
+        catch (Exception pEx)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, pEx);
         }
     }
 
-    ///// <summary>
-    ///// Get some pure component constant(s)
-    ///// </summary>
-    ///// <remarks>
-    ///// This method is responsible for setting the values for properties of the 
-    ///// Material Object. See Notes for a more detailed explanation of the arguments.
-    ///// </remarks>
-    ///// <param name="property">
-    ///// The Property for which results are requested from the MaterialObject.
-    ///// </param>
-    ///// <param name="phase">
-    ///// The qualified phase for the results.
-    ///// </param>
-    ///// <param name="compIds">
-    ///// The qualified components for the results. emptyObject to specify all 
-    ///// components in the Material Object. For mixture property such as liquid 
-    ///// enthalpy, this qualifier is not required. Use emptyObject as place holder.
-    ///// </param>
-    ///// <param name="calcType">
-    ///// The qualified type of calculation for the results. (valid Calculation Types: 
-    ///// Pure and Mixture)
-    ///// </param>
-    ///// <param name="basis">
-    ///// Qualifies the basis of the result (i.e., mass /mole). Default is mole. Use 
-    ///// NULL for default or as place holder for property for which basis does not 
-    ///// apply (see also Specific properties.
-    ///// </param>
-    ///// <param name="values">
-    ///// Values to set for the property.
-    ///// </param>
-    ///// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
-    ///// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    //void ICapeThermoMaterialObjectCOM.SetProp(System.String property,
-    //    System.String phase,
-    //    object compIds,
-    //    System.String calcType,
-    //    System.String basis,
-    //    object values)
-    //{
-    //    try
-    //    {
-    //        p_MaterialObject.SetProp(property, phase, compIds, calcType, basis, values);
-    //    }
-    //    catch (System.Exception p_Ex)
-    //    {
-    //        throw CapeOpen.COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
-    //    }
-    //}
-
-    /// <summary>Calculate some equilibrium values</summary>
-    /// <remarks>This method is responsible for delegating flash calculations to the 
-    /// associated Property Package or Equilibrium Server. It must set the amounts, 
-    /// compositions, temperature and pressure for all phases present at equilibrium, 
-    /// as well as the temperature and pressure for the overall mixture, if not set 
-    /// as part of the calculation specifications. See CalcProp and CalcEquilibrium 
-    /// for more information.</remarks>
-    /// <param name="flashType">
-    /// The type of flash to be calculated.
-    /// </param>
-    /// <param name="props">
-    /// Properties to be calculated at equilibrium. emptyObject for no properties. 
-    /// If a list, then the property values should be set for each phase present at 
-    /// equilibrium. 
-    /// </param>
+    /// <summary>计算一些平衡值。</summary>
+    /// <remarks>此方法负责将闪蒸计算委托给相关的属性包或均衡服务器。如果没有作为计算规范的一部分设置，
+    /// 则必须设置平衡状态下所有相的数量、组成、温度和压力，以及整个混合物的温度和压力。
+    /// 参见 CalcProp 和 CalcEquilibrium 了解更多信息。</remarks>
+    /// <param name="flashType">要计算的闪蒸类型。</param>
+    /// <param name="props">要在平衡状态下计算的性质。没有属性的空对象。
+    /// 如果是一个列表，那么应该为处于平衡状态的每个相设置属性值。</param>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    /// <exception cref = "ECapeBadInvOrder">ECapeBadInvOrder</exception>
-    /// <exception cref = "ECapeSolvingError">ECapeSolvingError</exception>
-    /// <exception cref = "ECapeOutOfBounds">ECapeOutOfBounds</exception>
-    /// <exception cref = "ECapeLicenceError">ECapeLicenceError</exception>
-    void ICapeThermoMaterialObject.CalcEquilibrium(String flashType, String[] props)
+    /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为 UNDEFINED。</exception>
+    /// <exception cref="ECapeBadInvOrder">ECapeBadInvOrder</exception>
+    /// <exception cref="ECapeSolvingError">ECapeSolvingError</exception>
+    /// <exception cref="ECapeOutOfBounds">ECapeOutOfBounds</exception>
+    /// <exception cref="ECapeLicenceError">ECapeLicenceError</exception>
+    void ICapeThermoMaterialObject.CalcEquilibrium(string flashType, string[] props)
     {
         try
         {
             _pMaterialObject.CalcEquilibrium(flashType, props);
         }
-        catch (Exception p_Ex)
+        catch (Exception pEx)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, pEx);
         }
     }
 
-
-    ///// <summary>
-    ///// Calculate some equilibrium values
-    ///// </summary>
-    ///// <remarks>
-    ///// This method is responsible for delegating flash calculations to the 
-    ///// associated Property Package or Equilibrium Server. It must set the amounts, 
-    ///// compositions, temperature and pressure for all phases present at equilibrium, 
-    ///// as well as the temperature and pressure for the overall mixture, if not set 
-    ///// as part of the calculation specifications. See CalcProp and CalcEquilibrium 
-    ///// for more information.
-    ///// </remarks>
-    ///// <param name="flashType">
-    ///// The type of flash to be calculated.
-    ///// </param>
-    ///// <param name="props">
-    ///// Properties to be calculated at equilibrium. emptyObject for no properties. 
-    ///// If a list, then the property values should be set for each phase present at 
-    ///// equilibrium. 
-    ///// </param>
-    ///// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
-    ///// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    ///// <exception cref = "ECapeBadInvOrder">ECapeBadInvOrder</exception>
-    ///// <exception cref = "ECapeSolvingError">ECapeSolvingError</exception>
-    ///// <exception cref = "ECapeOutOfBounds">ECapeOutOfBounds</exception>
-    ///// <exception cref = "ECapeLicenceError">ECapeLicenceError</exception>
-    //void ICapeThermoMaterialObjectCOM.CalcEquilibrium(System.String flashType, object props)
-    //{
-    //    try
-    //    {
-    //        p_MaterialObject.CalcEquilibrium(flashType, props);
-    //    }
-    //    catch (System.Exception p_Ex)
-    //    {
-    //        throw CapeOpen.COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
-    //    }
-    //}
-
-    ///// <summary>
-    ///// Set the independent variable for the state
-    ///// </summary>
-    ///// <remarks>
-    ///// Sets the independent variable for a given Material Object.
-    ///// </remarks>
-    ///// <param name="indVars">
-    ///// Independent variables to be set (see names for state variables for list of 
-    ///// valid variables). A System.Object containing a String array marshalled from 
-    ///// a COM Object.
-    ///// </param>
-    ///// <param name="values">
-    ///// Values of independent variables.
-    ///// An array of doubles as a System.Object, which is marshalled as a Object 
-    ///// COM-based CAPE-OPEN. 
-    ///// </param>
-    //void ICapeThermoMaterialObjectCOM.SetIndependentVar(Object indVars, Object values)
-    //{
-    //    try
-    //    {
-    //        p_MaterialObject.SetIndependentVar(indVars, values);
-    //    }
-    //    catch (System.Exception p_Ex)
-    //    {
-    //        throw CapeOpen.COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
-    //    }
-    //}
-
-
-    /// <summary>Set the independent variable for the state</summary>
-    /// <remarks>Sets the independent variable for a given Material Object.</remarks>
-    /// <param name="indVars">
-    /// Independent variables to be set (see names for state variables for list of 
-    /// valid variables). A System.Object containing a String array marshalled from 
-    /// a COM Object.
-    /// </param>
-    /// <param name="values">
-    /// Values of independent variables.
-    /// An array of doubles as a System.Object, which is marshalled as a Object 
-    /// COM-based CAPE-OPEN. 
-    /// </param>
+    /// <summary>设置状态的自变量。</summary>
+    /// <remarks>为给定的物流对象设置自变量。</remarks>
+    /// <param name="indVars">要设置的独立变量（请参阅状态变量的名称以获取有效变量列表）。
+    /// 一个系统。对象，该对象包含从 COM 对象封送的字符串数组。</param>
+    /// <param name="values">自变量的值。一个双精度数组作为 System.Object 对象，该对象通过 COM 基于的 CAPE-OPEN 进行序列化。</param>
     void ICapeThermoMaterialObject.SetIndependentVar(string[] indVars, double[] values)
     {
         try
         {
             _pMaterialObject.SetIndependentVar(indVars, values);
         }
-        catch (Exception p_Ex)
+        catch (Exception pEx)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, pEx);
         }
     }
 
@@ -759,60 +343,28 @@ internal class MaterialObjectWrapper1 : CapeObjectBase, ICapeThermoMaterialObjec
     /// <remarks>Sets the independent variable for a given Material Object.</remarks>
     /// <param name="indVars">
     /// Independent variables to be set (see names for state variables for list of 
-    /// valid variables).
-    /// </param>
-    /// <returns>
-    /// Values of independent variables.
-    /// COM-based CAPE-OPEN. 
-    /// </returns>
-    double[] ICapeThermoMaterialObject.GetIndependentVar(String[] indVars)
+    /// valid variables).</param>
+    /// <returns>Values of independent variables.
+    /// COM-based CAPE-OPEN. </returns>
+    double[] ICapeThermoMaterialObject.GetIndependentVar(string[] indVars)
     {
         try
         {
             return (double[])_pMaterialObject.GetIndependentVar(indVars);
         }
-        catch (Exception p_Ex)
+        catch (Exception pEx)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, pEx);
         }
     }
 
-    ///// <summary>
-    ///// Get the independent variable for the state
-    ///// </summary>
-    ///// <remarks>
-    ///// Sets the independent variable for a given Material Object.
-    ///// </remarks>
-    ///// <param name="indVars">
-    ///// Independent variables to be set (see names for state variables for list of 
-    ///// valid variables).
-    ///// </param>
-    ///// <returns>
-    ///// Values of independent variables.
-    ///// COM-based CAPE-OPEN. 
-    ///// </returns>
-    //object ICapeThermoMaterialObjectCOM.GetIndependentVar(object indVars)
-    //{
-    //    try
-    //    {
-    //        return p_MaterialObject.GetIndependentVar(indVars);
-    //    }
-    //    catch (System.Exception p_Ex)
-    //    {
-    //        throw CapeOpen.COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
-    //    }
-    //}
     /// <summary>Check a property is valid</summary>
     /// <remarks>Checks to see if given properties can be calculated.</remarks>
-    /// <returns>
-    /// Returns Boolean List associated to list of properties to be checked.
-    /// </returns>
-    /// <param name="props">
-    /// Properties to check. 
-    /// </param>
+    /// <returns>Returns Boolean List associated to list of properties to be checked.</returns>
+    /// <param name="props">Properties to check. </param>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    bool[] ICapeThermoMaterialObject.PropCheck(String[] props)
+    /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为 UNDEFINED。</exception>
+    bool[] ICapeThermoMaterialObject.PropCheck(string[] props)
     {
         try
         {
@@ -837,7 +389,7 @@ internal class MaterialObjectWrapper1 : CapeObjectBase, ICapeThermoMaterialObjec
     ///// Properties to check. 
     ///// </param>
     ///// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
-    ///// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    ///// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为 UNDEFINED。</exception>
     //object ICapeThermoMaterialObjectCOM.PropCheck(object props)
     //{
     //    try
@@ -851,16 +403,14 @@ internal class MaterialObjectWrapper1 : CapeObjectBase, ICapeThermoMaterialObjec
     //}
     /// <summary>Check which properties are available</summary>
     /// <remarks>Gets a list properties that have been calculated.</remarks>
-    /// <returns>
-    /// Properties for which results are available.
-    /// </returns>
+    /// <returns>Properties for which results are available.</returns>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    String[] ICapeThermoMaterialObject.AvailableProps()
+    /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为 UNDEFINED。</exception>
+    string[] ICapeThermoMaterialObject.AvailableProps()
     {
         try
         {
-            return (String[])_pMaterialObject.AvailableProps();
+            return (string[])_pMaterialObject.AvailableProps();
         }
         catch (Exception p_Ex)
         {
@@ -878,7 +428,7 @@ internal class MaterialObjectWrapper1 : CapeObjectBase, ICapeThermoMaterialObjec
     ///// Properties for which results are available.
     ///// </returns>
     ///// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
-    ///// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    ///// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为 UNDEFINED。</exception>
     //object ICapeThermoMaterialObjectCOM.AvailableProps()
     //{
     //    try
@@ -913,9 +463,7 @@ internal class MaterialObjectWrapper1 : CapeObjectBase, ICapeThermoMaterialObjec
 
     /// <summary>Remove any previously calculated results for given properties</summary>
     /// <remarks>Remove all or specified property results in the Material Object.</remarks>
-    /// <param name="props">
-    /// Properties to be removed. emptyObject to remove all properties.
-    /// </param>
+    /// <param name="props">Properties to be removed. emptyObject to remove all properties.</param>
     void ICapeThermoMaterialObject.RemoveResults(string[] props)
     {
         try
@@ -933,12 +481,10 @@ internal class MaterialObjectWrapper1 : CapeObjectBase, ICapeThermoMaterialObjec
     /// <remarks>Create a Material Object from the parent Material Template of the current 
     /// Material Object. This is the same as using the CreateMaterialObject method 
     /// on the parent Material Template.</remarks> 
-    /// <returns>
-    /// The created/initialized Material Object.
-    /// </returns>
+    /// <returns>The created/initialized Material Object.</returns>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
-    /// <exception cref = "ECapeOutOfResources">ECapeOutOfResources</exception>
-    /// <exception cref = "ECapeLicenceError">ECapeLicenceError</exception>
+    /// <exception cref="ECapeOutOfResources">ECapeOutOfResources</exception>
+    /// <exception cref="ECapeLicenceError">ECapeLicenceError</exception>
     ICapeThermoMaterialObject ICapeThermoMaterialObject.CreateMaterialObject()
     {
         try
@@ -963,8 +509,8 @@ internal class MaterialObjectWrapper1 : CapeObjectBase, ICapeThermoMaterialObjec
     ///// The created/initialized Material Object.
     ///// </returns>
     ///// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
-    ///// <exception cref = "ECapeOutOfResources">ECapeOutOfResources</exception>
-    ///// <exception cref = "ECapeLicenceError">ECapeLicenceError</exception>
+    ///// <exception cref="ECapeOutOfResources">ECapeOutOfResources</exception>
+    ///// <exception cref="ECapeLicenceError">ECapeLicenceError</exception>
     //Object ICapeThermoMaterialObjectCOM.CreateMaterialObject()
     //{
     //    try
@@ -979,12 +525,10 @@ internal class MaterialObjectWrapper1 : CapeObjectBase, ICapeThermoMaterialObjec
 
     /// <summary>Duplicate this material object</summary>
     /// <remarks>Create a duplicate of the current Material Object.</remarks>
-    /// <returns>
-    /// The created/initialized Material Object.
-    /// </returns>
+    /// <returns>The created/initialized Material Object.</returns>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
-    /// <exception cref = "ECapeOutOfResources">ECapeOutOfResources</exception>
-    /// <exception cref = "ECapeLicenceError">ECapeLicenceError</exception>
+    /// <exception cref="ECapeOutOfResources">ECapeOutOfResources</exception>
+    /// <exception cref="ECapeLicenceError">ECapeLicenceError</exception>
     [DispId(15)]
     [Description("method Duplicate")]
     [return: MarshalAs(UnmanagedType.IDispatch)]
@@ -1011,8 +555,8 @@ internal class MaterialObjectWrapper1 : CapeObjectBase, ICapeThermoMaterialObjec
     ///// The created/initialized Material Object.
     ///// </returns>
     ///// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
-    ///// <exception cref = "ECapeOutOfResources">ECapeOutOfResources</exception>
-    ///// <exception cref = "ECapeLicenceError">ECapeLicenceError</exception>
+    ///// <exception cref="ECapeOutOfResources">ECapeOutOfResources</exception>
+    ///// <exception cref="ECapeLicenceError">ECapeLicenceError</exception>
     //[System.Runtime.InteropServices.DispIdAttribute(15)]
     //[System.ComponentModel.DescriptionAttribute("method Duplicate")]
     //[return: System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.IDispatch)]
@@ -1042,7 +586,7 @@ internal class MaterialObjectWrapper1 : CapeObjectBase, ICapeThermoMaterialObjec
     ///// properties. 
     ///// </param>
     ///// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
-    ///// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    ///// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为 UNDEFINED。</exception>
     //object ICapeThermoMaterialObjectCOM.ValidityCheck(object props)
     //{
     //    try
@@ -1057,16 +601,12 @@ internal class MaterialObjectWrapper1 : CapeObjectBase, ICapeThermoMaterialObjec
 
     /// <summary>Check the validity of the given properties</summary>
     /// <remarks>Checks the validity of the calculation.</remarks>
-    /// <returns>
-    /// Returns the reliability scale of the calculation.
-    /// </returns>
-    /// <param name="props">
-    /// The properties for which reliability is checked. Null value to remove all 
-    /// properties. 
-    /// </param>
+    /// <returns>Returns the reliability scale of the calculation.</returns>
+    /// <param name="props">The properties for which reliability is checked. Null value to remove all 
+    /// properties. </param>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    ICapeThermoReliability[] ICapeThermoMaterialObject.ValidityCheck(String[] props)
+    /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为 UNDEFINED。</exception>
+    ICapeThermoReliability[] ICapeThermoMaterialObject.ValidityCheck(string[] props)
     {
         try
         {
@@ -1087,14 +627,12 @@ internal class MaterialObjectWrapper1 : CapeObjectBase, ICapeThermoMaterialObjec
     /// method will return the identifiers of all supported derivative and 
     /// non-derivative properties. For instance, a Property Package could return 
     /// the following list: enthalpy, enthalpy.Dtemperature, entropy, entropy.Dpressure.</remarks>
-    /// <returns>
-    /// String list of all supported properties of the property package.
-    /// </returns>
+    /// <returns>String list of all supported properties of the property package.</returns>
     string[] ICapeThermoMaterialObject.GetPropList()
     {
         try
         {
-            return (String[])_pMaterialObject.GetPropList();
+            return (string[])_pMaterialObject.GetPropList();
         }
         catch (Exception p_Ex)
         {
@@ -1132,9 +670,7 @@ internal class MaterialObjectWrapper1 : CapeObjectBase, ICapeThermoMaterialObjec
 
     /// <summary>Get the number of components in this material object</summary>
     /// <remarks>Returns number of components in Material Object.</remarks>
-    /// <returns>
-    /// Number of components in the Material Object.
-    /// </returns>
+    /// <returns>Number of components in the Material Object.</returns>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
     int ICapeThermoMaterialObject.GetNumComponents()
     {
