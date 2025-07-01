@@ -339,13 +339,10 @@ internal class MaterialObjectWrapper1 : CapeObjectBase, ICapeThermoMaterialObjec
         }
     }
 
-    /// <summary>Get the independent variable for the state</summary>
-    /// <remarks>Sets the independent variable for a given Material Object.</remarks>
-    /// <param name="indVars">
-    /// Independent variables to be set (see names for state variables for list of 
-    /// valid variables).</param>
-    /// <returns>Values of independent variables.
-    /// COM-based CAPE-OPEN. </returns>
+    /// <summary>获取状态的自变量。</summary>
+    /// <remarks>设置给定物流对象的自变量。</remarks>
+    /// <param name="indVars">需设置的自变量（请参阅状态变量名称以获取有效变量列表）。</param>
+    /// <returns>自变量的值。基于 COM 的 CAPE-OPEN。</returns>
     double[] ICapeThermoMaterialObject.GetIndependentVar(string[] indVars)
     {
         try
@@ -358,10 +355,10 @@ internal class MaterialObjectWrapper1 : CapeObjectBase, ICapeThermoMaterialObjec
         }
     }
 
-    /// <summary>Check a property is valid</summary>
-    /// <remarks>Checks to see if given properties can be calculated.</remarks>
-    /// <returns>Returns Boolean List associated to list of properties to be checked.</returns>
-    /// <param name="props">Properties to check. </param>
+    /// <summary>验证属性是否有效。</summary>
+    /// <remarks>检查给定属性是否可以计算。</remarks>
+    /// <returns>返回与待检查属性列表关联的布尔值列表。</returns>
+    /// <param name="props">需要检查的属性。</param>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为 UNDEFINED。</exception>
     bool[] ICapeThermoMaterialObject.PropCheck(string[] props)
@@ -370,40 +367,15 @@ internal class MaterialObjectWrapper1 : CapeObjectBase, ICapeThermoMaterialObjec
         {
             return (bool[])_pMaterialObject.PropCheck(props);
         }
-        catch (Exception p_Ex)
+        catch (Exception pEx)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, pEx);
         }
     }
-
-    ///// <summary>
-    ///// Check a property is valid
-    ///// </summary>
-    ///// <remarks>
-    ///// Checks to see if given properties can be calculated.
-    ///// </remarks>
-    ///// <returns>
-    ///// Returns Boolean List associated to list of properties to be checked.
-    ///// </returns>
-    ///// <param name="props">
-    ///// Properties to check. 
-    ///// </param>
-    ///// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
-    ///// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为 UNDEFINED。</exception>
-    //object ICapeThermoMaterialObjectCOM.PropCheck(object props)
-    //{
-    //    try
-    //    {
-    //        return p_MaterialObject.PropCheck(props);
-    //    }
-    //    catch (System.Exception p_Ex)
-    //    {
-    //        throw CapeOpen.COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
-    //    }
-    //}
-    /// <summary>Check which properties are available</summary>
-    /// <remarks>Gets a list properties that have been calculated.</remarks>
-    /// <returns>Properties for which results are available.</returns>
+    
+    /// <summary>查看哪些属性可用。</summary>
+    /// <remarks>获取已计算的属性列表。</remarks>
+    /// <returns>已获得结果的属性。</returns>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为 UNDEFINED。</exception>
     string[] ICapeThermoMaterialObject.AvailableProps()
@@ -412,54 +384,11 @@ internal class MaterialObjectWrapper1 : CapeObjectBase, ICapeThermoMaterialObjec
         {
             return (string[])_pMaterialObject.AvailableProps();
         }
-        catch (Exception p_Ex)
+        catch (Exception pEx)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, pEx);
         }
     }
-
-    ///// <summary>
-    ///// Check which properties are available
-    ///// </summary>
-    ///// <remarks>
-    ///// Gets a list properties that have been calculated.
-    ///// </remarks>
-    ///// <returns>
-    ///// Properties for which results are available.
-    ///// </returns>
-    ///// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
-    ///// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为 UNDEFINED。</exception>
-    //object ICapeThermoMaterialObjectCOM.AvailableProps()
-    //{
-    //    try
-    //    {
-    //        return p_MaterialObject.AvailableProps();
-    //    }
-    //    catch (System.Exception p_Ex)
-    //    {
-    //        throw CapeOpen.COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
-    //    }
-    //}
-    ///// <summary>
-    ///// Remove any previously calculated results for given properties
-    ///// </summary>
-    ///// <remarks>
-    ///// Remove all or specified property results in the Material Object.
-    ///// </remarks>
-    ///// <param name="props">
-    ///// Properties to be removed. emptyObject to remove all properties.
-    ///// </param>
-    //void ICapeThermoMaterialObjectCOM.RemoveResults(Object props)
-    //{
-    //    try
-    //    {
-    //        p_MaterialObject.RemoveResults(props);
-    //    }
-    //    catch (System.Exception p_Ex)
-    //    {
-    //        throw CapeOpen.COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
-    //    }
-    //}
 
     /// <summary>Remove any previously calculated results for given properties</summary>
     /// <remarks>Remove all or specified property results in the Material Object.</remarks>
@@ -470,17 +399,14 @@ internal class MaterialObjectWrapper1 : CapeObjectBase, ICapeThermoMaterialObjec
         {
             _pMaterialObject.RemoveResults(props);
         }
-        catch (Exception p_Ex)
+        catch (Exception pEx)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, pEx);
         }
     }
 
-
-    /// <summary>Create another empty material object</summary>
-    /// <remarks>Create a Material Object from the parent Material Template of the current 
-    /// Material Object. This is the same as using the CreateMaterialObject method 
-    /// on the parent Material Template.</remarks> 
+    /// <summary>创建另一个空的物流对象。</summary>
+    /// <remarks>从当前物流对象的父物流模板创建一个物流对象。这与在父物流模板上调用 CreateMaterialObject 方法的效果相同。</remarks> 
     /// <returns>The created/initialized Material Object.</returns>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
     /// <exception cref="ECapeOutOfResources">ECapeOutOfResources</exception>
@@ -491,46 +417,20 @@ internal class MaterialObjectWrapper1 : CapeObjectBase, ICapeThermoMaterialObjec
         {
             return (ICapeThermoMaterialObject)_pMaterialObject.CreateMaterialObject();
         }
-        catch (Exception p_Ex)
+        catch (Exception pEx)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, pEx);
         }
     }
 
-    ///// <summary>
-    ///// Create another empty material object
-    ///// </summary>
-    ///// <remarks>
-    ///// Create a Material Object from the parent Material Template of the current 
-    ///// Material Object. This is the same as using the CreateMaterialObject method 
-    ///// on the parent Material Template.
-    ///// </remarks> 
-    ///// <returns>
-    ///// The created/initialized Material Object.
-    ///// </returns>
-    ///// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
-    ///// <exception cref="ECapeOutOfResources">ECapeOutOfResources</exception>
-    ///// <exception cref="ECapeLicenceError">ECapeLicenceError</exception>
-    //Object ICapeThermoMaterialObjectCOM.CreateMaterialObject()
-    //{
-    //    try
-    //    {
-    //        return (ICapeThermoMaterialObject)p_MaterialObject.CreateMaterialObject();
-    //    }
-    //    catch (System.Exception p_Ex)
-    //    {
-    //        throw CapeOpen.COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
-    //    }
-    //}
-
-    /// <summary>Duplicate this material object</summary>
-    /// <remarks>Create a duplicate of the current Material Object.</remarks>
-    /// <returns>The created/initialized Material Object.</returns>
+    /// <summary>复制此物流对象。</summary>
+    /// <remarks>创建当前物流对象的副本。</remarks>
+    /// <returns>已创建/初始化的物流对象。</returns>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
     /// <exception cref="ECapeOutOfResources">ECapeOutOfResources</exception>
     /// <exception cref="ECapeLicenceError">ECapeLicenceError</exception>
     [DispId(15)]
-    [Description("method Duplicate")]
+    [Description("Method Duplicate")]
     [return: MarshalAs(UnmanagedType.IDispatch)]
     ICapeThermoMaterialObject ICapeThermoMaterialObject.Duplicate()
     {
@@ -538,72 +438,16 @@ internal class MaterialObjectWrapper1 : CapeObjectBase, ICapeThermoMaterialObjec
         {
             return new MaterialObjectWrapper(_pMaterialObject.Duplicate());
         }
-        catch (Exception p_Ex)
+        catch (Exception pEx)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, pEx);
         }
     }
 
-
-    ///// <summary>
-    ///// Duplicate this material object
-    ///// </summary>
-    ///// <remarks>
-    ///// Create a duplicate of the current Material Object.
-    ///// </remarks>
-    ///// <returns>
-    ///// The created/initialized Material Object.
-    ///// </returns>
-    ///// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
-    ///// <exception cref="ECapeOutOfResources">ECapeOutOfResources</exception>
-    ///// <exception cref="ECapeLicenceError">ECapeLicenceError</exception>
-    //[System.Runtime.InteropServices.DispIdAttribute(15)]
-    //[System.ComponentModel.DescriptionAttribute("method Duplicate")]
-    //[return: System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.IDispatch)]
-    //object ICapeThermoMaterialObjectCOM.Duplicate()
-    //{
-    //    try
-    //    {
-    //        return new MaterialObjectWrapper(p_MaterialObject.Duplicate());
-    //    }
-    //    catch (System.Exception p_Ex)
-    //    {
-    //        throw CapeOpen.COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
-    //    }
-    //}
-
-    ///// <summary>
-    ///// Check the validity of the given properties
-    ///// </summary>
-    ///// <remarks>
-    ///// Checks the validity of the calculation.
-    ///// </remarks>
-    ///// <returns>
-    ///// Returns the reliability scale of the calculation.
-    ///// </returns>
-    ///// <param name="props">
-    ///// The properties for which reliability is checked. Null value to remove all 
-    ///// properties. 
-    ///// </param>
-    ///// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
-    ///// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为 UNDEFINED。</exception>
-    //object ICapeThermoMaterialObjectCOM.ValidityCheck(object props)
-    //{
-    //    try
-    //    {
-    //        return (bool[])p_MaterialObject.ValidityCheck(props);
-    //    }
-    //    catch (System.Exception p_Ex)
-    //    {
-    //        throw CapeOpen.COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
-    //    }
-    //}
-
-    /// <summary>Check the validity of the given properties</summary>
-    /// <remarks>Checks the validity of the calculation.</remarks>
-    /// <returns>Returns the reliability scale of the calculation.</returns>
-    /// <param name="props">The properties for which reliability is checked. Null value to remove all 
-    /// properties. </param>
+    /// <summary>验证给定属性的有效性。</summary>
+    /// <remarks>验证计算的有效性。</remarks>
+    /// <returns>返回计算的可靠性量表。</returns>
+    /// <param name="props">需要检查可靠性的属性。设置为空值以移除所有属性。</param>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或属性参数为 UNDEFINED。</exception>
     ICapeThermoReliability[] ICapeThermoMaterialObject.ValidityCheck(string[] props)
@@ -612,65 +456,34 @@ internal class MaterialObjectWrapper1 : CapeObjectBase, ICapeThermoMaterialObjec
         {
             return (ICapeThermoReliability[])_pMaterialObject.ValidityCheck(props);
         }
-        catch (Exception p_Ex)
+        catch (Exception pEx)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, pEx);
         }
     }
 
-    /// <summary>Get the list of properties</summary>
-    /// <remarks>Returns list of properties supported by the property package and corresponding 
-    /// CO Calculation Routines. The properties TEMPERATURE, PRESSURE, FRACTION, FLOW, 
-    /// PHASEFRACTION, TOTALFLOW cannot be returned by GetPropList, since all 
-    /// components must support them. Although the property identifier of derivative 
-    /// properties is formed from the identifier of another property, the GetPropList 
-    /// method will return the identifiers of all supported derivative and 
-    /// non-derivative properties. For instance, a Property Package could return 
-    /// the following list: enthalpy, enthalpy.Dtemperature, entropy, entropy.Dpressure.</remarks>
-    /// <returns>String list of all supported properties of the property package.</returns>
+    /// <summary>获取属性列表。</summary>
+    /// <remarks>该函数返回由该属性包支持的属性列表以及相应的 CO 计算函数。
+    /// 属性 TEMPERATURE、PRESSURE、FRACTION、FLOW、PHASE-FRACTION、TOTAL-FLOW 无法通过 GetPropList 函数获取，
+    /// 因为所有组件都必须支持这些属性。尽管衍生属性的属性标识符是由另一个属性的标识符生成的，但 GetPropList 方法将
+    /// 返回所有支持的衍生和非衍生属性的标识符。例如，一个属性包可能返回以下列表：
+    /// enthalpy、enthalpy.Dtemperature、entropy、entropy.Dpressure。</remarks>
+    /// <returns>属性包中所有支持属性的字符串列表。</returns>
     string[] ICapeThermoMaterialObject.GetPropList()
     {
         try
         {
             return (string[])_pMaterialObject.GetPropList();
         }
-        catch (Exception p_Ex)
+        catch (Exception pEx)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, pEx);
         }
     }
 
-    ///// <summary>
-    ///// Get the list of properties
-    ///// </summary>
-    ///// <remarks>
-    ///// Returns list of properties supported by the property package and corresponding 
-    ///// CO Calculation Routines. The properties TEMPERATURE, PRESSURE, FRACTION, FLOW, 
-    ///// PHASEFRACTION, TOTALFLOW cannot be returned by GetPropList, since all 
-    ///// components must support them. Although the property identifier of derivative 
-    ///// properties is formed from the identifier of another property, the GetPropList 
-    ///// method will return the identifiers of all supported derivative and 
-    ///// non-derivative properties. For instance, a Property Package could return 
-    ///// the following list: enthalpy, enthalpy.Dtemperature, entropy, entropy.Dpressure.
-    ///// </remarks>
-    ///// <returns>
-    ///// String list of all supported properties of the property package.
-    ///// </returns>
-    //object ICapeThermoMaterialObjectCOM.GetPropList()
-    //{
-    //    try
-    //    {
-    //        return p_MaterialObject.GetPropList();
-    //    }
-    //    catch (System.Exception p_Ex)
-    //    {
-    //        throw CapeOpen.COMExceptionHandler.ExceptionForHRESULT(p_MaterialObject, p_Ex);
-    //    }
-    //}
-
-    /// <summary>Get the number of components in this material object</summary>
-    /// <remarks>Returns number of components in Material Object.</remarks>
-    /// <returns>Number of components in the Material Object.</returns>
+    /// <summary>获取此物流对象中的组件数量。</summary>
+    /// <remarks>返回物流对象中的组件数量。</remarks>
+    /// <returns>物流对象中的组件数量。</returns>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
     int ICapeThermoMaterialObject.GetNumComponents()
     {
@@ -678,9 +491,9 @@ internal class MaterialObjectWrapper1 : CapeObjectBase, ICapeThermoMaterialObjec
         {
             return _pMaterialObject.GetNumComponents();
         }
-        catch (Exception p_Ex)
+        catch (Exception pEx)
         {
-            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, p_Ex);
+            throw COMExceptionHandler.ExceptionForHRESULT(_pMaterialObject, pEx);
         }
     }
 }
