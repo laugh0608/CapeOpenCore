@@ -165,47 +165,37 @@ internal class MaterialObjectWrapper11 : CapeObjectBase, ICapeThermoMaterial, IC
         set => ((ICapeIdentification)_pIMatObj).ComponentDescription = value;
     }
 
-    /// <summary>Provides information regarding whether the object supports Thermodynamics version 1.0.</summary>
-    /// <remarks>The <see cref="MaterialObjectWrapper10"/> class checks to determine whether the wrapped material object
-    /// supports CAPE-OPEN version 1.0 thrmoedynamics. This proprety indicates the result of that check.</remarks>
-    /// <value>Indicates whetehr the wrapped material object supports CAPE-OPEN Thermodynamics varsion 1.0 interfaces.</value>
+    /// <summary>提供有关对象是否支持热力学版本 1.0 的信息。</summary>
+    /// <remarks><see cref="MaterialObjectWrapper10"/> 类用于检查所封装的物流对象是否支持
+    /// CAPE-OPEN 1.0 版本的热力学。此属性表示该检查的结果。</remarks>
+    /// <value>指示封装的物流对象是否支持 CAPE-OPEN 热力学版本 1.0 接口。</value>
     public bool SupportsThermo10 => false;
 
-    /// <summary>Provides information regarding whether the object supports Thermodynamics version 1.1.</summary>
-    /// <remarks>The <see cref="MaterialObjectWrapper11"/> class checks to determine whether the wrapped material object
-    /// supports CAPE-OPEN version 1.1 thrmoedynamics. This proprety indicates the result of that check.</remarks>
-    /// <value>Indicates whetehr the wrapped material object supports CAPE-OPEN Thermodynamics varsion 1.1 interfaces.</value>
+    /// <summary>提供有关对象是否支持热力学版本 1.1 的信息。</summary>
+    /// <remarks><see cref="MaterialObjectWrapper10"/> 类用于检查所包裹的物流对象是否支持
+    /// CAPE-OPEN 1.1 版本的热力学。此属性表示该检查的结果。</remarks>
+    /// <value>指示包裹的物流对象是否支持 CAPE-OPEN 热力学版本 1.1 接口。</value>
     public bool SupportsThermo11 => true;
 
-    /// <summary> Gets the wrapped Thermo Version 1.0 Material Object.</summary>
-    /// <remarks><para>Provides direct access to the Thermo Version 1.0 material object.</para>
-    /// <para>The material object exposes the COm version of the ICapeThermoMaterialObject interface.</para></remarks>
-    /// <value>The wrapped Thermo Version 1.0 Material Object.</value>
+    /// <summary>获取封装的热力学版本 1.0 物流对象。</summary>
+    /// <remarks><para>提供对热力学版本 1.0 物流对象的直接访问。</para>
+    /// <para>该物流对象实现了 ICapeThermoMaterialObject 接口的 COM 版本。</para></remarks>
+    /// <value>封装的热力学版本 1.0 物流对象。</value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
-    [Description(
-        "Unit Operation Parameter Collection. Click on the (...) button to edit collection.")]
+    [Description("Unit Operation Parameter Collection. Click on the (...) button to edit collection.")]
     [Category("CapeIdentification")]
-    public object MaterialObject10
-    {
-        get { return null; }
-    }
+    public object MaterialObject10 => null;
 
-
-    /// <summary> Gets the wrapped Thermo Version 1.1 Material Object.</summary>
-    /// <remarks><para>Provides direct access to the Thermo Version 1.1 material object.</para>
-    /// <para>The material object exposes the COM version of the Thermo 1.1 interfaces.</para></remarks>
-    /// <value>The wrapped Thermo Version 1.1 Material Object.</value>
+    /// <summary>获取封装的热力学版本 1.1 物流对象。</summary>
+    /// <remarks><para>提供对热力学版本 1.1 物流对象的直接访问。</para>
+    /// <para>该物流对象暴露了热力学 1.1 接口的 COM 版本。</para></remarks>
+    /// <value>封装了热力学 1.1 的物流对象</value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
-    [Description(
-        "Unit Operation Parameter Collection. Click on the (...) button to edit collection.")]
+    [Description("Unit Operation Parameter Collection. Click on the (...) button to edit collection.")]
     [Category("CapeIdentification")]
-    public object MaterialObject11
-    {
-        get { return _pIMatObj; }
-    }
+    public object MaterialObject11 => _pIMatObj;
 
     // ICapeThermoMaterial implementation
-
     /// <summary>Remove all stored Physical Property values.</summary>
     /// <remarks><para>
     /// ClearAllProps removes all stored Physical Properties that have been set 
