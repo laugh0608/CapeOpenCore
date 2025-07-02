@@ -19,7 +19,7 @@ namespace CapeOpenCore.Class;
 [ComVisible(false)]
 [Guid("5A65B4B2-2FDD-4208-813D-7CC527FB91BD")]
 [Description("ICapeThermoMaterialObject Interface")]
-internal class MaterialObjectWrapper1 : CapeObjectBase, ICapeThermoMaterialObject
+internal class MaterialObjectWrapper10 : CapeObjectBase, ICapeThermoMaterialObject
 {
     [NonSerialized] private ICapeThermoMaterialObjectCOM _pMaterialObject;
 
@@ -28,7 +28,7 @@ internal class MaterialObjectWrapper1 : CapeObjectBase, ICapeThermoMaterialObjec
 
     /// <summary>创建 MaterialObjectWrapper 类的实例</summary>
     /// <param name="materialObject">待封装的物流对象。</param>
-    public MaterialObjectWrapper1(object materialObject)
+    public MaterialObjectWrapper10(object materialObject)
     {
         _disposed = false;
 
@@ -41,7 +41,7 @@ internal class MaterialObjectWrapper1 : CapeObjectBase, ICapeThermoMaterialObjec
     // 使用 C# 析构函数语法来实现最终化代码。
     /// <summary><see cref="MaterialObjectWrapper"/> 类的终结器。</summary>
     /// <remarks>这将最终确定当前类的实例。</remarks>
-    ~MaterialObjectWrapper1()
+    ~MaterialObjectWrapper10()
     {
         // 只需调用 Dispose(false)。
         Dispose(false);
@@ -98,7 +98,7 @@ internal class MaterialObjectWrapper1 : CapeObjectBase, ICapeThermoMaterialObjec
     }
 
     /// <summary>获取并设置组件的描述。</summary>
-    /// <remarks><para>系统中的某个用例可能包含多个同一类别的CAPE-OPEN组件。用户应能够为每个实例分配不同的
+    /// <remarks><para>系统中的某个用例可能包含多个同一类别的 CAPE-OPEN 组件。用户应能够为每个实例分配不同的
     /// 名称和描述，以便以无歧义且用户友好的方式引用它们。由于能够设置这些标识的软件组件与需要此信息的软件组件并
     /// 不总是由同一供应商开发，因此需要制定一个CAPE-OPEN标准来设置和获取此类信息。</para>
     /// <para>因此，组件通常不会自行设置其名称和描述：组件的使用者会进行设置。</para></remarks>
@@ -113,13 +113,13 @@ internal class MaterialObjectWrapper1 : CapeObjectBase, ICapeThermoMaterialObjec
     }
 
     /// <summary>提供有关对象是否支持热力学版本 1.0 的信息。</summary>
-    /// <remarks><see cref="MaterialObjectWrapper1"/> 类用于检查所封装的物流对象是否支持
+    /// <remarks><see cref="MaterialObjectWrapper10"/> 类用于检查所封装的物流对象是否支持
     /// CAPE-OPEN 1.0 版本的热力学。此属性表示该检查的结果。</remarks>
-    /// <value>指示封装的物流对象是否支持CAPE-OPEN热力学版本1.0接口。</value>
+    /// <value>指示封装的物流对象是否支持 CAPE-OPEN 热力学版本 1.0接口。</value>
     public bool SupportsThermo10 => true;
 
     /// <summary>提供有关对象是否支持热力学版本 1.1 的信息。</summary>
-    /// <remarks><see cref="MaterialObjectWrapper1"/> 类用于检查所包裹的物流对象是否支持
+    /// <remarks><see cref="MaterialObjectWrapper10"/> 类用于检查所包裹的物流对象是否支持
     /// CAPE-OPEN 1.1 版本的热力学。此属性表示该检查的结果。</remarks>
     /// <value>指示包裹的物流对象是否支持 CAPE-OPEN 热力学版本 1.1 接口。</value>
     public bool SupportsThermo11 => false;

@@ -80,14 +80,13 @@ internal class MaterialObjectWrapper11 : CapeObjectBase, ICapeThermoMaterial, IC
     /// <param name="disposing">true 表示释放受管和不受管资源；false 表示仅释放不受管资源。</param>
     protected override void Dispose(bool disposing)
     {
-        // If you need thread safety, use a lock around these 
-        // operations, as well as in your methods that use the resource.
+        // 如果您需要线程安全，请在这些操作周围使用锁，以及在使用该资源的方法中也使用锁。
         if (_disposed) return;
         if (disposing)
         {
         }
 
-        // Indicate that the instance has been disposed.                
+        // 指示该实例已被释放。
         if (_pIMatObj != null)
         {
             if (_pIMatObj.GetType().IsCOMObject)
@@ -136,72 +135,53 @@ internal class MaterialObjectWrapper11 : CapeObjectBase, ICapeThermoMaterial, IC
         _disposed = true;
     }
 
-    /// <summary>Gets and sets the name of the component.</summary>
-    /// <remarks><para>A particular Use Case in a system may contain several CAPE-OPEN components 
-    /// of the same class. The user should be able to assign different names and 
-    /// descriptions to each instance in order to refer to them unambiguously and in a 
-    /// user-friendly way. Since not always the software components that are able to 
-    /// set these identifications and the software components that require this information 
-    /// have been developed by the same vendor, a CAPE-OPEN standard for setting and 
-    /// getting this information is required.</para>
-    /// <para>So, the component will not usually set its own name and description: the 
-    /// user of the component will do it.</para></remarks>
-    /// <value>The unique name of the component.</value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    [Description(
-        "Unit Operation Parameter Collection. Click on the (...) button to edit collection.")]
+    /// <summary>获取并设置组件的名称。</summary>
+    /// <remarks><para>系统中的某个用例可能包含多个同一类别的 CAPE-OPEN 组件。用户应能够为每个实例分配
+    /// 不同的名称和描述，以便以无歧义且用户友好的方式引用它们。由于能够设置这些标识的软件组件与需要此信息的
+    /// 软件组件并不总是由同一供应商开发，因此需要制定一个 CAPE-OPEN 标准来设置和获取此类信息。</para>
+    /// <para>因此，组件通常不会自行设置其名称和描述：组件的使用者会进行设置。</para></remarks>
+    /// <value>组件的唯一名称。</value>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
+    [Description("Unit Operation Parameter Collection. Click on the (...) button to edit collection.")]
     [Category("CapeIdentification")]
-    override public String ComponentName
+    public override string ComponentName
     {
-        get { return ((ICapeIdentification)_pIMatObj).ComponentName; }
-
-        set { ((ICapeIdentification)_pIMatObj).ComponentName = value; }
+        get => ((ICapeIdentification)_pIMatObj).ComponentName;
+        set => ((ICapeIdentification)_pIMatObj).ComponentName = value;
     }
 
-    /// <summary> Gets and sets the description of the component.</summary>
-    /// <remarks><para>A particular Use Case in a system may contain several CAPE-OPEN components 
-    /// of the same class. The user should be able to assign different names and 
-    /// descriptions to each instance in order to refer to them unambiguously and in a 
-    /// user-friendly way. Since not always the software components that are able to 
-    /// set these identifications and the software components that require this information 
-    /// have been developed by the same vendor, a CAPE-OPEN standard for setting and 
-    /// getting this information is required.</para>
-    /// <para>So, the component will not usually set its own name and description: the 
-    /// user of the component will do it.</para></remarks>
-    /// <value>The description of the component.</value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    [Description(
-        "Unit Operation Parameter Collection. Click on the (...) button to edit collection.")]
+    /// <summary>获取并设置组件的描述。</summary>
+    /// <remarks><para>系统中的某个用例可能包含多个同一类别的 CAPE-OPEN 组件。用户应能够为每个实例分配不同的
+    /// 名称和描述，以便以无歧义且用户友好的方式引用它们。由于能够设置这些标识的软件组件与需要此信息的软件组件并
+    /// 不总是由同一供应商开发，因此需要制定一个CAPE-OPEN标准来设置和获取此类信息。</para>
+    /// <para>因此，组件通常不会自行设置其名称和描述：组件的使用者会进行设置。</para></remarks>
+    /// <value>组件的描述。</value>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
+    [Description("Unit Operation Parameter Collection. Click on the (...) button to edit collection.")]
     [Category("CapeIdentification")]
-    override public String ComponentDescription
+    public override String ComponentDescription
     {
-        get { return ((ICapeIdentification)_pIMatObj).ComponentDescription; }
-        set { ((ICapeIdentification)_pIMatObj).ComponentDescription = value; }
+        get => ((ICapeIdentification)_pIMatObj).ComponentDescription;
+        set => ((ICapeIdentification)_pIMatObj).ComponentDescription = value;
     }
 
     /// <summary>Provides information regarding whether the object supports Thermodynamics version 1.0.</summary>
-    /// <remarks>The <see cref="MaterialObjectWrapper11"/> class checks to determine whether the wrapped material object
+    /// <remarks>The <see cref="MaterialObjectWrapper10"/> class checks to determine whether the wrapped material object
     /// supports CAPE-OPEN version 1.0 thrmoedynamics. This proprety indicates the result of that check.</remarks>
     /// <value>Indicates whetehr the wrapped material object supports CAPE-OPEN Thermodynamics varsion 1.0 interfaces.</value>
-    public bool SupportsThermo10
-    {
-        get { return false; }
-    }
+    public bool SupportsThermo10 => false;
 
     /// <summary>Provides information regarding whether the object supports Thermodynamics version 1.1.</summary>
     /// <remarks>The <see cref="MaterialObjectWrapper11"/> class checks to determine whether the wrapped material object
     /// supports CAPE-OPEN version 1.1 thrmoedynamics. This proprety indicates the result of that check.</remarks>
     /// <value>Indicates whetehr the wrapped material object supports CAPE-OPEN Thermodynamics varsion 1.1 interfaces.</value>
-    public bool SupportsThermo11
-    {
-        get { return true; }
-    }
+    public bool SupportsThermo11 => true;
 
     /// <summary> Gets the wrapped Thermo Version 1.0 Material Object.</summary>
     /// <remarks><para>Provides direct access to the Thermo Version 1.0 material object.</para>
     /// <para>The material object exposes the COm version of the ICapeThermoMaterialObject interface.</para></remarks>
     /// <value>The wrapped Thermo Version 1.0 Material Object.</value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
     [Description(
         "Unit Operation Parameter Collection. Click on the (...) button to edit collection.")]
     [Category("CapeIdentification")]
@@ -215,7 +195,7 @@ internal class MaterialObjectWrapper11 : CapeObjectBase, ICapeThermoMaterial, IC
     /// <remarks><para>Provides direct access to the Thermo Version 1.1 material object.</para>
     /// <para>The material object exposes the COM version of the Thermo 1.1 interfaces.</para></remarks>
     /// <value>The wrapped Thermo Version 1.1 Material Object.</value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不合适时，将引发此错误。</exception>
     [Description(
         "Unit Operation Parameter Collection. Click on the (...) button to edit collection.")]
     [Category("CapeIdentification")]
@@ -1018,7 +998,7 @@ internal class MaterialObjectWrapper11 : CapeObjectBase, ICapeThermoMaterial, IC
     /// this method can be called for reasons of compatibility with the CAPE-OPEN 
     /// standards. That is to say that the operation exists, but it is not supported
     /// by the current implementation.</exception>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s), 
+    /// <exception cref="ECapeUnknown">The error to be raised when other error(s), 
     /// specified for this operation, are not suitable.</exception>
     int ICapeThermoPhases.GetNumPhases()
     {
@@ -1053,13 +1033,13 @@ internal class MaterialObjectWrapper11 : CapeObjectBase, ICapeThermoMaterial, IC
     /// The aqueous liquid
     /// Phase 
     /// TypeOfSolid UNDEFINED UNDEFINED UNDEFINED</para></remarks>
-    /// <exception cref ="ECapeNoImpl">The operation is “not” implemented even if 
+    /// <exception cref="ECapeNoImpl">The operation is “not” implemented even if 
     /// this method can be called for reasons of compatibility with the CAPE-OPEN 
     /// standards. That is to say that the operation exists but it is not supported 
     /// by the current implementation..</exception>
-    /// <exception cref ="ECapeInvalidArgument"> – phaseLabel is not recognised, or 
+    /// <exception cref="ECapeInvalidArgument"> – phaseLabel is not recognised, or 
     /// UNDEFINED, or phaseAttribute is not recognised.</exception>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s), 
+    /// <exception cref="ECapeUnknown">The error to be raised when other error(s), 
     /// specified for this operation, are not suitable..</exception>
     String[] ICapeThermoPhases.GetPhaseInfo(String phaseLabel, String phaseAttribute)
     {
@@ -1277,9 +1257,9 @@ internal class MaterialObjectWrapper11 : CapeObjectBase, ICapeThermoMaterial, IC
     /// this method can be called for reasons of compatibility with the CAPE-OPEN 
     /// standards. That is to say that the operation exists, but it is not supported 
     /// by the current implementation.</exception>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s), 
+    /// <exception cref="ECapeUnknown">The error to be raised when other error(s), 
     /// specified for this operation, are not suitable.</exception>
-    /// <exception cref ="ECapeBadInvOrder">The error to be raised if the 
+    /// <exception cref="ECapeBadInvOrder">The error to be raised if the 
     /// Property Package required the SetMaterial method to be called before calling 
     /// the GetNumCompounds method. The error would not be raised when the 
     /// GetNumCompounds method is implemented by a Material Object.</exception>
@@ -1325,7 +1305,7 @@ internal class MaterialObjectWrapper11 : CapeObjectBase, ICapeThermoMaterial, IC
     /// standards. That is to say that the operation exists, but it is not supported 
     /// by the current implementation. This exception should be raised if no Compounds 
     /// or no Physical Properties are supported.</exception>
-    /// <exception cref ="ECapeLimitedImpl">One or more Physical Properties are not 
+    /// <exception cref="ECapeLimitedImpl">One or more Physical Properties are not 
     /// supported by the component that implements this interface. This exception 
     /// should also be raised (rather than ECapeInvalidArgument) if any element of 
     /// the props argument is not recognised since the list of Physical Properties 
@@ -1371,7 +1351,7 @@ internal class MaterialObjectWrapper11 : CapeObjectBase, ICapeThermoMaterial, IC
     /// by the current implementation.</exception>
     /// <exception cref = "ECapeUnknown">The error to be raised when other error(s), 
     /// specified for the operation, are not suitable.</exception>
-    /// <exception cref ="ECapeBadInvOrder">The error to be raised if the Property 
+    /// <exception cref="ECapeBadInvOrder">The error to be raised if the Property 
     /// Package required the SetMaterial method to be called before calling the 
     /// GetPDependentPropList method. The error would not be raised when the 
     /// GetPDependentPropList method is implemented by a Material Object.</exception>
@@ -1580,7 +1560,7 @@ internal class MaterialObjectWrapper11 : CapeObjectBase, ICapeThermoMaterial, IC
     /// this method can be called for reasons of compatibility with the CAPE-OPEN 
     /// standards. That is to say that the operation exists, but it is not supported by 
     /// the current implementation.</exception>
-    /// <exception cref ="ECapeLimitedImpl">Would be raised if the one or more of the 
+    /// <exception cref="ECapeLimitedImpl">Would be raised if the one or more of the 
     /// properties requested cannot be returned because the calculation is not 
     /// implemented.</exception>
     /// <exception cref = "ECapeBadInvOrder">The necessary pre-requisite operation has 
@@ -1685,25 +1665,25 @@ internal class MaterialObjectWrapper11 : CapeObjectBase, ICapeThermoMaterial, IC
     /// extrapolated value may be returned.</para>
     /// <para>It is responsibility of the implementer to decide how to handle this 
     /// circumstance.</para></remarks>
-    /// <exception cref ="ECapeNoImpl">The operation is “not” implemented even if this
+    /// <exception cref="ECapeNoImpl">The operation is “not” implemented even if this
     /// method can be called for reasons of compatibility with the CAPE-OPEN standards. 
     /// That is to say that the operation exists, but it is not supported by the 
     /// current implementation.</exception>
-    /// <exception cref ="ECapeLimitedImpl">Would be raised if the one or more of the 
+    /// <exception cref="ECapeLimitedImpl">Would be raised if the one or more of the 
     /// properties requested cannot be returned because the calculation (of the 
     /// particular property) is not implemented. This exception should also be raised 
     /// (rather than ECapeInvalidArgument) if the props argument is not recognised 
     /// because the list of properties in section 7.5.5 is not intended to be 
     /// exhaustive and an unrecognised property identifier may be valid. If no 
     /// properties at all are supported ECapeNoImpl should be raised (see above).</exception>
-    /// <exception cref ="ECapeBadInvOrder">The necessary pre-requisite operation has 
+    /// <exception cref="ECapeBadInvOrder">The necessary pre-requisite operation has 
     /// not been called prior to the operation request. For example, the 
     /// ICapeThermoMaterial interface has not been passed via a SetMaterial call prior 
     /// to calling this method.</exception> 
-    /// <exception cref ="ECapeFailedInitialisation">The pre-requisites for the 
+    /// <exception cref="ECapeFailedInitialisation">The pre-requisites for the 
     /// property calculation are not valid. For example, the composition of the phases
     /// is not defined or any other necessary input information is not available.</exception>
-    /// <exception cref ="ECapeThrmPropertyNotAvailable">At least one item in the 
+    /// <exception cref="ECapeThrmPropertyNotAvailable">At least one item in the 
     /// requested properties cannot be returned. This could be because the property 
     /// cannot be calculated at the specified conditions or for the specified phase. 
     /// If the property calculation is not implemented then ECapeLimitedImpl should be 
@@ -2063,29 +2043,29 @@ internal class MaterialObjectWrapper11 : CapeObjectBase, ICapeThermoMaterial, IC
     /// <para>The meaning of these terms is defined below in the notes. Other 
     /// identifiers may be supported but their interpretation is not part of the CO 
     /// standard.</para></param>
-    /// <exception cref ="ECapeNoImpl">The operation is “not” implemented even if this 
+    /// <exception cref="ECapeNoImpl">The operation is “not” implemented even if this 
     /// method can be called for reasons of compatibility with the CAPE-OPEN standards. 
     /// That is to say that the operation exists, but it is not supported by the 
     /// current implementation.</exception>
-    /// <exception cref ="ECapeBadInvOrder">The necessary pre-requisite operation has 
+    /// <exception cref="ECapeBadInvOrder">The necessary pre-requisite operation has 
     /// not been called prior to the operation request. The ICapeThermoMaterial interface 
     /// has not been passed via a SetMaterial call prior to calling this method.</exception>
-    /// <exception cref ="ECapeSolvingError">The Equilibrium Calculation could not be 
+    /// <exception cref="ECapeSolvingError">The Equilibrium Calculation could not be 
     /// solved. For example if the solver has run out of iterations, or has converged 
     /// to a trivial solution.</exception>
-    /// <exception cref ="ECapeLimitedImpl">Would be raised if the Equilibrium Routine 
+    /// <exception cref="ECapeLimitedImpl">Would be raised if the Equilibrium Routine 
     /// is not able to perform the flash it has been asked to perform. For example, 
     /// the values given to the input specifications are valid, but the routine is not 
     /// able to perform a flash given a temperature and a Compound fraction. That 
     /// would imply a bad usage or no usage of CheckEquilibriumSpec method, which is 
     /// there to prevent calling CalcEquilibrium for a calculation which cannot be
     /// performed.</exception>
-    /// <exception cref ="ECapeInvalidArgument">To be used when an invalid argument 
+    /// <exception cref="ECapeInvalidArgument">To be used when an invalid argument 
     /// value is passed. It would be raised, for example, if a specification 
     /// identifier does not belong to the list of recognised identifiers. It would 
     /// also be raised if the value given to argument solutionType is not among 
     /// the three defined, or if UNDEFINED was used instead of a specification identifier.</exception>
-    /// <exception cref ="ECapeFailedInitialisation"><para>The pre-requisites for the Equilibrium 
+    /// <exception cref="ECapeFailedInitialisation"><para>The pre-requisites for the Equilibrium 
     /// Calculation are not valid. For example:</para>
     /// <para>• The overall composition of the mixture is not defined.</para>
     /// <para>• The Material Object (set by a previous call to the SetMaterial method of the
@@ -2093,7 +2073,7 @@ internal class MaterialObjectWrapper11 : CapeObjectBase, ICapeThermoMaterial, IC
     /// Phases are present or because the Phases present are not recognised by the
     /// component that implements the ICapeThermoEquilibriumRoutine interface.</para>
     /// <para>• Any other necessary input information is not available.</para></exception>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s), 
+    /// <exception cref="ECapeUnknown">The error to be raised when other error(s), 
     /// specified for this operation, are not suitable.</exception>
     void ICapeThermoEquilibriumRoutine.CalcEquilibrium(string[] specification1, string[] specification2,
         String solutionType)
@@ -2122,14 +2102,14 @@ internal class MaterialObjectWrapper11 : CapeObjectBase, ICapeThermoMaterial, IC
     /// <param name="solutionType">The required solution type.</param>
     /// <returns>Set to True if the combination of specifications and solutionType is 
     /// supported or False if not supported.</returns>
-    /// <exception cref ="ECapeNoImpl">The operation is “not” implemented even if this 
+    /// <exception cref="ECapeNoImpl">The operation is “not” implemented even if this 
     /// method can be called for reasons of compatibility with the CAPE-OPEN standards. 
     /// That is to say that the operation exists, but it is not supported by the 
     /// current implementation.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument 
     /// value is passed, for example UNDEFINED for solutionType, specification1 or 
     /// specification2 argument.</exception>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s), 
+    /// <exception cref="ECapeUnknown">The error to be raised when other error(s), 
     /// specified for this operation, are not suitable.</exception>
     bool ICapeThermoEquilibriumRoutine.CheckEquilibriumSpec(string[] specification1, string[] specification2,
         String solutionType)

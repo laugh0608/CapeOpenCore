@@ -327,7 +327,7 @@ namespace CapeOpenCore.Class
                     else if (objectToConnect is ICapeThermoMaterialObjectCOM)
                     {
                         // then use the wrapper that supports thermo 1.0.
-                        m_ConnectedNonSerializableObject = new MaterialObjectWrapper1(objectToConnect);
+                        m_ConnectedNonSerializableObject = new MaterialObjectWrapper10(objectToConnect);
                         m_ConnectedObject = null;
                         isConnectObjectSerializable = false;
                         OnPortConnected(args);

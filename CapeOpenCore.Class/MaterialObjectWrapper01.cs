@@ -201,13 +201,13 @@ internal partial class MaterialObjectWrapper : CapeObjectBase, ICapeThermoMateri
     }
 
     /// <summary>提供有关对象是否支持热力学版本 1.0 的信息。</summary>
-    /// <remarks><see cref="MaterialObjectWrapper"/> 类用于检查所包装的物流对象是否支持 CAPE-OPEN 1.0 版本的热力学。
+    /// <remarks><see cref="MaterialObjectWrapper10"/> 类用于检查所包装的物流对象是否支持 CAPE-OPEN 1.0 版本的热力学。
     /// 此属性表示该检查的结果。</remarks>
     /// <value>指示封装的物流对象是否支持 CAPE-OPEN 热力学版本 1.0 接口。</value>
     public bool SupportsThermo10 { get; }
 
     /// <summary>提供有关对象是否支持热力学版本 1.1 的信息。</summary>
-    /// <remarks><see cref="MaterialObjectWrapper1"/> 类用于检查所包裹的物流对象是否支持 CAPE-OPEN 1.1 版本的热力学。
+    /// <remarks><see cref="MaterialObjectWrapper11"/> 类用于检查所包裹的物流对象是否支持 CAPE-OPEN 1.1 版本的热力学。
     /// 此属性表示该检查的结果。</remarks>
     /// <value>指示封装的物流对象是否支持 CAPE-OPEN 热力学版本 1.1 接口。</value>
     public bool SupportsThermo11 { get; }
