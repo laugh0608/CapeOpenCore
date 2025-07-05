@@ -695,90 +695,57 @@ internal class MaterialObjectWrapper11 : CapeObjectBase, ICapeThermoMaterial, IC
     /// 则将 compIds 设置为 UNDEFINED 的属性请求表示属性包中的所有化合物，而非传递给属性包的材料对象中的所有化合物。</para>
     /// <para>如果某个物理属性对一个或多个化合物不可用，则必须为这些组合返回未定义的值，
     /// 并抛出 ECapeThrmPropertyNotAvailable 异常。如果抛出异常，客户端应检查所有返回的值以确定哪个值未定义。</para></remarks>
-    /// <param name="props">The list of Physical Property identifiers. Valid
-    /// identifiers for constant Physical Properties are listed in
-    /// section 7.5.2.</param>
-    /// <param name="compIds">List of Compound identifiers for which constants are 
-    /// to be retrieved. Set compIds = UNDEFINED to denote all Compounds in the 
-    /// component that implements the ICapeThermoCompounds interface.</param>
-    /// <returns>Values of constants for the specified Compounds.</returns>
-    /// <exception cref="ECapeNoImpl">The operation GetCompoundConstant is “not” 
-    /// implemented even if this method can be called for reasons of compatibility 
-    /// with the CAPE-OPEN standards. That is to say that the operation exists, but 
-    /// it is not supported by the current implementation. This exception should be 
-    /// raised if no compounds or no properties are supported.</exception>
-    /// <exception cref="ECapeThrmPropertyNotAvailable">At least one item in the 
-    /// list of Physical Properties is not available for a particular Compound. This 
-    /// exception is meant to be treated as a warning rather than as an error.</exception>
-    /// <exception cref="ECapeLimitedImpl">One or more Physical Properties are not 
-    /// supported by the component that implements this interface. This exception 
-    /// should also be raised if any element of the props argument is not recognised 
-    /// since the list of Physical Properties in section 7.5.2 is not intended to be 
-    /// exhaustive and an unrecognised Physical Property identifier may be valid. If
-    /// no Physical Properties at all are supported ECapeNoImpl should be raised 
-    /// (see above).</exception>
-    /// <exception cref="ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    /// <exception cref="ECapeUnknown">The error to be raised when other error(s), 
-    /// specified for the operation, are not suitable.</exception>
+    /// <param name="props">物理性质标识符列表。常量物理性质的有效标识符在第 7.5.2 节中列出。</param>
+    /// <param name="compIds">用于检索常量的化合物标识符列表。将 compIds 设置为 UNDEFINED 以
+    /// 表示实现 ICapeThermoCompounds 接口的组件中的所有化合物。</param>
+    /// <returns>指定化合物的常数值。</returns>
+    /// <exception cref="ECapeNoImpl">操作 GetCompoundConstant 尚未实现，即使出于与 CAPE-OPEN 标准兼容性的考虑，
+    /// 该方法仍可被调用。也就是说，该操作确实存在，但当前实现不支持它。如果不支持任何化合物或属性，应抛出此异常。</exception>
+    /// <exception cref="ECapeThrmPropertyNotAvailable">物理性质列表中至少有一项属性对于特定化合物不可用。
+    /// 此异常应被视为警告而非错误。</exception>
+    /// <exception cref="ECapeLimitedImpl">该接口的实现组件不支持一个或多个物理属性。如果 props 参数中的任何元素未被识别，
+    /// 也应抛出此异常，因为第 7.5.2 节中列出的物理属性列表并非旨在详尽无遗，且未识别的物理属性标识符可能有效。如果完全不支持
+    /// 任何物理属性，应抛出 ECapeNoImpl 异常（参见上文）。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
+    /// <exception cref="ECapeUnknown">当操作中指定的其他错误不适用时，应触发的错误。</exception>
     /// <exception cref="ECapeBadInvOrder">The error to be raised if the 
     /// Property Package required the SetMaterial method to be called before calling 
     /// the GetCompoundConstant method. The error would not be raised when the 
-    /// GetCompoundConstant method is implemented by a Material Object.</exception>
+    /// GetCompoundConstant method is implement ed by a Material Object.</exception>
     object[] ICapeThermoCompounds.GetCompoundConstant(string[] props, string[] compIds)
     {
         return (object[])_pICompounds.GetCompoundConstant(props, compIds);
     }
 
-    /// <summary>Returns the list of all Compounds. This includes the Compound 
-    /// identifiers recognised and extra information that can be used to further 
-    /// identify the Compounds.</summary>
-    /// <remarks><para>If any item cannot be returned then the value should be set 
-    /// to UNDEFINED. The same information can also be extracted using the 
-    /// GetCompoundConstant method. The equivalences between GetCompoundList 
-    /// arguments and Compound constant Physical Properties, as specified in section 
-    /// 7.5.2, is as follows:</para>
-    /// <para>compIds - No equivalence. compIds is an artefact, which is assigned by 
-    /// the component that implements the GetCompoundList method. This string will 
-    /// normally contain a unique Compound identifier such as "benzene". It must be 
-    /// used in all the arguments which are named “compIds” in the methods of the
-    ///ICapeThermoCompounds and ICapeThermoMaterial interfaces.</para>
+    /// <summary>返回所有化合物的列表。这包括已识别的化合物标识符以及可用于进一步识别化合物的额外信息。</summary>
+    /// <remarks><para>如果任何项目无法返回，则其值应设置为 UNDEFINED。相同的信息也可通过 GetCompoundConstant
+    /// 方法提取。GetCompoundList 参数与 Compound 常量物理属性之间的对应关系，如第 7.5.2 节所规定，如下所示：</para>
+    /// <para>compIds - 不存在等价关系。compIds 是一个由实现 GetCompoundList 方法的组件分配的标识符。
+    /// 该字符串通常包含一个唯一的化合物标识符，例如“苯”。
+    /// 它必须用于 ICapeThermoCompounds 和 ICapeThermoMaterial 接口中所有名为“compIds”的参数中。</para>
     /// <para>Formulae - chemicalFormula</para>
     /// <para>names - iupacName</para>
     /// <para>boilTemps - normalBoilingPoint</para>
     /// <para>molwts - molecularWeight</para>
     /// <para>casnos casRegistryNumber</para>
-    /// <para>When the ICapeThermoCompounds interface is implemented by a Material 
-    /// Object, the list of Compounds returned is fixed when the Material Object is 
-    /// configured.</para>
-    /// <para>For a Property Package component, the Property Package will normally 
-    /// contain a limited set of Compounds selected for a particular application, 
-    /// rather than all possible Compounds that could be available to a proprietary 
-    /// Properties System.</para>
-    /// <para>In order to identify the Compounds of a Property Package, the PME, or 
-    /// other client, will use the casnos argument rather than the compIds. This is 
-    /// because different PMEs may give different names to the same Compounds and the
-    /// casnos is (almost always) unique. If the casnos is not available (e.g. for 
-    /// petroleum fractions), or not unique, the other pieces of information returned 
-    /// by GetCompoundList can be used to distinguish the Compounds. It should be 
-    /// noted, however, that for communication with a Property Package a client must 
-    /// use the Compound identifiers returned in the compIds argument.</para></remarks>
+    /// <para>当 ICapeThermoCompounds 接口由材料对象实现时，返回的化合物列表在配置材料对象时是固定的。</para>
+    /// <para>对于一个属性包组件，属性包通常会包含为特定应用程序选定的有限数量的化合物，而不是所有可能的化合物，
+    /// 这些化合物可能适用于专有属性系统。</para>
+    /// <para>为了识别属性包中的化合物，PME 或其他客户端将使用 casnos 参数而非 compIds。这是因为不同 PME 可能为
+    /// 同一化合物赋予不同名称，而 casnos 参数（几乎总是）是唯一的。如果 casnos 不可用（例如石油馏分），或不唯一，
+    /// 则 GetCompoundList 返回的其他信息可用于区分化合物。然而，需要注意的是，与属性包通信时，客户必须使用
+    /// compIds 参数中返回的化合物标识符。</para></remarks>
     /// <param name="compIds">List of Compound identifiers</param>
     /// <param name="formulae">List of Compound formulae</param>
     /// <param name="names">List of Compound names.</param>
     /// <param name="boilTemps">List of boiling point temperatures.</param>
     /// <param name="molwts">List of molecular weights.</param>
-    /// <param name="casnos">List of Chemical Abstract Service (CAS) Registry
-    /// numbers.</param>
-    /// <exception cref="ECapeNoImpl">The operation GetCompoundList is “not” 
-    /// implemented even if this method can be called for reasons of compatibility
-    /// with the CAPE-OPEN standards. That is to say that the operation exists, but 
-    /// it is not supported by the current implementation.</exception>
-    /// <exception cref="ECapeUnknown">The error to be raised when other error(s), 
-    /// specified for the GetCompoundList operation, are not suitable.</exception>
-    /// <exception cref="ECapeBadInvOrder">The error to be raised if the Property 
-    /// Package required the SetMaterial method to be called before calling the 
-    /// GetCompoundList method. The error would not be raised when the 
-    /// GetCompoundList method is implemented by a Material Object.</exception>
+    /// <param name="casnos">List of Chemical Abstract Service (CAS) Registry numbers.</param>
+    /// <exception cref="ECapeNoImpl">操作 GetCompoundList 尚未实现，即使出于与 CAPE-OPEN 标准兼容性的考虑，
+    /// 该方法仍可被调用。也就是说，该操作确实存在，但当前实现尚未支持该功能。</exception>
+    /// <exception cref="ECapeUnknown">当为 GetCompoundList 操作指定的其他错误不适用时，应引发的错误。</exception>
+    /// <exception cref="ECapeBadInvOrder">如果属性包要求在调用 GetCompoundList 方法之前先调用 SetMaterial 方法，
+    /// 则会引发此错误。当 GetCompoundList 方法由物流对象实现时，此错误不会被引发。</exception>
     void ICapeThermoCompounds.GetCompoundList(ref string[] compIds, ref string[] formulae, ref string[] names,
         ref double[] boilTemps, ref double[] molwts, ref string[] casnos)
     {
@@ -797,31 +764,17 @@ internal class MaterialObjectWrapper11 : CapeObjectBase, ICapeThermoMaterial, IC
         casnos = (string[])obj6;
     }
 
-    /// <summary>Returns the list of supported constant Physical Properties.</summary>
-    /// <returns>List of identifiers for all supported constant Physical Properties. 
-    /// The standard constant property identifiers are listed in section 7.5.2.
-    /// </returns>
-    /// <remarks><para>MGetConstPropList returns identifiers for all the constant Physical 
-    /// Properties that can be retrieved by the GetCompoundConstant method. If no 
-    /// properties are supported, UNDEFINED should be returned. The CAPE-OPEN 
-    /// standards do not define a minimum list of Physical Properties to be made 
-    /// available by a software component that implements the ICapeThermoCompounds 
-    /// interface.</para>
-    /// <para>A component that implements the ICapeThermoCompounds interface may 
-    /// return constant Physical Property identifiers which do not belong to the 
-    /// list defined in section 7.5.2.</para>
-    /// <para>However, these proprietary identifiers may not be understood by most 
-    /// of the clients of this component.</para></remarks>
-    /// <exception cref="ECapeNoImpl">The operation GetConstPropList is “not” 
-    /// implemented even if this method can be called for reasons of compatibility 
-    /// with the CAPE-OPEN standards. That is to say that the operation exists, but 
-    /// it is not supported by the current implementation.</exception>
-    /// <exception cref="ECapeUnknown">The error to be raised when other error(s), 
-    /// specified for the Get-ConstPropList operation, are not suitable.</exception>
-    /// <exception cref="ECapeBadInvOrder">The error to be raised if the 
-    /// Property Package required the SetMaterial method to be called before calling 
-    /// the GetConstPropList method. The error would not be raised when the 
-    /// GetConstPropList method is implemented by a Material Object.</exception>
+    /// <summary>返回支持的物理属性常量列表。</summary>
+    /// <returns>所有支持的物理常量属性标识符列表。标准常量属性标识符在第 7.5.2 节中列出。</returns>
+    /// <remarks><para>MGetConstPropList 方法返回所有可通过 GetCompoundConstant 方法获取的常量物理属性的标识符。如果不
+    /// 支持任何属性，应返回 UNDEFINED。CAPE-OPEN 标准未定义实现 ICapeThermoCompounds 接口的软件组件必须提供的物理属性最小列表。</para>
+    /// <para>实现 ICapeThermoCompounds 接口的组件可能会返回不属于第 7.5.2 节中定义的列表的常量物理属性标识符。</para>
+    /// <para>然而，这些专有标识符可能无法被该组件的大多数客户端理解。</para></remarks>
+    /// <exception cref="ECapeNoImpl">操作 GetConstPropList 尚未实现，即使出于与 CAPE-OPEN 标准兼容性的考虑，
+    /// 该方法仍可被调用。也就是说，该操作确实存在，但当前实现尚未支持该功能。</exception>
+    /// <exception cref="ECapeUnknown">当为 Get-ConstPropList 操作指定的其他错误不适用时，将引发此错误。</exception>
+    /// <exception cref="ECapeBadInvOrder">如果属性包要求在调用 GetConstPropList 方法之前先调用 SetMaterial 方法，
+    /// 则会引发此错误。当 GetConstPropList 方法由物流对象实现时，此错误不会被引发。</exception>
     string[] ICapeThermoCompounds.GetConstPropList()
     {
         return (string[])_pICompounds.GetConstPropList();
@@ -896,8 +849,7 @@ internal class MaterialObjectWrapper11 : CapeObjectBase, ICapeThermoMaterial, IC
     /// the range of values accepted by the Property Package.</exception>
     /// <exception cref="ECapeThrmPropertyNotAvailable">At least one item in the 
     /// properties list is not available for a particular compound.</exception>
-    /// <exception cref="ECapeUnknown">The error to be raised when other error(s), 
-    /// specified for the operation, are not suitable.</exception>
+    /// <exception cref="ECapeUnknown">当操作中指定的其他错误不适用时，应触发的错误。</exception>
     /// <exception cref="ECapeBadInvOrder">The error to be raised if the 
     /// Property Package required the SetMaterial method to be called before calling 
     /// the GetPDependentProperty method. The error would not be raised when the 
@@ -927,8 +879,7 @@ internal class MaterialObjectWrapper11 : CapeObjectBase, ICapeThermoMaterial, IC
     /// this method can be called for reasons of compatibility with the CAPE-OPEN 
     /// standards. That is to say that the operation exists, but it is not supported 
     /// by the current implementation.</exception>
-    /// <exception cref="ECapeUnknown">The error to be raised when other error(s), 
-    /// specified for the operation, are not suitable.</exception>
+    /// <exception cref="ECapeUnknown">当操作中指定的其他错误不适用时，应触发的错误。</exception>
     /// <exception cref="ECapeBadInvOrder">The error to be raised if the Property 
     /// Package required the SetMaterial method to be called before calling the 
     /// GetPDependentPropList method. The error would not be raised when the 
@@ -988,8 +939,7 @@ internal class MaterialObjectWrapper11 : CapeObjectBase, ICapeThermoMaterial, IC
     /// of the range of values accepted by the Property Package.</exception>
     /// <exception cref="ECapeThrmPropertyNotAvailable">At least one item in the 
     /// properties list is not available for a particular compound.</exception>
-    /// <exception cref="ECapeUnknown">The error to be raised when other error(s), 
-    /// specified for the operation, are not suitable.</exception>
+    /// <exception cref="ECapeUnknown">当操作中指定的其他错误不适用时，应触发的错误。</exception>
     /// <exception cref="ECapeBadInvOrder"> The error to be raised if the 
     /// Property Package required the SetMaterial method to be called before calling 
     /// the GetTDependentProperty method. The error would not be raised when the 
