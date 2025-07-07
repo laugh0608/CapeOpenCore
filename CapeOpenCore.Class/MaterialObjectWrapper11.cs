@@ -900,131 +900,62 @@ internal class MaterialObjectWrapper11 : CapeObjectBase, ICapeThermoMaterial, IC
         return (string[])_pICompounds.GetTDependentPropList();
     }
 
-    /// <summary>This method is used to calculate the natural logarithm of the 
-    /// fugacity coefficients (and optionally their derivatives) in a single Phase 
-    /// mixture. The values of temperature, pressure and composition are specified in 
-    /// the argument list and the results are also returned through the argument list.</summary>
-    /// <param name="phaseLabel">Phase label of the Phase for which the properties 
-    /// are to be calculated. The Phase label must be one of the strings returned by 
-    /// the GetPhaseList method on the ICapeThermoPhases interface.</param>
+    /// <summary>该方法用于计算单相混合物的逸度系数（可选其导数）的自然对数。
+    /// 温度、压力和成分值在参数列表中指定，计算结果也通过参数列表返回。</summary>
+    /// <param name="phaseLabel">要计算属性的相位的相位标签。相位标签必须是 ICapeThermoPhases
+    /// 接口的 GetPhaseList 方法返回的字符串之一。</param>
     /// <param name="temperature">The temperature (K) for the calculation.</param>
     /// <param name="pressure">The pressure (Pa) for the calculation.</param>
-    /// <param name="lnPhiDt">Derivatives of natural logarithm of the fugacity
-    /// coefficients w.r.t. temperature (if requested).</param>
-    /// <param name="moleNumbers">Number of moles of each Compound in the mixture.</param>
-    /// <param name="fFlags">Code indicating whether natural logarithm of the 
-    /// fugacity coefficients and/or derivatives should be calculated (see notes).</param>
-    /// <param name="lnPhi">Natural logarithm of the fugacity coefficients (if
-    /// requested).</param>
-    /// <param anem = "lnPhiDT">Derivatives of natural logarithm of the fugacity
-    /// coefficients w.r.t. temperature (if requested).</param>
-    /// <param name="lnPhiDp">Derivatives of natural logarithm of the fugacity
-    /// coefficients w.r.t. pressure (if requested).</param>
-    /// <param name="lnPhiDn">Derivatives of natural logarithm of the fugacity
-    /// coefficients w.r.t. mole numbers (if requested).</param>
-    /// <remarks><para>This method is provided to allow the natural logarithm of the fugacity 
-    /// coefficient, which is the most commonly used thermodynamic property, to be 
-    /// calculated and returned in a highly efficient manner.</para>
-    /// <para>The temperature, pressure and composition (mole numbers) for the 
-    /// calculation are specified by the arguments and are not obtained from the 
-    /// Material Object by a separate request. Likewise, any quantities calculated are 
-    /// returned through the arguments and are not stored in the Material Object. The 
-    /// state of the Material Object is not affected by calling this method. It should 
-    /// be noted however, that prior to calling CalcAndGetLnPhi a valid Material 
-    /// Object must have been defined by calling the SetMaterial method on the
-    /// ICapeThermoMaterialContext interface of the component that implements the
-    /// ICapeThermoPropertyRoutine interface. The compounds in the Material Object 
-    /// must have been identified and the number of values supplied in the moleNumbers
-    /// argument must be equal to the number of Compounds in the Material Object.</para>
-    /// <para>The fugacity coefficient information is returned as the natural 
-    /// logarithm of the fugacity coefficient. This is because thermodynamic models 
-    /// naturally provide the natural logarithm of this quantity and also a wider 
-    /// range of values may be safely returned.</para>
-    /// <para>The quantities actually calculated and returned by this method are 
-    /// controlled by an integer code fFlags. The code is formed by summing 
-    /// contributions for the property and each derivative required using the 
-    /// enumerated constants eCapeCalculationCode (defined in the
-    /// Thermo version 1.1 IDL) shown in the following table. For example, to 
-    /// calculate log fugacity coefficients and their T-derivatives the fFlags 
-    /// argument would be set to CAPE_LOG_FUGACITY_COEFFICIENTS + CAPE_T_DERIVATIVE.</para>
+    /// <param name="lnPhiDt">逸度系数随温度变化的自然对数的衍生物（如有要求）。</param>
+    /// <param name="moleNumbers">混合物中每种化合物的摩尔数。</param>
+    /// <param name="fFlags">表示是否应计算逸度系数和/或导数的自然对数的代码（见注释）。</param>
+    /// <param name="lnPhi">逸度系数的自然对数（如有要求）。</param>
+    /// <param name="lnPhiDp">与压力有关的逸度系数自然对数的衍生物（如有要求）。</param>
+    /// <param name="lnPhiDn">与摩尔数有关的逸度系数自然对数的衍生物（如有要求）。</param>
+    /// <remarks><para>提供这种方法是为了高效地计算和返回逸度系数的自然对数，逸度系数是最常用的热力学性质。</para>
+    /// <para>用于计算的温度、压力和成分（摩尔数）由参数指定，不会通过单独请求从 “材料对象 ”中获取。同样，
+    /// 任何计算量都通过参数返回，不会存储在材料对象中。调用此方法不会影响材料对象的状态。但应注意的是，在
+    /// 调用 CalcAndGetLnPhi 之前，必须通过调用实现 ICapeThermoPropertyRoutine 接口的组件的
+    /// ICapeThermoMaterialContext 接口上的 SetMaterial 方法，定义一个有效的物流对象。
+    /// 材料对象中的化合物必须已被识别，moleNumbers 参数中提供的数值数必须等于材料对象中的化合物数。</para>
+    /// <para>逸度系数信息以逸度系数的自然对数形式返回。这是因为热力学模型自然会提供该量的自然对数，
+    /// 而且可以安全地返回更大范围的值。</para>
+    /// <para>该方法实际计算和返回的数量由整数代码 fFlags 控制。该代码是通过使用下表所示的枚举常量
+    /// eCapeCalculationCode（在 Thermo 1.1 版 IDL 中定义）对所需属性和每个导数的贡献值求和而形成的。
+    /// 例如，要计算对数逸度系数及其 T 衍生系数，fFlags 参数应设置为
+    /// CAPE_LOG_FUGACITY_COEFFICIENTS + CAPE_T_DERIVATIVE。</para>
     /// <table border="1">
-    /// <tr>
-    /// <th>Calculation Type</th>
-    /// <th>Enumeration Value</th>
-    /// <th>Numerical Value</th>
-    /// </tr>
-    /// <tr>
-    /// <td>no calculation</td>
-    /// <td>CAPE_NO_CALCULATION</td>
-    /// <td>0</td>
-    /// </tr>
-    /// <tr>
-    /// <td>log fugacity coefficients</td>
-    /// <td>CAPE_LOG_FUGACITY_COEFFICIENTS</td>
-    /// <td>1</td>
-    /// </tr>
-    /// <tr>
-    /// <td>T-derivative</td>
-    /// <td>CAPE_T_DERIVATIVE</td>
-    /// <td>2</td>
-    /// </tr>
-    /// <tr>
-    /// <td>P-derivative</td>
-    /// <td>CAPE_P_DERIVATIVE</td>
-    /// <td>4</td>
-    /// </tr>
-    /// <tr>
-    /// <td>mole number derivatives</td>
-    /// <td>CAPE_MOLE_NUMBERS_DERIVATIVES</td>
-    /// <td>8</td>
-    /// </tr>
+    /// <tr><th>Calculation Type</th><th>Enumeration Value</th><th>Numerical Value</th></tr>
+    /// <tr><td>no calculation</td><td>CAPE_NO_CALCULATION</td><td>0</td></tr>
+    /// <tr><td>log fugacity coefficients</td><td>CAPE_LOG_FUGACITY_COEFFICIENTS</td><td>1</td></tr>
+    /// <tr><td>T-derivative</td><td>CAPE_T_DERIVATIVE</td><td>2</td></tr>
+    /// <tr><td>P-derivative</td><td>CAPE_P_DERIVATIVE</td><td>4</td></tr>
+    /// <tr><td>mole number derivatives</td><td>CAPE_MOLE_NUMBERS_DERIVATIVES</td><td>8</td></tr>
     /// </table>	
-    /// <para>If CalcAndGetLnPhi is called with fFlags set to CAPE_NO_CALCULATION no 
-    /// property values are returned.</para>
-    /// <para>A typical sequence of operations for this method when implemented by a 
-    /// Property Package component would be:</para>
-    /// <para>- Check that the phaseLabel specified is valid.</para>
-    /// <para>- Check that the moleNumbers array contains the number of values expected
-    /// (should be consistent with the last call to the SetMaterial method).</para>
-    /// <para>- Calculate the requested properties/derivatives at the T/P/composition specified in the argument list.</para>
-    /// <para>- Store values for the properties/derivatives in the corresponding arguments.</para>
-    /// <para>Note that this calculation can be carried out irrespective of whether the Phase actually exists in the Material Object.</para></remarks>
-    /// <exception cref="ECapeNoImpl">The operation is “not” implemented even if 
-    /// this method can be called for reasons of compatibility with the CAPE-OPEN 
-    /// standards. That is to say that the operation exists, but it is not supported by 
-    /// the current implementation.</exception>
-    /// <exception cref="ECapeLimitedImpl">Would be raised if the one or more of the 
-    /// properties requested cannot be returned because the calculation is not 
-    /// implemented.</exception>
-    /// <exception cref="ECapeBadInvOrder">The necessary pre-requisite operation has 
-    /// not been called prior to the operation request. For example, the 
-    /// ICapeThermoMaterial interface has not been passed via a SetMaterial call prior
-    /// to calling this method.</exception>
-    /// <exception cref="ECapeFailedInitialisation">The pre-requisites for the 
-    ///	Property Calculation are not valid. Forexample, the composition of the phase is 
-    /// not defined, the number of Compounds in the Material Object is zero or not 
-    /// consistent with the moleNumbers argument or any other necessary input information 
-    /// is not available.</exception>
-    /// <exception cref="ECapeThrmPropertyNotAvailable">At least one item in the 
-    /// requested properties cannot be returned. This could be because the property 
-    /// cannot be calculated at the specified conditions or for the specified Phase. 
-    /// If the property calculation is not implemented then ECapeLimitedImpl should 
-    /// be returned.</exception>
-    /// <exception cref="ECapeSolvingError">One of the property calculations has 
-    /// failed. For example if one of the iterative solution procedures in the model 
-    /// has run out of iterations, or has converged to a wrong solution.</exception>
-    /// <exception cref="ECapeInvalidArgument">To be used when an invalid argument 
-    /// value is passed, for example an unrecognised value, or UNDEFINED for the 
-    /// phaseLabel argument.</exception>
+    /// <para>如果调用 CalcAndGetLnPhi 时 fFlags 设置为 CAPE_NO_CALCULATION，则不会返回任何属性值。</para>
+    /// <para>由属性包组件执行该方法时，典型的操作顺序是</para>
+    /// <para>1. 检查指定的 phaseLabel 是否有效。</para>
+    /// <para>2. 检查 moleNumbers 数组是否包含预期的数值（应与上次调用的 SetMaterial 方法一致）。</para>
+    /// <para>3. 按参数列表中指定的 T/P/composition 计算所要求的属性/衍生物。</para>
+    /// <para>4. 在相应参数中存储属性/衍生物的值。</para>
+    /// <para>请注意，无论 “阶段 ”是否实际存在于 “材料对象 ”中，都可以进行这种计算。</para></remarks>
+    /// <exception cref="ECapeNoImpl">出于与 CAPE-OPEN 标准的兼容性考虑，即使可以调用该方法，也 “未 ”执行该操作。
+    /// 也就是说，该操作是存在的，但目前的实现方式不支持它。</exception>
+    /// <exception cref="ECapeLimitedImpl">如果由于未执行计算而无法返回所请求的一个或多个属性，则会引发该故障。</exception>
+    /// <exception cref="ECapeBadInvOrder">在操作请求之前没有调用过必要的前提操作。例如，在调用此方法之前，
+    /// ICapeThermoMaterial 接口未通过 SetMaterial 调用传递。</exception>
+    /// <exception cref="ECapeFailedInitialisation">属性计算的前提条件无效。例如，相的组成未定义，
+    /// 材料对象中的化合物数量为零或与摩尔数参数不一致，或没有任何 其他必要的输入信息。</exception>
+    /// <exception cref="ECapeThrmPropertyNotAvailable">所请求的属性中至少有一项无法返回。这可能是因为无法在
+    /// 指定条件下或针对指定阶段计算该属性。如果未执行属性计算，则应返回 ECapeLimitedImpl。</exception>
+    /// <exception cref="ECapeSolvingError">某个属性计算失败。例如，模型中的某个迭代求解程序迭代次数耗尽，
+    /// 或收敛到一个错误的解。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递的参数值无效时使用，例如未识别的值，
+    /// 或 phaseLabel 参数为 UNDEFINED。</exception>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误条件不适用时，将引发此错误。</exception>
     void ICapeThermoPropertyRoutine.CalcAndGetLnPhi(string phaseLabel, double temperature,
-        double pressure,
-        double[] moleNumbers,
-        CapeFugacityFlag fFlags,
-        ref double[] lnPhi,
-        ref double[] lnPhiDt,
-        ref double[] lnPhiDp,
-        ref double[] lnPhiDn)
+        double pressure, double[] moleNumbers, CapeFugacityFlag fFlags,
+        ref double[] lnPhi, ref double[] lnPhiDt, ref double[] lnPhiDp, ref double[] lnPhiDn)
     {
         object obj1 = null;
         object obj2 = null;
