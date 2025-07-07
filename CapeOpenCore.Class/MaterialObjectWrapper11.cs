@@ -883,29 +883,18 @@ internal class MaterialObjectWrapper11 : CapeObjectBase, ICapeThermoMaterial, IC
         propVals = (double[])obj1;
     }
 
-    /// <summary>Returns the list of supported temperature-dependent Physical 
-    /// Properties.</summary>
-    /// <returns>The list of Physical Property identifiers for all supported 
-    /// temperature-dependent properties. The standard identifiers are listed in 
-    /// section 7.5.3</returns>
-    /// <remarks><para>GetTDependentPropList returns identifiers for all the 
-    /// temperature-dependent Physical Properties that can be retrieved by the 
-    /// GetTDependentProperty method. If no properties are supported UNDEFINED 
-    /// should be returned. The CAPE-OPEN standards do not define a minimum list of 
-    /// properties to be made available by a software component that implements the 
-    /// ICapeThermoCompounds interface.</para>
-    /// <para>A component that implements the ICapeThermoCompounds interface may 
-    /// return identifiers which do not belong to the list defined in section 
-    /// 7.5.3. However, these proprietary identifiers may not be understood by most 
-    /// of the clients of this component.</para></remarks>
+    /// <summary>返回支持的随温度变化的物理属性列表。</summary>
+    /// <returns>物理属性标识符列表，包含所有支持的温度相关属性。标准标识符列于第 7.5.3 节。</returns>
+    /// <remarks><para>GetTDependentPropList 返回可通过 GetTDependentProperty 方法检索的所有与
+    /// 温度相关的物理属性的标识符。如果不支持任何属性，则应返回 UNDEFINED。CAPE-OPEN 标准并没有定义实现
+    /// ICapeThermoCompounds 接口的软件组件必须提供的最小属性列表。</para>
+    /// <para>实现 ICapeThermoCompounds 接口的组件可返回不属于第 7.5.3 节所定义列表的标识符。
+    /// 但是，该组件的大多数客户可能无法理解这些专有标识符。</para></remarks>
     /// <exception cref="ECapeNoImpl">即使出于与 CAPE-OPEN 标准兼容性的考虑，该方法可以被调用，
     /// 但该操作“并未”实现。也就是说，该操作确实存在，但当前实现不支持该操作。</exception>
-    /// <exception cref="ECapeUnknown">The error to be raised when other error(s),
-    /// specified for the operation, are not suitable.</exception>
-    /// <exception cref="ECapeBadInvOrder">The error to be raised if the Property 
-    /// Package required the SetMaterial method to be called before calling the 
-    /// GetTDependentPropList method. The error would not be raised when the 
-    /// GetTDependentPropList method is implemented by a Material Object.</exception>
+    /// <exception cref="ECapeUnknown">当为操作指定的其他错误不合适时将引发的错误。</exception>
+    /// <exception cref="ECapeBadInvOrder">如果属性包要求在调用 GetTDependentPropList 方法之前
+    /// 调用 SetMaterial 方法，则会引发错误。如果 GetTDependentPropList 方法是由物流对象实现的，则不会出现该错误。</exception>
     string[] ICapeThermoCompounds.GetTDependentPropList()
     {
         return (string[])_pICompounds.GetTDependentPropList();
