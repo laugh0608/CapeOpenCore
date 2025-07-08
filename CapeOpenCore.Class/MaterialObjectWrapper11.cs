@@ -970,87 +970,46 @@ internal class MaterialObjectWrapper11 : CapeObjectBase, ICapeThermoMaterial, IC
         lnPhiDn = (double[])obj4;
     }
 
-    /// <summary>CalcSinglePhaseProp is used to calculate properties and property 
-    /// derivatives of a mixture in a single Phase at the current values of 
-    /// temperature, pressure and composition set in the Material Object. 
-    /// CalcSinglePhaseProp does not perform phase Equilibrium Calculations.</summary>
-    /// <param name="props">The list of identifiers for the single-phase properties 
-    /// or derivatives to be calculated. See sections 7.5.5 and 7.6 for the standard 
-    /// identifiers.</param>
-    /// <param name="phaseLabel">Phase label of the Phase for which the properties 
-    /// are to be calculated. The Phase label must be one of the strings returned by 
-    /// the GetPhaseList method on the ICapeThermoPhases interface.</param>
-    /// <remarks><para>CalcSinglePhaseProp calculates properties, such as enthalpy or viscosity 
-    /// that are defined for a single Phase. Physical Properties that depend on more 
-    /// than one Phase, for example surface tension or K-values, are handled by 
-    /// CalcTwoPhaseProp method.</para>
-    /// <para>Components that implement this method must get the input specification 
-    /// for the calculation (temperature, pressure and composition) from the associated 
-    /// Material Object and set the results in the Material Object.</para>
-    /// <para>Thermodynamic and Physical Properties Components, such as a Property 
-    /// Package or Property Calculator, must implement the ICapeThermoMaterialContext 
-    /// interface so that an ICapeThermoMaterial interface can be passed via the 
-    /// SetMaterial method.</para>
-    /// <para>A typical sequence of operations for CalcSinglePhaseProp when implemented
-    /// by a Property Package component would be:</para>
-    /// <para>- Check that the phaseLabel specified is valid.</para>
-    /// <para>- Use the GetTPFraction method (of the Material Object specified in the 
-    /// last call to the SetMaterial method) to get the temperature, pressure and 
-    /// composition of the specified Phase.</para>
-    /// <para>- Calculate the properties.</para>
-    /// <para>- Store values for the properties of the Phase in the Material Object 
-    /// using the SetSinglePhaseProp method of the ICapeThermoMaterial interface.</para>
-    /// <para>CalcSinglePhaseProp will request the input Property values it requires 
-    /// from the Material Object through GetSinglePhaseProp calls. If a requested 
-    /// property is not available, the exception raised will be 
-    /// ECapeThrmPropertyNotAvailable. If this error occurs then the Property Package 
-    /// can return it to the client, or request a different property. Material Object
-    /// implementations must be able to supply property values using the client’s 
-    /// choice of basis by implementing conversion from one basis to another.</para>
-    /// <para>Clients should not assume that Phase fractions and Compound fractions in 
-    /// a Material Object are normalised. Fraction values may also lie outside the 
-    /// range 0 to 1. If fractions are not normalised, or are outside the expected 
-    /// range, it is the responsibility of the Property Package to decide how to deal 
-    /// with the situation.</para>
-    /// <para>It is recommended that properties are requested one at a time in order 
-    /// to simplify error handling. However, it is recognised that there are cases 
-    /// where the potential efficiency gains of requesting several properties 
-    /// simultaneously are more important. One such example might be when a property 
-    /// and its derivatives are required.</para>
-    /// <para>If a client uses multiple properties in a call and one of them fails 
-    /// then the whole call should be considered to have failed. This implies that no 
-    /// value should be written back to the Material Object by the Property Package 
-    /// until it is known that the whole request can be satisfied.</para>
-    /// <para>It is likely that a PME might request values of properties for a Phase at 
-    /// conditions of temperature, pressure and composition where the Phase does not 
-    /// exist (according to the mathematical/physical models used to represent 
-    /// properties). The exception ECapeThrmPropertyNotAvailable may be raised or an 
-    /// extrapolated value may be returned.</para>
-    /// <para>It is responsibility of the implementer to decide how to handle this 
-    /// circumstance.</para></remarks>
-    /// <exception cref="ECapeNoImpl">The operation is “not” implemented even if this
-    /// method can be called for reasons of compatibility with the CAPE-OPEN standards. 
-    /// That is to say that the operation exists, but it is not supported by the 
-    /// current implementation.</exception>
-    /// <exception cref="ECapeLimitedImpl">Would be raised if the one or more of the 
-    /// properties requested cannot be returned because the calculation (of the 
-    /// particular property) is not implemented. This exception should also be raised 
-    /// (rather than ECapeInvalidArgument) if the props argument is not recognised 
-    /// because the list of properties in section 7.5.5 is not intended to be 
-    /// exhaustive and an unrecognised property identifier may be valid. If no 
-    /// properties at all are supported ECapeNoImpl should be raised (see above).</exception>
-    /// <exception cref="ECapeBadInvOrder">The necessary pre-requisite operation has 
-    /// not been called prior to the operation request. For example, the 
-    /// ICapeThermoMaterial interface has not been passed via a SetMaterial call prior 
-    /// to calling this method.</exception> 
-    /// <exception cref="ECapeFailedInitialisation">The pre-requisites for the 
-    /// property calculation are not valid. For example, the composition of the phases
-    /// is not defined or any other necessary input information is not available.</exception>
-    /// <exception cref="ECapeThrmPropertyNotAvailable">At least one item in the 
-    /// requested properties cannot be returned. This could be because the property 
-    /// cannot be calculated at the specified conditions or for the specified phase. 
-    /// If the property calculation is not implemented then ECapeLimitedImpl should be 
-    /// returned.</exception>
+    /// <summary>CalcSinglePhaseProp 用于计算在材料对象中设置的温度、压力和成分的当前值下，单相混合物
+    /// 的属性和属性导数。CalcSinglePhaseProp 不进行相平衡计算。</summary>
+    /// <param name="props">要计算的单相属性或导数的标识符列表。标准标识符见第 7.5.5 和 7.6 节。</param>
+    /// <param name="phaseLabel">要计算属性的相位的相位标签。相位标签必须是 ICapeThermoPhases
+    /// 接口的 GetPhaseList 方法返回的字符串之一。</param>
+    /// <remarks><para>CalcSinglePhaseProp 计算为单相定义的属性，如焓值或粘度。取决于多个相的物理性质，
+    /// 如表面张力或 K 值，则由 CalcTwoPhaseProp 方法处理。</para>
+    /// <para>执行此方法的组件必须从相关材料对象中获取计算的输入规格（温度、压力和成分），并在材料对象中设置计算结果。</para>
+    /// <para>热力学和物理属性组件（如属性包或属性计算器）必须实现 ICapeThermoMaterialContext 接口，
+    /// 以便通过 SetMaterial 方法传递 ICapeThermoMaterial 接口。</para>
+    /// <para>在由属性包组件实现 CalcSinglePhaseProp 时，典型的操作序列是</para>
+    /// <para>1. 检查指定的 phaseLabel 是否有效。</para>
+    /// <para>2. 使用 GetTPFraction 方法（最后一次调用 SetMaterial 方法时指定的材料对象）
+    /// 获取指定相的温度、压力和成分。</para>
+    /// <para>3. 计算属性。</para>
+    /// <para>4. 使用 ICapeThermoMaterial 接口的 SetSinglePhaseProp 方法，在材料对象中存储相的属性值。</para>
+    /// <para>CalcSinglePhaseProp 将通过调用 GetSinglePhaseProp 从材料对象中获取所需的输入属性值。
+    /// 如果请求的属性不可用，则会出现 ECapeThrmPropertyNotAvailable 异常。如果发生此错误，属性包可将其
+    /// 返回给客户端，或请求其他属性。材料对象实现必须能够通过实现从一种基础到另一种基础的转换，
+    /// 使用客户选择的基础提供属性值。</para>
+    /// <para>客户不应假定材料对象中的相分数和化合物分数已归一化。如果分数没有归一化或超出预期范围，
+    /// 则由属性包负责决定如何处理这种情况。</para>
+    /// <para>建议一次申请一个属性，以简化错误处理。不过，我们也认识到，在某些情况下，同时请求多个
+    /// 属性可能会提高效率。例如，需要一个属性及其导数。</para>
+    /// <para>如果客户在一次调用中使用了多个属性，而其中一个属性失效，则整个调用应被视为失效。这意味着，
+    /// 在知道整个请求可以满足之前，属性包不应向材料对象写回任何值。</para>
+    /// <para>根据用于表示属性的数学/物理模型，相很可能在不存在相的温度、压力和成分条件下请求相的属性值。
+    /// 这时可能会出现 ECapeThrmPropertyNotAvailable 异常或返回一个外推值。</para>
+    /// <para>实施者有责任决定如何处理这种情况。</para></remarks>
+    /// <exception cref="ECapeNoImpl">出于与 CAPE-OPEN 标准的兼容性考虑，即使可以调用该方法，也 “未 ”执行该操作。
+    /// 也就是说，该操作是存在的，但目前的实现方式不支持它。</exception>
+    /// <exception cref="ECapeLimitedImpl">如果由于（特定属性的）计算未实现而无法返回所请求的一个或多个属性，
+    /// 则会引发该异常。如果道具参数未被识别，也应引发此异常（而不是 ECapeInvalidArgument），因为第 7.5.5 节
+    /// 中的属性列表并非详尽无遗，未被识别的属性标识符可能是有效的。如果不支持任何属性，则应引发 ECapeNoImpl（见上文）。</exception>
+    /// <exception cref="ECapeBadInvOrder">在操作请求之前没有调用过必要的前提操作。例如，在调用此方法之前，
+    /// ICapeThermoMaterial 接口未通过 SetMaterial 调用传递。</exception> 
+    /// <exception cref="ECapeFailedInitialisation">属性计算的前提条件无效。
+    /// 例如，没有定义相的组成或没有其他必要的输入信息。</exception>
+    /// <exception cref="ECapeThrmPropertyNotAvailable">所请求的属性中至少有一项无法返回。
+    /// 这可能是因为无法在指定条件下或指定阶段计算该属性。如果未执行属性计算，则应返回 ECapeLimitedImpl。</exception>
     [DispId(0x00000002)]
     [Description("Method CalcSinglePhaseProp")]
     void ICapeThermoPropertyRoutine.CalcSinglePhaseProp(string[] props, string phaseLabel)
