@@ -54,9 +54,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TestScreenshot\2025-06-21_12-12-53.png" />
     <Content Include="TestScreenshot\2025-06-21_12-13-49.png" />
     <Content Include="TestScreenshot\2025-06-21_12-14-44.png" />
+    <Content Include="TestScreenshot\20250709130409.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
