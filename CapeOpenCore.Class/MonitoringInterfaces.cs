@@ -112,7 +112,7 @@ public interface ICapeFlowsheetMonitoring
     /// <summary>获取单元操作集合。</summary>
     /// <remarks>获取单元操作集合返回枚举单元操作的 ICapeCollection 对象，每个单元操作通过
     /// ICapeIdentification 标识，单元操作还暴露了 ICapeUnit 和可能的 ICapeUtilities（用于参数访问）。</remarks>
-    /// <returns>An <see cref="ICapeCollection"/>  of streams.</returns>
+    /// <returns>流股的 <see cref="ICapeCollection"/> 集合。</returns>
     [DispId(2)]
     [Description("Method GetUnitOperationCollection")]
     [return: MarshalAs(UnmanagedType.IDispatch)]
@@ -172,42 +172,38 @@ public interface ICapeFlowsheetMonitoring
 [Description("ICapeFlowsheetMonitoring Interface")]
 public interface ICapeFlowsheetMonitoringOld
 {
-    /// <summary>Get the collection of streams.</summary>
-    /// <remarks>Get the collection of streams
-    /// returns an ICapeCollection object enumerating streams
-    /// each stream is identified via ICapeIdentification
-    /// material streams expose ICapeThermoMaterial or ICapeThermoMaterialObject
-    /// energy streams and information streams expose ICapeCollection, each item in the collection is an ICapeParameter object</remarks>
-    /// <returns>An ICapeCollection of unit operations.</returns>
+    /// <summary>获取流股集合。</summary>
+    /// <summary>获取流股集合。</summary>
+    /// <remarks>获取流股集合，返回一个 ICapeCollection 对象，枚举每个流股，每个流股通过
+    /// ICapeIdentification 标识，物流暴露 ICapeThermoMaterial 或 ICapeThermoMaterialObject
+    /// 能量流和物料流暴露 ICapeCollection，集合中的每个项目都是 ICapeParameter 对象。</remarks>
+    /// <returns>单元操作的 <see cref="ICapeCollection"/> 集合。</returns>
     [DispId(1)]
     [Description("Method GetStreamCollection.")]
     [return: MarshalAs(UnmanagedType.IDispatch)]
     object GetStreamCollection();
 
-    /// <summary>Get the collection of unit operations.</summary>
-    /// <remarks>Get the collection of unit operations
-    /// returns an ICapeCollection object enumerating unit operations
-    /// each unit operation is identified via ICapeIdentification
-    /// unit operations also expose ICapeUnit, and possibly ICapeUtilities (for parameter access)</remarks>
-    /// <returns>An ICapeCollection of streams.</returns>
+    /// <summary>获取单元操作集合。</summary>
+    /// <remarks>获取单元操作集合返回枚举单元操作的 ICapeCollection 对象，每个单元操作通过
+    /// ICapeIdentification 标识，单元操作还暴露了 ICapeUnit 和可能的 ICapeUtilities（用于参数访问）。</remarks>
+    /// <returns>流股的 <see cref="ICapeCollection"/> 集合。</returns>
     [DispId(2)]
     [Description("Method GetUnitOperationCollection")]
     [return: MarshalAs(UnmanagedType.IDispatch)]
     object GetUnitOperationCollection();
 
-    /// <summary>Check whether the flowsheet is currently solved.</summary>
-    /// <remarks>Check whether the flowsheet is currently solved</remarks>
-    /// <returns><para>true, if the unit is solved.</para>
-    /// <para>false, if the unit is not solved.</para></returns>
+    /// <summary>检查流程图当前是否已解决。</summary>
+    /// <remarks>检查流程图当前是否已解决。</remarks>
+    /// <returns>true，表示单元已解决；false，表示单元未解决。</returns>
     [DispId(3)]
     [Description("Method IsSolved")]
     [return: MarshalAs(UnmanagedType.VariantBool)]
     bool IsSolved();
 
-    /// <summary>Check whether the flowsheet is valid.</summary>
-    /// <remarks>Check whether the flowsheet is valid</remarks>
-    /// <value>The validation status of the flowsheet.</value>
+    /// <summary>检查流程图是否有效。</summary>
+    /// <remarks>检查流程图是否有效。</remarks>
+    /// <value>流程表的验证状态。</value>
     [DispId(4)]
     [Description("Get the flowsheet validation status.")]
     CapeValidationStatus ValStatus { get; }
-};
+}
