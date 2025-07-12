@@ -144,20 +144,18 @@ public class OptionParameter : CapeParameter, ICapeParameter, ICapeParameterSpec
         m_ValStatus = CapeValidationStatus.CAPE_VALID;
     }
     
-    /// <summary>Constructor for the boolean-valued parameter</summary>
-    /// <remarks>This constructor sets the ICapeIdentification.ComponentName and 
-    /// ICapeIdentification.ComponentDescription of the 
-    /// parameter. The parameter's value and default value are set to the value. 
-    /// Additionally, the parameters CapeParameterMode is set.</remarks>
-    /// <param name="name">Sets as the ComponentName of the parameter's ICapeIdentification interface.</param>
-    /// <param name="description">Sets as the ComponentDescription of the parameter's ICapeIdentification interface.</param>
-    /// <param name="value">Sets the inital value of the parameter.</param>
-    /// <param name="defaultValue">Sets the default value of the parameter.</param>
-    /// <param name="options">String array used as the list acceptable options.</param>
-    /// <param name="restricted">Sets whether the parameter value is restricted to values in the option list.</param>
-    /// <param name="mode">Sets the CapeParamMode mode of the parameter.</param>
-    public OptionParameter(string name, string description, string value, string defaultValue, string[] options, bool restricted, CapeParamMode mode)
-        : base(name, description, mode)
+    /// <summary>布尔值参数构造函数。</summary>
+    /// <remarks>此构造函数设置参数的 ICapeIdentification.ComponentName 和
+    /// ICapeIdentification.ComponentDescription。参数的值和默认值将被设置为该值。此外，还将设置参数的 CapeParameterMode。</remarks>
+    /// <param name="name">设置为参数的 ICapeIdentification 接口的 ComponentName。</param>
+    /// <param name="description">设置为参数的 ICapeIdentification 接口的 ComponentDescription。</param>
+    /// <param name="value">设置参数的初始值。</param>
+    /// <param name="defaultValue">设置参数的默认值。</param>
+    /// <param name="options">字符串数组，用作可接受选项列表。</param>
+    /// <param name="restricted">设置参数值是否仅限于选项列表中的值。</param>
+    /// <param name="mode">设置参数的 CapeParamMode 模式。</param>
+    public OptionParameter(string name, string description, string value, string defaultValue, 
+        string[] options, bool restricted, CapeParamMode mode) : base(name, description, mode)
     {
         _mValue = value;
         Mode = mode;
@@ -166,63 +164,53 @@ public class OptionParameter : CapeParameter, ICapeParameter, ICapeParameterSpec
         _mRestricted = restricted;
     }
 
-    /// <summary>Creates a new object that is a copy of the current instance.</summary>
-    /// <remarks><para>Clone can be implemented either as a deep copy or a shallow copy. In a deep copy, all objects are duplicated; 
-    /// in a shallow copy, only the top-level objects are duplicated
-    /// and the lower levels contain references.</para>
-    /// <para>The resulting clone must be of the same type as, or compatible with, the original instance.</para>
-    /// <para>See <see cref="Object.MemberwiseClone"/> for more information on cloning,
-    /// deep versus shallow copies, and examples.</para></remarks>
-    /// <returns>A new object that is a copy of this instance.</returns>
+    /// <summary>创建一个新对象，该对象是当前实例的副本。</summary>
+    /// <remarks><para>克隆可以以深度复制或浅层复制的方式实现。在深度复制中，所有对象都被复制；
+    /// 在浅层复制中，只有顶层对象被复制，低层对象包含引用。</para>
+    /// <para>生成的克隆必须与原始实例的类型相同或兼容。</para>
+    /// <para>请参阅 <see cref="Object.MemberwiseClone"/> 以获取有关克隆、深度复制与浅层复制以及示例的更多信息。</para></remarks>
+    /// <returns>一个新对象，是该实例的副本。</returns>
     public override object Clone()
     {
         return new OptionParameter(ComponentName, ComponentDescription, Value, 
             DefaultValue, OptionList, RestrictedToList, Mode);
     }
 
-    /// <summary>Occurs when the user changes of the lower bound of the parameter changes.</summary>
+    /// <summary>当用户更改参数下限时发生。</summary>
     public event ParameterOptionListChangedHandler ParameterOptionListChanged;
     
-    /// <summary>Occurs when the user changes of the option list of a parameter.</summary>
+    /// <summary>当用户更改参数的选项列表时发生。</summary>
     /// <remarks><para>引发事件时，事件处理程序会通过委托进行调用。</para>
-    /// <para>The <c>OnParameterOptionListChanged</c> method also allows derived classes to handle the event without attaching a delegate. This is the preferred 
-    /// technique for handling the event in a derived class.</para>
+    /// <para><c>OnParameterOptionListChanged</c> 方法还允许派生类在不附加委托的情况下处理事件。
+    /// 这是在派生类中处理事件的首选技术。</para>
     /// <para>继承该方法须知：</para>
-    /// <para>When overriding <c>OnParameterOptionListChanged</c> in a derived class, be sure to call the base class's <c>OnParameterOptionListChanged</c> method so that registered 
-    /// delegates receive the event.</para></remarks>
-    /// <param name="args">A <see cref="ParameterValueChangedEventArgs">ParameterOptionListChangedEventArgs</see> that contains information about the event.</param>
+    /// <para>在派生类中重载 <c>OnParameterOptionListChanged</c> 时，请确保调用基类的
+    /// <c>OnParameterOptionListChanged</c> 方法，以便已注册的委托能收到该事件。</para></remarks>
+    /// <param name="args"><see cref="ParameterOptionListChangedEventArgs"/> 包含事件相关信息。</param>
     protected void OnParameterOptionListChanged(ParameterOptionListChangedEventArgs args)
     {
-        if (ParameterOptionListChanged != null)
-        {
-            ParameterOptionListChanged(this, args);
-        }
+        ParameterOptionListChanged?.Invoke(this, args);
     }
 
-    /// <summary>Occurs when the user changes of the upper bound of the parameter changes.</summary>
+    /// <summary>当用户更改参数的上限时发生。</summary>
     public event ParameterRestrictedToListChangedHandler ParameterRestrictedToListChanged;
-    /// <summary>Occurs when the user changes of the upper bound of a parameter.</summary>
+    
+    /// <summary>当用户更改参数上限时出现。</summary>
     /// <remarks><para>引发事件时，事件处理程序会通过委托进行调用。</para>
     /// <para><c>OnParameterUpperBoundChanged</c> 方法还允许派生类在不附加委托的情况下处理事件。这是在派生类中处理事件的首选技术。</para>
     /// <para>继承该方法须知：</para>
-    /// <para>在派生类中重载 <c>OnParameterUpperBoundChanged</c> 时，请确保调用基类的 <c>OnParameterUpperBoundChanged</c> 方法，以便已注册的委托能收到该事件。</para></remarks>
-    /// <param name="args">A <see cref="ParameterLowerBoundChangedEventArgs">ParameterUpperBoundChangedEventArgs</see> that contains information about the event.</param>
+    /// <para>在派生类中重载 <c>OnParameterUpperBoundChanged</c> 时，请确保调用基类的
+    /// <c>OnParameterUpperBoundChanged</c> 方法，以便已注册的委托能收到该事件。</para></remarks>
+    /// <param name="args"><see cref="ParameterUpperBoundChangedEventArgs"/> 包含事件相关信息。</param>
     protected void OnParameterRestrictedToListChanged(ParameterRestrictedToListChangedEventArgs args)
     {
-        if (ParameterRestrictedToListChanged != null)
-        {
-            ParameterRestrictedToListChanged(this, args);
-        }
+        ParameterRestrictedToListChanged?.Invoke(this, args);
     }
 
     /// <summary>Gets and sets the value of the parameter.</summary>
     /// <remarks>The value is returned as a String, which marshals as a BSTR to COM.</remarks>
-    /// <returns>
-    /// System.String
-    /// </returns>
-    /// <value>
-    /// The value of the parameter.
-    /// </value>
+    /// <returns>System.String</returns>
+    /// <value>The value of the parameter.</value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不合适时将引发的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递了无效的参数值时使用，例如，未识别的复合标识符或 props 参数的 UNDEFINED。</exception>
     [TypeConverter(typeof(OptionParameterValueConverter))]
@@ -533,7 +521,7 @@ class OptionParameterWrapper : CapeParameter,
 
     /// <summary>Occurs when the user changes of the upper bound of the parameter changes.</summary>
     public event ParameterRestrictedToListChangedHandler ParameterRestrictedToListChanged;
-    /// <summary>Occurs when the user changes of the upper bound of a parameter.</summary>
+    /// <summary>当用户更改参数上限时出现。</summary>
     /// <remarks><para>引发事件时，事件处理程序会通过委托进行调用。</para>
     /// <para><c>OnParameterUpperBoundChanged</c> 方法还允许派生类在不附加委托的情况下处理事件。这是在派生类中处理事件的首选技术。</para>
     /// <para>继承该方法须知：</para>
