@@ -611,14 +611,14 @@ namespace CapeOpenCore.Class
         /// <returns>
         /// True if the parameter is valid, false if not valid.
         /// </returns>
-        /// <param name = "value">A candidate value for the parameter to be tested to determine whether the value is valid.</param>
+        /// <param name = "pValue">A candidate value for the parameter to be tested to determine whether the value is valid.</param>
         /// <param name = "message">Reference to a string that will conain a message regarding the validation of the parameter.</param>
         /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
         /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
         [System.Runtime.InteropServices.DispIdAttribute(4)]
         [System.ComponentModel.DescriptionAttribute("Check if value is OK for this spec as string")]
         [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.VariantBool)]
-        bool Validate(System.String value, ref String message);
+        bool Validate(System.String pValue, ref String message);
     };
 
 
@@ -698,14 +698,14 @@ namespace CapeOpenCore.Class
         /// <returns>
         /// True if the parameter is valid, false if not valid.
         /// </returns>
-        /// <param name = "value">A candidate value for the parameter to be tested to determine whether the value is valid.</param>
+        /// <param name = "pValue">A candidate value for the parameter to be tested to determine whether the value is valid.</param>
         /// <param name = "message">Reference to a string that will conain a message regarding the validation of the parameter.</param>
         /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
         /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
         [System.Runtime.InteropServices.DispIdAttribute(4)]
         [System.ComponentModel.DescriptionAttribute("Check if value is OK for this spec as string")]
         [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.VariantBool)]
-        bool Validate(System.String value, ref String message);
+        bool Validate(System.String pValue, ref String message);
     };
     
     /// <summary>

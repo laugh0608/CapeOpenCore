@@ -357,19 +357,19 @@ public class OptionParameter : CapeParameter, ICapeParameter, ICapeParameterSpec
     /// value of <see cref="RestrictedToList">RestrictedToList</see> public is <c>false</c>
     /// any valid String is a valid value for the parameter.</remarks>
     /// <returns>如果字符串参数有效，则为 true；如果无效，则为 false。</returns>
-    /// <param name="value">The string to be tested for validity.</param>
+    /// <param name="pValue">The string to be tested for validity.</param>
     /// <param name="message">Reference to a string that will conain a message regarding the validation of the parameter.</param>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不合适时将引发的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递了无效的参数值时使用，例如，未识别的复合标识符或 props 参数的 UNDEFINED。</exception>
     [Description("Checks whether the value is an accepatble value for the parameter.")]
-    public bool Validate(string value, ref string message)
+    public bool Validate(string pValue, ref string message)
     {
         if (_mRestricted)
         {
             var inList = false;
             foreach (var mT in _mOptionList)
             {
-                if (mT == value)
+                if (mT == pValue)
                 {
                     inList = true;
                 }
@@ -660,13 +660,13 @@ class OptionParameterWrapper : CapeParameter,
     /// value of <see cref="RestrictedToList">RestrictedToList</see> public is <c>false</c>
     /// any valid String is a valid value for the parameter.</remarks>
     /// <returns>如果字符串参数有效，则为 true；如果无效，则为 false。</returns>
-    /// <param name="value">The string to be tested for validity.</param>
+    /// <param name="pValue">The string to be tested for validity.</param>
     /// <param name="message">Reference to a string that will conain a message regarding the validation of the parameter.</param>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不合适时将引发的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递了无效的参数值时使用，例如，未识别的复合标识符或 props 参数的 UNDEFINED。</exception>
     [Description("Checks whether the value is an accepatble value for the parameter.")]
-    public bool Validate(String value, ref String message)
+    public bool Validate(String pValue, ref String message)
     {
-        return ((ICapeOptionParameterSpecCOM)m_parameter.Specification).Validate(value, ref message);
+        return ((ICapeOptionParameterSpecCOM)m_parameter.Specification).Validate(pValue, ref message);
     }
 }
