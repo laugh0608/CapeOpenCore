@@ -110,14 +110,13 @@ public class OptionParameter : CapeParameter, ICapeParameter, ICapeParameterSpec
         get => _mValue;
         set
         {
-            var message = string.Empty; ;
+            var message = string.Empty;
             var args = new ParameterValueChangedEventArgs(ComponentName, _mValue, value);
             if (!Validate(value.ToString(), ref message)) 
                 throw new CapeInvalidArgumentException(message, 0);
             _mValue = value.ToString();
             OnParameterValueChanged(args);
             NotifyPropertyChanged("Value");
-            return;
         }
     }
 
@@ -349,16 +348,13 @@ public class OptionParameter : CapeParameter, ICapeParameter, ICapeParameterSpec
         }
     }
 
-    /// <summary>Validates the value against the parameter's specification.</summary>
-    /// <remarks>If the value of the <see cref="RestrictedToList">RestrictedToList</see>
-    /// public is set to <c>true</c>, the value to be tested is a valid value for the 
-    /// parameter if it is included in the 
-    /// <see cref="OptionList">OptionList</see>. If the 
-    /// value of <see cref="RestrictedToList">RestrictedToList</see> public is <c>false</c>
-    /// any valid String is a valid value for the parameter.</remarks>
+    /// <summary>根据参数说明验证值。</summary>
+    /// <remarks>如果 <see cref="RestrictedToList"/> public 的值设置为 <c>true</c>，那么如果要测试的值包含在
+    /// <see cref="OptionList"/> 中，该值就是参数的有效值。如果 <see cref="RestrictedToList"/> public 的值为
+    /// <c>false</c>，则任何有效字符串都是参数的有效值。</remarks>
     /// <returns>如果字符串参数有效，则为 true；如果无效，则为 false。</returns>
-    /// <param name="pValue">The string to be tested for validity.</param>
-    /// <param name="message">Reference to a string that will conain a message regarding the validation of the parameter.</param>
+    /// <param name="pValue">要进行有效性测试的字符串。</param>
+    /// <param name="message">指向字符串的引用，该字符串将包含与参数验证相关的信息。</param>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不合适时将引发的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递了无效的参数值时使用，例如，未识别的复合标识符或 props 参数的 UNDEFINED。</exception>
     [Description("Checks whether the value is an accepatble value for the parameter.")]
@@ -385,79 +381,60 @@ public class OptionParameter : CapeParameter, ICapeParameter, ICapeParameterSpec
     }
 }
 
-
-/// <summary>Option(string)-Valued parameter for use in the CAPE-OPEN parameter collection.</summary>
-/// <remarks>Option(string)-Valued parameter for use in the CAPE-OPEN parameter collection.</remarks>
+/// <summary>Option(string)- 在 CAPE-OPEN 参数集合中使用的值参数。</summary>
+/// <remarks>Option(string)- 在 CAPE-OPEN 参数集合中使用的值参数。</remarks>
 [Serializable]
 [ComSourceInterfaces(typeof(IOptionParameterSpecEvents))]
 [ComVisible(true)]
 [Guid("70994E8C-179E-40E1-A51B-54A5C0F64A84")]
 [ClassInterface(ClassInterfaceType.None)]
-class OptionParameterWrapper : CapeParameter,
-    ICapeParameter,
-    ICapeParameterSpec,
-    ICapeOptionParameterSpec,
-    ICapeOptionParameterSpecCOM,
-    ICloneable,
-    INotifyPropertyChanged
+internal sealed class OptionParameterWrapper : CapeParameter, ICapeParameter, ICapeParameterSpec,
+    ICapeOptionParameterSpec, ICapeOptionParameterSpecCOM, ICloneable
 {
     [NonSerialized]
-    private ICapeParameter m_parameter;
+    private ICapeParameter _mParameter;
 
-    /// <summary>Gets and sets the value for this Parameter.</summary>
-    /// <remarks>This value uses the System.Object data type for compatibility with 
-    /// COM-based CAPE-OPEN.</remarks>
+    /// <summary>获取和设置该参数的值。</summary>
+    /// <remarks>该值使用 System.Object 数据类型，以便与基于 COM 的 CAPE-OPEN 兼容。</remarks>
     /// <value>System.Object</value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不合适时将引发的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递了无效的参数值时使用，例如，未识别的复合标识符或 props 参数的 UNDEFINED。</exception>
     [Browsable(false)]
-    override public Object value
+    public override object value
     {
-        get
-        {
-            return m_parameter.value;
-        }
+        get => _mParameter.value;
         set
         {
-            String message = String.Empty; ;
-            ParameterValueChangedEventArgs args = new ParameterValueChangedEventArgs(ComponentName, m_parameter.value.ToString(), value);
-            m_parameter.value = value.ToString();
+            // var message = string.Empty;
+            var args = new ParameterValueChangedEventArgs(ComponentName, _mParameter.value.ToString(), value);
+            _mParameter.value = value.ToString();
             OnParameterValueChanged(args);
             NotifyPropertyChanged("Value");                
         }
     }
 
-    /// <summary>Gets the list of valid values for the parameter if 'RestrictedtoList' public is true.</summary>
-    /// <remarks>Used in validating the parameter if the <see cref="RestrictedToList">RestrictedToList</see>
-    /// is set to <c>true</c>.</remarks>
-    /// <value>
-    /// String array as a System.Object, COM Variant containing a SafeArray of BSTR.
-    /// </value>
+    /// <summary>如果 RestrictedList 为 true，则获取参数的有效值列表。</summary>
+    /// <remarks>如果 <see cref="RestrictedToList"/> 设置为 <c>true</c>，则用于验证参数。</remarks>
+    /// <value>字符串数组作为 System.Object，COM 变体，包含 BSTR 的 SafeArray。</value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不合适时将引发的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递了无效的参数值时使用，例如，未识别的复合标识符或 props 参数的 UNDEFINED。</exception>
     [Browsable(false)]
-    [Description("Gets the list of valid values for the parameter if 'RestrictedtoList' public is true.")]
-    Object ICapeOptionParameterSpecCOM.OptionList
-    {
-        get
-        {
-            return ((ICapeOptionParameterSpecCOM)m_parameter.Specification).OptionList;
-        }
-    }
-
-
+    [Description("Gets the list of valid values for the parameter if 'RestrictedToList' public is true.")]
+    object ICapeOptionParameterSpecCOM.OptionList => 
+        ((ICapeOptionParameterSpecCOM)_mParameter.Specification).OptionList;
+    
     /// <summary>Constructor for the String-valued parameter</summary>
     /// <remarks>This constructor sets the ICapeIdentification.ComponentName of the 
     /// parameter. The parameter's value and default value are set to the value. </remarks>
     /// <param name="parameter">Sets as the ComponentName of the parameter's ICapeIdentification interface.</param>
     public OptionParameterWrapper(ICapeParameter parameter)
-        : base(String.Empty, string.Empty, parameter.Mode)
+        : base(string.Empty, string.Empty, parameter.Mode)
     {
-        m_parameter = parameter;
+        _mParameter = parameter;
         ComponentName = ((ICapeIdentification)parameter).ComponentName;
         ComponentDescription = ((ICapeIdentification)parameter).ComponentDescription;
-        Mode = m_parameter.Mode;
-        m_ValStatus = m_parameter.ValStatus;            
+        Mode = _mParameter.Mode;
+        m_ValStatus = _mParameter.ValStatus;            
     }        
 
     /// <summary>Occurs when the user changes of the lower bound of the parameter changes.</summary>
@@ -470,7 +447,7 @@ class OptionParameterWrapper : CapeParameter,
     /// <para>When overriding <c>OnParameterOptionListChanged</c> in a derived class, be sure to call the base class's <c>OnParameterOptionListChanged</c> method so that registered 
     /// delegates receive the event.</para></remarks>
     /// <param name="args">A <see cref="ParameterValueChangedEventArgs">ParameterOptionListChangedEventArgs</see> that contains information about the event.</param>
-    protected void OnParameterOptionListChanged(ParameterOptionListChangedEventArgs args)
+    private void OnParameterOptionListChanged(ParameterOptionListChangedEventArgs args)
     {
         if (ParameterOptionListChanged != null)
         {
@@ -486,7 +463,7 @@ class OptionParameterWrapper : CapeParameter,
     /// <para>继承该方法须知：</para>
     /// <para>在派生类中重载 <c>OnParameterUpperBoundChanged</c> 时，请确保调用基类的 <c>OnParameterUpperBoundChanged</c> 方法，以便已注册的委托能收到该事件。</para></remarks>
     /// <param name="args">A <see cref="ParameterLowerBoundChangedEventArgs">ParameterUpperBoundChangedEventArgs</see> that contains information about the event.</param>
-    protected void OnParameterRestrictedToListChanged(ParameterRestrictedToListChangedEventArgs args)
+    private void OnParameterRestrictedToListChanged(ParameterRestrictedToListChangedEventArgs args)
     {
         if (ParameterRestrictedToListChanged != null)
         {
@@ -509,7 +486,7 @@ class OptionParameterWrapper : CapeParameter,
     /// <returns>A new object that is a copy of this instance.</returns>
     override public object Clone()
     {
-        return new OptionParameterWrapper(m_parameter);
+        return new OptionParameterWrapper(_mParameter);
     }
 
     /// <summary>Gets and sets the value of the parameter.</summary>
@@ -525,19 +502,19 @@ class OptionParameterWrapper : CapeParameter,
     [TypeConverter(typeof(OptionParameterValueConverter))]
     [Category("ICapeParameter")]
     [Description("Gets and sets the value of the parameter.")]
-    public String Value
+    public string Value
     {
         [Description("Gets the value of the parameter.")]
         get
         {
-            return m_parameter.value.ToString();
+            return _mParameter.value.ToString();
         }
         [Description("Sets the value of the parameter.")]
         set
         {
-            String message = string.Empty;
-            ParameterValueChangedEventArgs args = new ParameterValueChangedEventArgs(ComponentName, m_parameter.value.ToString(), value);
-            m_parameter.value = value;
+            string message = string.Empty;
+            ParameterValueChangedEventArgs args = new ParameterValueChangedEventArgs(ComponentName, _mParameter.value.ToString(), value);
+            _mParameter.value = value;
             OnParameterValueChanged(args);
             NotifyPropertyChanged("Value");                
         }
@@ -553,12 +530,12 @@ class OptionParameterWrapper : CapeParameter,
     /// <param name="message">Reference to a string that will conain a message regarding the validation of the parameter.</param>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不合适时将引发的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递了无效的参数值时使用，例如，未识别的复合标识符或 props 参数的 UNDEFINED。</exception>
-    public override bool Validate(ref String message)
+    public override bool Validate(ref string message)
     {
         ParameterValidatedEventArgs args;
-        CapeValidationStatus valid = m_parameter.ValStatus;
-        bool retVal = m_parameter.Validate(message);
-        args = new ParameterValidatedEventArgs(ComponentName, message, valid, m_parameter.ValStatus);
+        CapeValidationStatus valid = _mParameter.ValStatus;
+        bool retVal = _mParameter.Validate(message);
+        args = new ParameterValidatedEventArgs(ComponentName, message, valid, _mParameter.ValStatus);
         NotifyPropertyChanged("ValStatus");
         OnParameterValidated(args);
         return true;
@@ -570,7 +547,7 @@ class OptionParameterWrapper : CapeParameter,
     public override void Reset()
     {
         ParameterResetEventArgs args = new ParameterResetEventArgs(ComponentName);
-        m_parameter.Reset();
+        _mParameter.Reset();
         OnParameterReset(args);
         NotifyPropertyChanged("Value");
     }
@@ -599,11 +576,11 @@ class OptionParameterWrapper : CapeParameter,
     /// <value>The default value for the parameter. </value>
     [Category("ICapeOptionParameterSpec")]
     [Description("Gets and Sets the default value of the parameter.")]
-    public String DefaultValue
+    public string DefaultValue
     {
         get
         {
-            return ((ICapeOptionParameterSpecCOM)m_parameter.Specification).DefaultValue;
+            return ((ICapeOptionParameterSpecCOM)_mParameter.Specification).DefaultValue;
         }
         set
         {
@@ -618,11 +595,11 @@ class OptionParameterWrapper : CapeParameter,
     /// </value>
     [Category("ICapeOptionParameterSpec")]
     [Description("Gets and Sets the list of valid values for the parameter if 'RestrictedtoList' public is true.")]
-    public String[] OptionList
+    public string[] OptionList
     {
         get
         {
-            return (string[])((ICapeOptionParameterSpecCOM)m_parameter.Specification).OptionList;
+            return (string[])((ICapeOptionParameterSpecCOM)_mParameter.Specification).OptionList;
         }
         set
         {
@@ -645,7 +622,7 @@ class OptionParameterWrapper : CapeParameter,
     {
         get
         {
-            return ((ICapeOptionParameterSpecCOM)m_parameter.Specification).RestrictedToList;
+            return ((ICapeOptionParameterSpecCOM)_mParameter.Specification).RestrictedToList;
         }
         set
         {
@@ -660,13 +637,13 @@ class OptionParameterWrapper : CapeParameter,
     /// value of <see cref="RestrictedToList">RestrictedToList</see> public is <c>false</c>
     /// any valid String is a valid value for the parameter.</remarks>
     /// <returns>如果字符串参数有效，则为 true；如果无效，则为 false。</returns>
-    /// <param name="pValue">The string to be tested for validity.</param>
+    /// <param name="pValue">要进行有效性测试的字符串。</param>
     /// <param name="message">Reference to a string that will conain a message regarding the validation of the parameter.</param>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不合适时将引发的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递了无效的参数值时使用，例如，未识别的复合标识符或 props 参数的 UNDEFINED。</exception>
     [Description("Checks whether the value is an accepatble value for the parameter.")]
-    public bool Validate(String pValue, ref String message)
+    public bool Validate(string pValue, ref string message)
     {
-        return ((ICapeOptionParameterSpecCOM)m_parameter.Specification).Validate(pValue, ref message);
+        return ((ICapeOptionParameterSpecCOM)_mParameter.Specification).Validate(pValue, ref message);
     }
 }
