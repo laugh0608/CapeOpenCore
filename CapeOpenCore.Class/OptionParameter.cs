@@ -423,10 +423,9 @@ internal sealed class OptionParameterWrapper : CapeParameter, ICapeParameter, IC
     object ICapeOptionParameterSpecCOM.OptionList => 
         ((ICapeOptionParameterSpecCOM)_mParameter.Specification).OptionList;
     
-    /// <summary>Constructor for the String-valued parameter</summary>
-    /// <remarks>This constructor sets the ICapeIdentification.ComponentName of the 
-    /// parameter. The parameter's value and default value are set to the value. </remarks>
-    /// <param name="parameter">Sets as the ComponentName of the parameter's ICapeIdentification interface.</param>
+    /// <summary>字符串值参数构造函数。</summary>
+    /// <remarks>此构造函数设置参数的 ICapeIdentification.ComponentName 名称。参数的值和默认值将被设置为该值。</remarks>
+    /// <param name="parameter">设置为参数的 ICapeIdentification 接口的 ComponentName。</param>
     public OptionParameterWrapper(ICapeParameter parameter)
         : base(string.Empty, string.Empty, parameter.Mode)
     {
@@ -437,66 +436,51 @@ internal sealed class OptionParameterWrapper : CapeParameter, ICapeParameter, IC
         m_ValStatus = _mParameter.ValStatus;            
     }        
 
-    /// <summary>Occurs when the user changes of the lower bound of the parameter changes.</summary>
+    /// <summary>当用户更改参数下限时发生。</summary>
     public event ParameterOptionListChangedHandler ParameterOptionListChanged;
-    /// <summary>Occurs when the user changes of the option list of a parameter.</summary>
+    
+    /// <summary>当用户更改参数的选项列表时发生。</summary>
     /// <remarks><para>引发事件时，事件处理程序会通过委托进行调用。</para>
-    /// <para>The <c>OnParameterOptionListChanged</c> method also allows derived classes to handle the event without attaching a delegate. This is the preferred 
-    /// technique for handling the event in a derived class.</para>
+    /// <para><c>OnParameterOptionListChanged</c> 方法还允许派生类在不附加委托的情况下处理事件。这是在派生类中处理事件的首选技术。</para>
     /// <para>继承该方法须知：</para>
-    /// <para>When overriding <c>OnParameterOptionListChanged</c> in a derived class, be sure to call the base class's <c>OnParameterOptionListChanged</c> method so that registered 
-    /// delegates receive the event.</para></remarks>
-    /// <param name="args">A <see cref="ParameterValueChangedEventArgs">ParameterOptionListChangedEventArgs</see> that contains information about the event.</param>
+    /// <para>在派生类中重载 <c>OnParameterOptionListChanged</c> 时，请确保调用基类的
+    /// <c>OnParameterOptionListChanged</c> 方法，以便已注册的委托能收到该事件。</para></remarks>
+    /// <param name="args">包含事件相关信息的 <see cref="ParameterOptionListChangedEventArgs"/> 文件。</param>
     private void OnParameterOptionListChanged(ParameterOptionListChangedEventArgs args)
     {
-        if (ParameterOptionListChanged != null)
-        {
-            ParameterOptionListChanged(this, args);
-        }
+        ParameterOptionListChanged?.Invoke(this, args);
     }
 
-    /// <summary>Occurs when the user changes of the upper bound of the parameter changes.</summary>
+    /// <summary>当用户更改参数的上限时发生。</summary>
     public event ParameterRestrictedToListChangedHandler ParameterRestrictedToListChanged;
+    
     /// <summary>当用户更改参数上限时出现。</summary>
     /// <remarks><para>引发事件时，事件处理程序会通过委托进行调用。</para>
     /// <para><c>OnParameterUpperBoundChanged</c> 方法还允许派生类在不附加委托的情况下处理事件。这是在派生类中处理事件的首选技术。</para>
     /// <para>继承该方法须知：</para>
-    /// <para>在派生类中重载 <c>OnParameterUpperBoundChanged</c> 时，请确保调用基类的 <c>OnParameterUpperBoundChanged</c> 方法，以便已注册的委托能收到该事件。</para></remarks>
-    /// <param name="args">A <see cref="ParameterLowerBoundChangedEventArgs">ParameterUpperBoundChangedEventArgs</see> that contains information about the event.</param>
+    /// <para>在派生类中重载 <c>OnParameterUpperBoundChanged</c> 时，请确保调用基类的
+    /// <c>OnParameterUpperBoundChanged</c> 方法，以便已注册的委托能收到该事件。</para></remarks>
+    /// <param name="args">包含事件相关信息的 <see cref="ParameterRestrictedToListChangedEventArgs"/> 文件。</param>
     private void OnParameterRestrictedToListChanged(ParameterRestrictedToListChangedEventArgs args)
     {
-        if (ParameterRestrictedToListChanged != null)
-        {
-            ParameterRestrictedToListChanged(this, args);
-        }
+        ParameterRestrictedToListChanged?.Invoke(this, args);
     }
-
-
-    /// <summary>Creates a new object that is a copy of the current instance.</summary>
-    /// <remarks><para>
-    /// Clone can be implemented either as a deep copy or a shallow copy. In a deep copy, all objects are duplicated; 
-    /// in a shallow copy, only the top-level objects are duplicated and the lower levels contain references.
-    /// </para>
-    /// <para>
-    /// The resulting clone must be of the same type as, or compatible with, the original instance.
-    /// </para>
-    /// <para>
-    /// See <see cref="Object.MemberwiseClone"/> for more information on cloning, deep versus shallow copies, and examples.
-    /// </para></remarks>
-    /// <returns>A new object that is a copy of this instance.</returns>
-    override public object Clone()
+    
+    /// <summary>创建一个新对象，该对象是当前实例的副本。</summary>
+    /// <remarks><para>克隆可以以深度复制或浅层复制的方式实现。在深度复制中，所有对象都被复制；
+    /// 在浅层复制中，只有顶层对象被复制，低层对象包含引用。</para>
+    /// <para>生成的克隆必须与原始实例的类型相同或兼容。</para>
+    /// <para>有关克隆、深拷贝与浅拷贝以及示例的更多信息，请参见 <see cref="Object.MemberwiseClone"/>。</para></remarks>
+    /// <returns>一个新对象，是该实例的副本。</returns>
+    public override object Clone()
     {
         return new OptionParameterWrapper(_mParameter);
     }
 
-    /// <summary>Gets and sets the value of the parameter.</summary>
-    /// <remarks>The value is returned as a String, which marshals as a BSTR to COM.</remarks>
-    /// <returns>
-    /// System.String
-    /// </returns>
-    /// <value>
-    /// The value of the parameter.
-    /// </value>
+    /// <summary>获取和设置参数值。</summary>
+    /// <remarks>该值以字符串形式返回，在 COM 中以 BSTR 形式传递。</remarks>
+    /// <returns>System.String</returns>
+    /// <value>参数值。</value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不合适时将引发的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递了无效的参数值时使用，例如，未识别的复合标识符或 props 参数的 UNDEFINED。</exception>
     [TypeConverter(typeof(OptionParameterValueConverter))]
@@ -505,37 +489,32 @@ internal sealed class OptionParameterWrapper : CapeParameter, ICapeParameter, IC
     public string Value
     {
         [Description("Gets the value of the parameter.")]
-        get
-        {
-            return _mParameter.value.ToString();
-        }
+        get => _mParameter.value.ToString();
+        
         [Description("Sets the value of the parameter.")]
         set
         {
-            string message = string.Empty;
-            ParameterValueChangedEventArgs args = new ParameterValueChangedEventArgs(ComponentName, _mParameter.value.ToString(), value);
+            // var message = string.Empty;
+            var args = new ParameterValueChangedEventArgs(ComponentName, _mParameter.value.ToString(), value);
             _mParameter.value = value;
             OnParameterValueChanged(args);
             NotifyPropertyChanged("Value");                
         }
     }
 
-    /// <summary>Validates the current value of the parameter against the parameter's specification.</summary>
-    /// <remarks>If the value of the <see cref="RestrictedToList">RestrictedToList</see>
-    /// public is set to <c>true</c>, the parameter is valid only if the current value
-    /// is included in the <see cref="OptionList">OptionList</see>. If the 
-    /// value of <see cref="RestrictedToList">RestrictedToList</see> public is <c>false</c>
-    /// any valid String is a valid value for the parameter.</remarks>
+    /// <summary>根据参数说明验证参数的当前值。</summary>
+    /// <remarks>如果 <see cref="RestrictedToList"/> 公共设置的值为 <c>true</c>，则只有当前值包含在
+    /// <see cref="OptionList"/> 中时，参数才有效。如果 <see cref="RestrictedToList"/> public
+    /// 的值为 <c>false</c>，则任何有效字符串都是参数的有效值。</remarks>
     /// <returns>如果字符串参数有效，则为 true；如果无效，则为 false。</returns>
-    /// <param name="message">Reference to a string that will conain a message regarding the validation of the parameter.</param>
+    /// <param name="message">指向字符串的引用，该字符串将包含与参数验证相关的信息。</param>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不合适时将引发的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递了无效的参数值时使用，例如，未识别的复合标识符或 props 参数的 UNDEFINED。</exception>
     public override bool Validate(ref string message)
     {
-        ParameterValidatedEventArgs args;
-        CapeValidationStatus valid = _mParameter.ValStatus;
-        bool retVal = _mParameter.Validate(message);
-        args = new ParameterValidatedEventArgs(ComponentName, message, valid, _mParameter.ValStatus);
+        var valid = _mParameter.ValStatus;
+        // var retVal = _mParameter.Validate(message);
+        var args = new ParameterValidatedEventArgs(ComponentName, message, valid, _mParameter.ValStatus);
         NotifyPropertyChanged("ValStatus");
         OnParameterValidated(args);
         return true;
@@ -546,7 +525,7 @@ internal sealed class OptionParameterWrapper : CapeParameter, ICapeParameter, IC
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不合适时将引发的错误。</exception>
     public override void Reset()
     {
-        ParameterResetEventArgs args = new ParameterResetEventArgs(ComponentName);
+        var args = new ParameterResetEventArgs(ComponentName);
         _mParameter.Reset();
         OnParameterReset(args);
         NotifyPropertyChanged("Value");
