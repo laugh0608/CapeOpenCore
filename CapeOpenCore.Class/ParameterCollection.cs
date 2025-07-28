@@ -54,37 +54,29 @@ public class ParameterCollection : BindingList<ICapeParameter>, ICapeCollection,
     private string _mComponentName;
     private string _mComponentDescription;
 
-    //These are the ICapeCollection member implementations
-    /// <summary>Gets the number of items currently stored in the collection.</summary>
-    /// <remarks>Gets the number of items currently stored in the collection.</remarks>
-    /// <returns>Gets the number of items currently stored in the collection.</returns>
-    /// <exception cref="ECapeUnknown">The error to be raised when other error(s), specified for this operation, are not suitable.</exception>
+    // 以下是 ICapeCollection 成员的实现。
+    /// <summary>获取集合中当前存储的项目数量。</summary>
+    /// <remarks>获取集合中当前存储的项目数量。</remarks>
+    /// <returns>获取集合中当前存储的项目数量。</returns>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
     /// <exception cref="ECapeFailedInitialisation">ECapeFailedInitialisation</exception>
     int ICapeCollection.Count()
     {
         return Items.Count;
     }
 
-    /// <summary>Gets the specific item stored within the collection, identified by its 
-    /// ICapeIdentification.ComponentName or 1-based index passed as an argument 
-    /// to the method.</summary>
-    /// <remarks>Return an element from the collection. The requested element can be 
-    /// identified by its actual name (e.g. type CapeString) or by its position 
-    /// in the collection (e.g. type CapeLong). The name of an element is the 
-    /// value returned by the ComponentName() method of its ICapeIdentification 
-    /// interface. The advantage of retrieving an item by name rather than by 
-    /// position is that it is much more efficient. This is because it is faster 
-    /// to check all names from the server part than checking then from the 
-    /// client, where a lot of COM/CORBA calls would be required.</remarks>
-    /// <param name = "index">
-    /// <para>Identifier for the requested item:</para>
-    /// <para>name of item (the variant contains a string)</para>
-    /// <para>position in collection (it contains a long)</para>
-    /// </param>
-    /// <returns>
-    /// System.Object containing the requested collection item.</returns>
-    /// <exception cref="ECapeUnknown">The error to be raised when other error(s), specified for this operation, are not suitable.</exception>
-    /// <exception cref="ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <summary>获取集合中存储的特定项，该项通过其 ICapeIdentification.ComponentName 或
+    /// 作为方法参数传递的基于 1 的索引进行标识。</summary>
+    /// <remarks>从集合中返回一个元素。请求的元素可以通过其实际名称（例如类型为CapeString）或在集合中的位置
+    /// （例如类型为CapeLong）来识别。元素的名称是其 ICapeIdentification 接口的 ComponentName() 方法返回的值。
+    /// 与通过位置检索项相比，通过名称检索项的优势在于效率更高。这是因为从服务器端检查所有名称比从客户端检查更快速，
+    /// 因为后者需要大量 COM/CORBA 调用。</remarks>
+    /// <param name="index"><para>请求项的标识符：</para>
+    /// <para>项目名称（该变体包含一个字符串）</para>
+    /// <para>在集合中的位置（它包含一个长度）</para></param>
+    /// <returns>包含请求的集合项的 System.Object 对象。</returns>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效的参数值时使用，例如，未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     /// <exception cref="ECapeFailedInitialisation">ECapeFailedInitialisation</exception>
     /// <exception cref="ECapeOutOfBounds">ECapeOutOfBounds</exception>
     Object ICapeCollection.Item(Object index)
@@ -159,7 +151,7 @@ public class ParameterCollection : BindingList<ICapeParameter>, ICapeCollection,
     /// <para>Notes to Inheritors: </para>
     /// <para>When overriding <c>OnComponentNameChanged</c> in a derived class, be sure to call the base class's <c>OnComponentNameChanged</c> method so that registered 
     /// delegates receive the event.</para></remarks>
-    /// <param name = "args">A <see cref="ComponentNameChangedEventArgs">NameChangedEventArgs</see> that contains information about the event.</param>
+    /// <param name="args">A <see cref="ComponentNameChangedEventArgs">NameChangedEventArgs</see> that contains information about the event.</param>
     protected void OnComponentNameChanged(ComponentNameChangedEventArgs args)
     {
         if (ComponentNameChanged != null)
@@ -179,7 +171,7 @@ public class ParameterCollection : BindingList<ICapeParameter>, ICapeCollection,
     /// <para>Notes to Inheritors: </para>
     /// <para>When overriding <c>OnComponentDescriptionChanged</c> in a derived class, be sure to call the base class's <c>OnComponentDescriptionChanged</c> method so that registered 
     /// delegates receive the event.</para></remarks>
-    /// <param name = "args">A <see cref="ComponentDescriptionChangedEventArgs">DescriptionChangedEventArgs</see> that contains information about the event.</param>
+    /// <param name="args">A <see cref="ComponentDescriptionChangedEventArgs">DescriptionChangedEventArgs</see> that contains information about the event.</param>
     protected void OnComponentDescriptionChanged(ComponentDescriptionChangedEventArgs args)
     {
         if (ComponentDescriptionChanged != null)
@@ -199,7 +191,7 @@ public class ParameterCollection : BindingList<ICapeParameter>, ICapeCollection,
     /// <para>So, the component will not usually set its own name and description: the 
     /// user of the component will do it.</para></remarks>
     /// <value>The unique name of the component.</value>
-    /// <exception cref="ECapeUnknown">The error to be raised when other error(s), specified for this operation, are not suitable.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
     [DescriptionAttribute("Unit Operation Parameter Collection. Click on the (...) button to edit collection.")]
     [CategoryAttribute("CapeIdentification")]
     public String ComponentName
@@ -228,7 +220,7 @@ public class ParameterCollection : BindingList<ICapeParameter>, ICapeCollection,
     /// <para>So, the component will not usually set its own name and description: the 
     /// user of the component will do it.</para></remarks>
     /// <value>The description of the component.</value>
-    /// <exception cref="ECapeUnknown">The error to be raised when other error(s), specified for this operation, are not suitable.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
     [DescriptionAttribute("Unit Operation Parameter Collection. Click on the (...) button to edit collection.")]
     [CategoryAttribute("CapeIdentification")]
     public String ComponentDescription
