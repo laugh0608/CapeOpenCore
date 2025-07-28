@@ -102,14 +102,14 @@ public class ParameterCollection : BindingList<ICapeParameter>, ICapeCollection,
         throw new CapeInvalidArgumentException("Item " + index + " not found.", 0);
     }
 
-    /// <summary>Initailizes a new instance of the <see cref="ParameterCollection"/> collection class.</summary>
-    /// <remarks>This will create a new instance of the collection.</remarks>
+    /// <summary>初始化 <see cref="ParameterCollection"/> 集合类的全新实例。</summary>
+    /// <remarks>这将创建集合的新实例。</remarks>
     public ParameterCollection()
     {
     }
 
-    /// <summary>Finalizer for the <see cref="ParameterCollection"/> collection class.</summary>
-    /// <remarks>This will finalize the current instance of the collection.</remarks>
+    /// <summary><see cref="ParameterCollection"/> 集合类的终结器。</summary>
+    /// <remarks>这将最终确定当前集合的实例。</remarks>
     ~ParameterCollection()
     {
         foreach (CapeParameter item in Items)
