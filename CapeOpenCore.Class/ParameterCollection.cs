@@ -87,23 +87,25 @@ public class ParameterCollection : BindingList<ICapeParameter>, ICapeCollection,
     /// <exception cref="ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
     /// <exception cref="ECapeFailedInitialisation">ECapeFailedInitialisation</exception>
     /// <exception cref="ECapeOutOfBounds">ECapeOutOfBounds</exception>
-    Object ICapeCollection.Item(Object index)
+    object ICapeCollection.Item(object index)
     {
-        Type indexType = index.GetType();
-        if ((indexType == typeof(Int16)) || (indexType == typeof(Int32)) || (indexType == typeof(Int64)))
+        var indexType = index.GetType();
+        if (indexType == typeof(short) || (indexType == typeof(int)) || indexType == typeof(long))
         {
-            int i = Convert.ToInt32(index);
+            var i = Convert.ToInt32(index);
             return Items[i - 1];
         }
-        if ((indexType == typeof(String)))
+
+        if (indexType != typeof(string)) 
+            throw new CapeInvalidArgumentException("Item " + index + " not found.", 0);
         {
-            String name = index.ToString();
-            for (int i = 0; i < Items.Count; i++)
+            var name = index.ToString();
+            foreach (var pT in Items)
             {
-                ICapeIdentification p_Id = (ICapeIdentification)(Items[i]);
-                if (p_Id.ComponentName == name)
+                var pId = (ICapeIdentification)pT;
+                if (pId.ComponentName == name)
                 {
-                    return Items[i];
+                    return pT;
                 }
             }
         }
@@ -120,8 +122,13 @@ public class ParameterCollection : BindingList<ICapeParameter>, ICapeCollection,
     /// <remarks>This will finalize the current instance of the collection.</remarks>
     ~ParameterCollection()
     {
-        foreach (CapeParameter item in Items)
+        // foreach (CapeParameter item in Items)
+        // {
+        //     item.Dispose();
+        // }
+        foreach (var capeParameter in Items)
         {
+            var item = (CapeParameter)capeParameter;
             item.Dispose();
         }
     }
@@ -140,9 +147,14 @@ public class ParameterCollection : BindingList<ICapeParameter>, ICapeCollection,
     /// <returns>A new object that is a copy of this instance.</returns>
     public object Clone()
     {
-        ParameterCollection clone = new ParameterCollection();
-        foreach (ICloneable item in Items)
+        var clone = new ParameterCollection();
+        // foreach (ICloneable item in Items)
+        // {
+        //     clone.Add((CapeParameter)item.Clone());
+        // }
+        foreach (var capeParameter in Items)
         {
+            var item = (ICloneable)capeParameter;
             clone.Add((CapeParameter)item.Clone());
         }
         return clone;
@@ -162,10 +174,7 @@ public class ParameterCollection : BindingList<ICapeParameter>, ICapeCollection,
     /// <param name = "args">A <see cref="ComponentNameChangedEventArgs">NameChangedEventArgs</see> that contains information about the event.</param>
     protected void OnComponentNameChanged(ComponentNameChangedEventArgs args)
     {
-        if (ComponentNameChanged != null)
-        {
-            ComponentNameChanged(this, args);
-        }
+        ComponentNameChanged?.Invoke(this, args);
     }
 
     /// <summary>Occurs when the user changes of the description of a component.</summary>
@@ -182,10 +191,7 @@ public class ParameterCollection : BindingList<ICapeParameter>, ICapeCollection,
     /// <param name = "args">A <see cref="ComponentDescriptionChangedEventArgs">DescriptionChangedEventArgs</see> that contains information about the event.</param>
     protected void OnComponentDescriptionChanged(ComponentDescriptionChangedEventArgs args)
     {
-        if (ComponentDescriptionChanged != null)
-        {
-            ComponentDescriptionChanged(this, args);
-        }
+        ComponentDescriptionChanged?.Invoke(this, args);
     }
 
     /// <summary>Gets and sets the name of the component.</summary>
@@ -200,18 +206,14 @@ public class ParameterCollection : BindingList<ICapeParameter>, ICapeCollection,
     /// user of the component will do it.</para></remarks>
     /// <value>The unique name of the component.</value>
     /// <exception cref="ECapeUnknown">The error to be raised when other error(s), specified for this operation, are not suitable.</exception>
-    [DescriptionAttribute("Unit Operation Parameter Collection. Click on the (...) button to edit collection.")]
-    [CategoryAttribute("CapeIdentification")]
-    public String ComponentName
+    [Description("Unit Operation Parameter Collection. Click on the (...) button to edit collection.")]
+    [Category("CapeIdentification")]
+    public string ComponentName
     {
-        get
-        {
-            return _mComponentName;
-        }
-
+        get => _mComponentName;
         set
         {
-            ComponentNameChangedEventArgs args = new ComponentNameChangedEventArgs(_mComponentName, value);
+            var args = new ComponentNameChangedEventArgs(_mComponentName, value);
             _mComponentName = value;
             OnComponentNameChanged(args);
         }
@@ -229,25 +231,21 @@ public class ParameterCollection : BindingList<ICapeParameter>, ICapeCollection,
     /// user of the component will do it.</para></remarks>
     /// <value>The description of the component.</value>
     /// <exception cref="ECapeUnknown">The error to be raised when other error(s), specified for this operation, are not suitable.</exception>
-    [DescriptionAttribute("Unit Operation Parameter Collection. Click on the (...) button to edit collection.")]
-    [CategoryAttribute("CapeIdentification")]
-    public String ComponentDescription
+    [Description("Unit Operation Parameter Collection. Click on the (...) button to edit collection.")]
+    [Category("CapeIdentification")]
+    public string ComponentDescription
     {
-        get
-        {
-            return _mComponentDescription;
-        }
+        get => _mComponentDescription;
         set
         {
-            ComponentDescriptionChangedEventArgs args = new ComponentDescriptionChangedEventArgs(_mComponentDescription, value);
+            var args = new ComponentDescriptionChangedEventArgs(_mComponentDescription, value);
             _mComponentDescription = value;
             OnComponentDescriptionChanged(args);
         }
     }
 
     // Implementation of ICustomTypeDescriptor: 
-
-    String ICustomTypeDescriptor.GetClassName()
+    string ICustomTypeDescriptor.GetClassName()
     {
         return TypeDescriptor.GetClassName(this, true);
     }
@@ -257,7 +255,7 @@ public class ParameterCollection : BindingList<ICapeParameter>, ICapeCollection,
         return TypeDescriptor.GetAttributes(this, true);
     }
 
-    String ICustomTypeDescriptor.GetComponentName()
+    string ICustomTypeDescriptor.GetComponentName()
     {
         return TypeDescriptor.GetComponentName(this, true);
     }
@@ -277,7 +275,7 @@ public class ParameterCollection : BindingList<ICapeParameter>, ICapeCollection,
         return TypeDescriptor.GetDefaultProperty(this, true);
     }
 
-    Object ICustomTypeDescriptor.GetEditor(Type editorBaseType)
+    object ICustomTypeDescriptor.GetEditor(Type editorBaseType)
     {
         return TypeDescriptor.GetEditor(this, editorBaseType, true);
     }
@@ -292,7 +290,7 @@ public class ParameterCollection : BindingList<ICapeParameter>, ICapeCollection,
         return TypeDescriptor.GetEvents(this, true);
     }
 
-    Object ICustomTypeDescriptor.GetPropertyOwner(PropertyDescriptor pd)
+    object ICustomTypeDescriptor.GetPropertyOwner(PropertyDescriptor pd)
     {
         return this;
     }
@@ -305,133 +303,62 @@ public class ParameterCollection : BindingList<ICapeParameter>, ICapeCollection,
     PropertyDescriptorCollection ICustomTypeDescriptor.GetProperties()
     {
         // Create a new collection object PropertyDescriptorCollection
-        PropertyDescriptorCollection pds = new PropertyDescriptorCollection(null);
+        var pds = new PropertyDescriptorCollection(null);
         // Iterate the list of parameters
-        for (int i = 0; i < Items.Count; i++)
+        for (var i = 0; i < Items.Count; i++)
         {
             // For each parameter create a property descriptor 
             // and add it to the PropertyDescriptorCollection instance
-            ParameterCollectionPropertyDescriptor pd = new ParameterCollectionPropertyDescriptor(this, i);
+            var pd = new ParameterCollectionPropertyDescriptor(this, i);
             pds.Add(pd);
         }
         return pds;
     }
 }
 
-//class ParameterCollectionEditor : System.ComponentModel.Design.CollectionEditor
-//{
-//    private Type[] m_types;
-
-//    public ParameterCollectionEditor(Type t)
-//        : base(t)
-//    {
-//        m_types = new Type[4];
-//        m_types[0] = typeof(CapeOpen.BooleanParameter);
-//        m_types[1] = typeof(CapeOpen.IntegerParameter);
-//        m_types[2] = typeof(CapeOpen.OptionParameter);
-//        m_types[3] = typeof(CapeOpen.RealParameter);
-//    }
-
-//    protected override Type[] CreateNewItemTypes()
-//    {
-//        return m_types;
-//    }
-//};
-
 /// <summary>
 /// Summary description for CollectionpublicDescriptor.
 /// </summary>
-[System.Runtime.InteropServices.ComVisibleAttribute(false)]
-class ParameterCollectionPropertyDescriptor : System.ComponentModel.PropertyDescriptor
+[ComVisible(false)]
+internal class ParameterCollectionPropertyDescriptor(ParameterCollection coll, int idx)
+    : PropertyDescriptor("#" + idx, null)
 {
-    private ParameterCollection collection;
-    private int index;
+    public override AttributeCollection Attributes => new(null);
 
-    public ParameterCollectionPropertyDescriptor(ParameterCollection coll, int idx) :
-        base("#" + idx.ToString(), null)
-    {
-        this.collection = coll;
-        this.index = idx;
-    }
-
-    public override System.ComponentModel.AttributeCollection Attributes
-    {
-        get
-        {
-            return new System.ComponentModel.AttributeCollection(null);
-        }
-    }
-
-    public override bool CanResetValue(Object component)
+    public override bool CanResetValue(object component)
     {
         return true;
     }
 
-    public override Type ComponentType
+    public override Type ComponentType => coll.GetType();
+
+    public override string DisplayName => ((ICapeIdentification)coll[idx]).ComponentName;
+
+    public override string Description => ((ICapeIdentification)coll[idx]).ComponentDescription;
+
+    public override object GetValue(object component)
     {
-        get
-        {
-            return this.collection.GetType();
-        }
+        return coll[idx];
     }
 
-    public override String DisplayName
-    {
-        get
-        {
-            return ((ICapeIdentification)this.collection[index]).ComponentName;
-        }
-    }
+    public override bool IsReadOnly => true;
 
-    public override String Description
-    {
-        get
-        {
-            return ((ICapeIdentification)this.collection[index]).ComponentDescription;
-        }
-    }
+    public override string Name => string.Concat("#", idx.ToString());
 
-    public override Object GetValue(Object component)
-    {
-        return this.collection[index];
-    }
+    public override Type PropertyType => coll[idx].GetType();
 
-    public override bool IsReadOnly
-    {
-        get
-        {
-            return true;
-        }
-    }
-
-    public override String Name
-    {
-        get
-        {
-            return String.Concat("#", index.ToString());
-        }
-    }
-
-    public override Type PropertyType
-    {
-        get
-        {
-            return this.collection[index].GetType();
-        }
-    }
-
-    public override void ResetValue(Object component)
+    public override void ResetValue(object component)
     {
 
     }
 
-    public override bool ShouldSerializeValue(Object component)
+    public override bool ShouldSerializeValue(object component)
     {
         return true;
     }
 
-    public override void SetValue(Object component, Object value)
+    public override void SetValue(object component, object value)
     {
-        //this.collection[index] = value;
+        // this.collection[index] = value;
     }
-};
+}
