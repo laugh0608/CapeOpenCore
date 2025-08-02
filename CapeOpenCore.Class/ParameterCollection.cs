@@ -125,18 +125,12 @@ public class ParameterCollection : BindingList<ICapeParameter>, ICapeCollection,
         }
     }
         
-    /// <summary>Creates a new object that is a copy of the current instance.</summary>
-    /// <remarks><para>
-    /// Clone can be implemented either as a deep copy or a shallow copy. In a deep copy, all objects are duplicated; 
-    /// in a shallow copy, only the top-level objects are duplicated and the lower levels contain references.
-    /// </para>
-    /// <para>
-    /// The resulting clone must be of the same type as, or compatible with, the original instance.
-    /// </para>
-    /// <para>
-    /// See <see cref="Object.MemberwiseClone"/> for more information on cloning, deep versus shallow copies, and examples.
-    /// </para></remarks>
-    /// <returns>A new object that is a copy of this instance.</returns>
+    /// <summary>创建一个与当前实例相同的副本对象。</summary>
+    /// <remarks><para>克隆可以实现为深度复制或浅度复制。在深度复制中，所有对象都会被复制；
+    /// 在浅度复制中，仅复制顶级对象，而较低级别的对象仅包含引用。</para>
+    /// <para>生成的克隆必须与原始实例属于同一类型或与之兼容。</para>
+    /// <para>有关克隆、深拷贝与浅拷贝的详细信息及示例，请参阅 <see cref="Object.MemberwiseClone"/>。</para></remarks>
+    /// <returns>一个与该实例相同的副本对象。</returns>
     public object Clone()
     {
         var clone = new ParameterCollection();
@@ -152,12 +146,12 @@ public class ParameterCollection : BindingList<ICapeParameter>, ICapeCollection,
         return clone;
     }
 
-    /// <summary>Occurs when the user changes of the name of a component.</summary>
-    /// <remarks>The event to be handles when the name of the PMC is changed.</remarks> 
+    /// <summary>当用户更改组件的名称时发生。</summary>
+    /// <remarks>当 PMC 名称发生变更时触发的事件。</remarks> 
     public event ComponentNameChangedHandler ComponentNameChanged;
 
-    /// <summary>Occurs when the user changes of the description of a component.</summary>
-    /// <remarks><para>Raising an event invokes the event handler through a delegate.</para>
+    /// <summary>当用户修改组件的描述时发生。</summary>
+    /// <remarks><para>触发事件时，会通过委托调用事件处理程序。</para>
     /// <para>The <c>OnComponentNameChanged</c> method also allows derived classes to handle the event without attaching a delegate. This is the preferred 
     /// technique for handling the event in a derived class.</para>
     /// <para>Notes to Inheritors: </para>
@@ -169,34 +163,29 @@ public class ParameterCollection : BindingList<ICapeParameter>, ICapeCollection,
         ComponentNameChanged?.Invoke(this, args);
     }
 
-    /// <summary>Occurs when the user changes of the description of a component.</summary>
-    /// <remarks>The event to be handles when the description of the PMC is changed.</remarks> 
+    /// <summary>当用户修改组件的描述时发生。</summary>
+    /// <remarks>当 PMC 的描述发生更改时触发的事件。</remarks> 
     public event ComponentDescriptionChangedHandler ComponentDescriptionChanged;
 
-    /// <summary>Occurs when the user changes of the description of a component.</summary>
-    /// <remarks><para>Raising an event invokes the event handler through a delegate.</para>
-    /// <para>The <c>OnComponentDescriptionChanged</c> method also allows derived classes to handle the event without attaching a delegate. This is the preferred 
-    /// technique for handling the event in a derived class.</para>
-    /// <para>Notes to Inheritors: </para>
-    /// <para>When overriding <c>OnComponentDescriptionChanged</c> in a derived class, be sure to call the base class's <c>OnComponentDescriptionChanged</c> method so that registered 
-    /// delegates receive the event.</para></remarks>
-    /// <param name="args">A <see cref="ComponentDescriptionChangedEventArgs">DescriptionChangedEventArgs</see> that contains information about the event.</param>
+    /// <summary>当用户修改组件的描述时发生。</summary>
+    /// <remarks><para>触发事件时，会通过委托调用事件处理程序。</para>
+    /// <para><c>OnComponentDescriptionChanged</c> 方法还允许派生类在不附加委托的情况下处理该事件。
+    /// 这是在派生类中处理该事件的首选方法。</para>
+    /// <para>致继承开发者的注意事项：</para>
+    /// <para>在派生类中重写 <c>OnComponentDescriptionChanged</c> 方法时，请务必调用基类的
+    /// <c>OnComponentDescriptionChanged</c> 方法，以确保已注册的委托能够收到该事件。</para></remarks>
+    /// <param name="args">一个包含事件相关信息的 <see cref="ComponentDescriptionChangedEventArgs"/>。</param>
     protected void OnComponentDescriptionChanged(ComponentDescriptionChangedEventArgs args)
     {
         ComponentDescriptionChanged?.Invoke(this, args);
     }
 
-    /// <summary>Gets and sets the name of the component.</summary>
-    /// <remarks><para>A particular Use Case in a system may contain several CAPE-OPEN components 
-    /// of the same class. The user should be able to assign different names and 
-    /// descriptions to each instance in order to refer to them unambiguously and in a 
-    /// user-friendly way. Since not always the software components that are able to 
-    /// set these identifications and the software components that require this information 
-    /// have been developed by the same vendor, a CAPE-OPEN standard for setting and 
-    /// getting this information is required.</para>
-    /// <para>So, the component will not usually set its own name and description: the 
-    /// user of the component will do it.</para></remarks>
-    /// <value>The unique name of the component.</value>
+    /// <summary>获取并设置组件的名称。</summary>
+    /// <remarks><para>系统中的某个用例可能包含多个同一类别的 CAPE-OPEN 组件。用户应能够为每个实例分配不同的名称和描述，
+    /// 以便以无歧义且用户友好的方式引用它们。由于能够设置这些标识的软件组件与需要此信息的软件组件并不总是由同一供应商开发，
+    /// 因此需要制定一个CAPE-OPEN标准来设置和获取此类信息。</para>
+    /// <para>因此，组件通常不会自行设置其名称和描述：组件的使用者会进行设置。</para></remarks>
+    /// <value>组件的唯一名称。</value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
     [Description("Unit Operation Parameter Collection. Click on the (...) button to edit collection.")]
     [Category("CapeIdentification")]
@@ -211,17 +200,12 @@ public class ParameterCollection : BindingList<ICapeParameter>, ICapeCollection,
         }
     }
 
-    /// <summary> Gets and sets the description of the component.</summary>
-    /// <remarks><para>A particular Use Case in a system may contain several CAPE-OPEN components 
-    /// of the same class. The user should be able to assign different names and 
-    /// descriptions to each instance in order to refer to them unambiguously and in a 
-    /// user-friendly way. Since not always the software components that are able to 
-    /// set these identifications and the software components that require this information 
-    /// have been developed by the same vendor, a CAPE-OPEN standard for setting and 
-    /// getting this information is required.</para>
-    /// <para>So, the component will not usually set its own name and description: the 
-    /// user of the component will do it.</para></remarks>
-    /// <value>The description of the component.</value>
+    /// <summary>获取并设置组件的描述。</summary>
+    /// <remarks><para>系统中的某个用例可能包含多个同一类别的 CAPE-OPEN 组件。用户应能够为每个实例分配不同的名称和描述，
+    /// 以便以无歧义且用户友好的方式引用它们。由于能够设置这些标识的软件组件与需要此信息的软件组件并不总是由同一供应商开发，
+    /// 因此需要制定一个CAPE-OPEN标准来设置和获取此类信息。</para>
+    /// <para>因此，组件通常不会自行设置其名称和描述：组件的使用者会进行设置。</para></remarks>
+    /// <value>组件的描述。</value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应触发的错误。</exception>
     [Description("Unit Operation Parameter Collection. Click on the (...) button to edit collection.")]
     [Category("CapeIdentification")]
@@ -294,13 +278,12 @@ public class ParameterCollection : BindingList<ICapeParameter>, ICapeCollection,
 
     PropertyDescriptorCollection ICustomTypeDescriptor.GetProperties()
     {
-        // Create a new collection object PropertyDescriptorCollection
+        // 创建一个新的集合对象 PropertyDescriptorCollection
         var pds = new PropertyDescriptorCollection(null);
-        // Iterate the list of parameters
+        // 遍历参数列表
         for (var i = 0; i < Items.Count; i++)
         {
-            // For each parameter create a property descriptor 
-            // and add it to the PropertyDescriptorCollection instance
+            // 对于每个参数，创建一个属性描述符并将其添加到 PropertyDescriptorCollection 实例中。
             var pd = new ParameterCollectionPropertyDescriptor(this, i);
             pds.Add(pd);
         }
@@ -308,9 +291,7 @@ public class ParameterCollection : BindingList<ICapeParameter>, ICapeCollection,
     }
 }
 
-/// <summary>
-/// Summary description for CollectionpublicDescriptor.
-/// </summary>
+/// <summary>CollectionPublicDescriptor 的摘要描述。</summary>
 [ComVisible(false)]
 internal class ParameterCollectionPropertyDescriptor(ParameterCollection coll, int idx)
     : PropertyDescriptor("#" + idx, null)
