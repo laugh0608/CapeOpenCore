@@ -18,86 +18,56 @@ This file can view properly with any basic editors and browsers (validation done
 // This file was developed/modified by JEAN-PIERRE-BELAUD for CO-LaN organisation - March 2003
 
 using System;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
 
 namespace CapeOpenCore.Class;
 
-/// <summary>
-/// Gets the type of the parameter for which this is a specification: 
-/// </summary>
-/// <remarks>
-///    double-precision Real (CAPE_REAL),
-///    integer(CAPE_INT),
-///    String (or option)(CAPE_OPTION), 
-///    boolean(CAPE_BOOLEAN)
-///    array(CAPE_ARRAY)
-/// Reference document: Parameter Common Interface
-/// </remarks>
+/// <summary>获取此规范所对应的参数类型： </summary>
+/// <remarks><para>double-precision Real (CAPE_REAL),</para>
+/// <para>integer(CAPE_INT),</para>
+/// <para>String (or option)(CAPE_OPTION),</para>
+/// <para>boolean(CAPE_BOOLEAN),</para>
+/// <para>array(CAPE_ARRAY),</para>
+/// 参考文档: Parameter Common Interface</remarks>
 [Serializable]
 public enum CapeParamType
 {
-    /// <summary>
-    /// Double-precision real-valued parameter
-    /// </summary>
-    /// <value>0</value>
+    /// <summary>双精度 double 参数类型</summary>
     CAPE_REAL = 0,
-    /// <summary>
-    /// Integer-valued parameter
-    /// </summary>
+    /// <summary>整数参数类型</summary>
     CAPE_INT = 1,
-    /// <summary>
-    /// String/option parameter
-    /// </summary>
+    /// <summary>字符串或 option 参数类型</summary>
     CAPE_OPTION = 2,
-    /// <summary>
-    /// Boolean-valued parameter
-    /// </summary>
+    /// <summary>布尔值参数类型</summary>
     CAPE_BOOLEAN = 3,
-    /// <summary>
-    /// Array parameter
-    /// </summary>
+    /// <summary>数组参数类型</summary>
     CAPE_ARRAY = 4
-};
-//typedef CapeParamType eCapeParamType;
+}
 
-/// <summary>
-/// Modes of parameters.
-/// </summary>
-/// <remarks>
-/// <para> It allows the following values:</para>
+/// <summary>参数模式。</summary>
+/// <remarks><para>它允许以下值：</para>
 /// <list type="number">
-/// <item>Input (CAPE_INPUT): the Unit(or whichever owner component) will use its value to calculate.</item>
-/// <item>Output (CAPE_OUTPUT): the Unit will place in the parameter a result of its calculations.</item>
-/// <item>Input-Output (CAPE_INPUT_OUTPUT): the user inputs an initial estimation value and the user outputs a 
-/// calculated value.</item>
+/// <item>Input (CAPE_INPUT): 该单元（或任何拥有者组件）将使用其值进行计算。</item>
+/// <item>Output (CAPE_OUTPUT): 该单元将把其计算结果置于参数中。</item>
+/// <item>Input-Output (CAPE_INPUT_OUTPUT): 用户输入一个初始估计值，并输出一个计算值。</item>
 /// </list>
-/// Reference document: Parameter Common Interface
+/// 参考文档: Parameter Common Interface
 /// </remarks>
 [Serializable]
 public enum CapeParamMode
 {
-    /// <summary>
-    /// The Unit(or whichever owner component) will use the parameter's value as an 
-    /// input to its calculation.
-    /// </summary>
+    /// <summary>该单元（或任何拥有该参数的组件）将使用该参数的值作为其计算的输入。</summary>
     CAPE_INPUT = 0,
-    /// <summary>
-    /// The Unit(or whichever owner component) will set the parameter's value as 
-    /// an output to its calculation.
-    /// </summary>
+    /// <summary>该单元（或任何拥有该参数的组件）将把该参数的值作为其计算结果的输出。</summary>
     CAPE_OUTPUT = 1,
-    /// <summary>
-    /// The Unit(or whichever owner component) will use the parameter's initial value as 
-    /// an estimate and will calculate the final value.
-    /// </summary>
+    /// <summary>单元（或任何拥有该参数的组件）将使用参数的初始值作为估计值，并计算最终值。</summary>
     CAPE_INPUT_OUTPUT = 2
-};
-//typedef CapeParamMode eCapeParamMode;
+}
 
-/// <remarks>
-/// Reference document: Parameter Common Interface
-/// </remarks>
-[System.Runtime.InteropServices.ComVisibleAttribute(false)]
-[System.ComponentModel.DescriptionAttribute("ICapeParameterSpec Interface")]
+/// <remarks>参考文档: Parameter Common Interface</remarks>
+[ComVisible(false)]
+[Description("ICapeParameterSpec Interface")]
 public interface ICapeParameterSpec
 {
     /// <summary>
@@ -111,12 +81,9 @@ public interface ICapeParameterSpec
     /// <value>The parameter type. </value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(1)]
-    [System.ComponentModel.DescriptionAttribute("property Type")]
-    CapeParamType Type
-    {
-        get;
-    }
+    [DispId(1)]
+    [Description("property Type")]
+    CapeParamType Type { get; }
 
     /// <summary>
     /// Gets the dimensionality of the parameter.
@@ -138,8 +105,8 @@ public interface ICapeParameterSpec
     /// <value>an integer array indicating the exponents of the various dimensional axes.</value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(2)]
-    [System.ComponentModel.DescriptionAttribute("property Dimensionality")]
+    [DispId(2)]
+    [Description("property Dimensionality")]
     double[] Dimensionality
     {
         get;
@@ -149,10 +116,10 @@ public interface ICapeParameterSpec
 /// <remarks>
 /// Reference document: Parameter Common Interface
 /// </remarks>
-[System.Runtime.InteropServices.ComImport()]
-[System.Runtime.InteropServices.ComVisibleAttribute(false)]
-[System.Runtime.InteropServices.Guid(COGuids.ICapeParameterSpec_IID)]
-[System.ComponentModel.DescriptionAttribute("ICapeParameterSpec Interface")]
+[ComImport()]
+[ComVisible(false)]
+[Guid(COGuids.ICapeParameterSpec_IID)]
+[Description("ICapeParameterSpec Interface")]
 interface ICapeParameterSpecCOM
 {
     /// <summary>
@@ -166,8 +133,8 @@ interface ICapeParameterSpecCOM
     /// <value>The parameter type. </value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(1)]
-    [System.ComponentModel.DescriptionAttribute("property Type")]
+    [DispId(1)]
+    [Description("property Type")]
     CapeParamType Type
     {
         get;
@@ -193,8 +160,8 @@ interface ICapeParameterSpecCOM
     /// <value>an integer array indicating the exponents of the various dimensional axes.</value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(2)]
-    [System.ComponentModel.DescriptionAttribute("property Dimensionality")]
+    [DispId(2)]
+    [Description("property Dimensionality")]
     Object Dimensionality
     {
         get;
@@ -205,8 +172,8 @@ interface ICapeParameterSpecCOM
 /// This interface is for a parameter specification when the 
 /// parameter has a double-precision floating point value.
 /// </summary>
-[System.Runtime.InteropServices.ComVisibleAttribute(false)]
-[System.ComponentModel.DescriptionAttribute("ICapeRealParameterSpec Interface")]
+[ComVisible(false)]
+[Description("ICapeRealParameterSpec Interface")]
 public interface ICapeRealParameterSpec
 {
     /// <summary>
@@ -220,8 +187,8 @@ public interface ICapeRealParameterSpec
     /// </value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(1)]
-    [System.ComponentModel.DescriptionAttribute("property Default")]
+    [DispId(1)]
+    [Description("property Default")]
     double SIDefaultValue
     {
         get;
@@ -239,8 +206,8 @@ public interface ICapeRealParameterSpec
     /// </value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(2)]
-    [System.ComponentModel.DescriptionAttribute("property LowerBound")]
+    [DispId(2)]
+    [Description("property LowerBound")]
     double SILowerBound
     {
         get;
@@ -258,8 +225,8 @@ public interface ICapeRealParameterSpec
     /// </value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(3)]
-    [System.ComponentModel.DescriptionAttribute("property UpperBound")]
+    [DispId(3)]
+    [Description("property UpperBound")]
     double SIUpperBound
     {
         get;
@@ -282,9 +249,9 @@ public interface ICapeRealParameterSpec
     /// <param name = "message">Reference to a string that will conain a message regarding the validation of the parameter.</param>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(4)]
-    [System.ComponentModel.DescriptionAttribute("Check if value is OK for this spec as double")]
-    [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.VariantBool)]
+    [DispId(4)]
+    [Description("Check if value is OK for this spec as double")]
+    [return: MarshalAs(UnmanagedType.VariantBool)]
     bool SIValidate(double value, ref String message);
 
     /// <summary>
@@ -298,8 +265,8 @@ public interface ICapeRealParameterSpec
     /// </value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(1)]
-    [System.ComponentModel.DescriptionAttribute("property Default")]
+    [DispId(1)]
+    [Description("property Default")]
     double DimensionedDefaultValue
     {
         get;
@@ -317,8 +284,8 @@ public interface ICapeRealParameterSpec
     /// </value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(2)]
-    [System.ComponentModel.DescriptionAttribute("property LowerBound")]
+    [DispId(2)]
+    [Description("property LowerBound")]
     double DimensionedLowerBound
     {
         get;
@@ -336,8 +303,8 @@ public interface ICapeRealParameterSpec
     /// </value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(3)]
-    [System.ComponentModel.DescriptionAttribute("property UpperBound")]
+    [DispId(3)]
+    [Description("property UpperBound")]
     double DimensionedUpperBound
     {
         get;
@@ -360,9 +327,9 @@ public interface ICapeRealParameterSpec
     /// <param name = "message">Reference to a string that will conain a message regarding the validation of the parameter.</param>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(4)]
-    [System.ComponentModel.DescriptionAttribute("Check if value is OK for this spec as double")]
-    [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.VariantBool)]
+    [DispId(4)]
+    [Description("Check if value is OK for this spec as double")]
+    [return: MarshalAs(UnmanagedType.VariantBool)]
     bool DimensionedValidate(double value, ref String message);
 };
 
@@ -371,10 +338,10 @@ public interface ICapeRealParameterSpec
 /// This interface is for a parameter specification when the 
 /// parameter has a double-precision floating point value.
 /// </summary>
-[System.Runtime.InteropServices.ComImport()]
-[System.Runtime.InteropServices.ComVisibleAttribute(false)]
-[System.Runtime.InteropServices.Guid(COGuids.ICapeRealParameterSpec_IID)]
-[System.ComponentModel.DescriptionAttribute("ICapeRealParameterSpec Interface")]
+[ComImport()]
+[ComVisible(false)]
+[Guid(COGuids.ICapeRealParameterSpec_IID)]
+[Description("ICapeRealParameterSpec Interface")]
 interface ICapeRealParameterSpecCOM
 {
     /// <summary>
@@ -388,8 +355,8 @@ interface ICapeRealParameterSpecCOM
     /// </value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(1)]
-    [System.ComponentModel.DescriptionAttribute("property Default")]
+    [DispId(1)]
+    [Description("property Default")]
     double DefaultValue
     {
         get;
@@ -406,8 +373,8 @@ interface ICapeRealParameterSpecCOM
     /// </value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(2)]
-    [System.ComponentModel.DescriptionAttribute("property LowerBound")]
+    [DispId(2)]
+    [Description("property LowerBound")]
     double LowerBound
     {
         get;
@@ -424,8 +391,8 @@ interface ICapeRealParameterSpecCOM
     /// </value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(3)]
-    [System.ComponentModel.DescriptionAttribute("property UpperBound")]
+    [DispId(3)]
+    [Description("property UpperBound")]
     double UpperBound
     {
         get;
@@ -447,9 +414,9 @@ interface ICapeRealParameterSpecCOM
     /// <param name = "message">Reference to a string that will conain a message regarding the validation of the parameter.</param>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(4)]
-    [System.ComponentModel.DescriptionAttribute("Check if value is OK for this spec as double")]
-    [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.VariantBool)]
+    [DispId(4)]
+    [Description("Check if value is OK for this spec as double")]
+    [return: MarshalAs(UnmanagedType.VariantBool)]
     bool Validate(double value, ref String message);
 };
 
@@ -457,10 +424,10 @@ interface ICapeRealParameterSpecCOM
 /// This interface is for a parameter specification
 /// when the parameter is an integer value.
 /// </summary>
-[System.Runtime.InteropServices.ComImport()]
-[System.Runtime.InteropServices.ComVisibleAttribute(false)]
-[System.Runtime.InteropServices.Guid(COGuids.ICapeIntegerParameterSpec_IID)]
-[System.ComponentModel.DescriptionAttribute("ICapeIntegerParameterSpec Interface")]
+[ComImport()]
+[ComVisible(false)]
+[Guid(COGuids.ICapeIntegerParameterSpec_IID)]
+[Description("ICapeIntegerParameterSpec Interface")]
 public interface ICapeIntegerParameterSpec
 {
     /// <summary>
@@ -474,7 +441,7 @@ public interface ICapeIntegerParameterSpec
     /// </value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(1), System.ComponentModel.DescriptionAttribute("property Default")]
+    [DispId(1), Description("property Default")]
     int DefaultValue
     {
         get;
@@ -492,7 +459,7 @@ public interface ICapeIntegerParameterSpec
     /// </value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(2), System.ComponentModel.DescriptionAttribute("property LowerBound")]
+    [DispId(2), Description("property LowerBound")]
     int LowerBound
     {
         get;
@@ -510,7 +477,7 @@ public interface ICapeIntegerParameterSpec
     /// </value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(3), System.ComponentModel.DescriptionAttribute("property UpperBound")]
+    [DispId(3), Description("property UpperBound")]
     int UpperBound
     {
         get;
@@ -532,9 +499,9 @@ public interface ICapeIntegerParameterSpec
     /// <param name = "message">Reference to a string that will conain a message regarding the validation of the parameter.</param>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(4)]
-    [System.ComponentModel.DescriptionAttribute("Check if value is OK for this spec as double")]
-    [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.VariantBool)]
+    [DispId(4)]
+    [Description("Check if value is OK for this spec as double")]
+    [return: MarshalAs(UnmanagedType.VariantBool)]
     bool Validate(int pValue, ref String message);
 };
 
@@ -543,8 +510,8 @@ public interface ICapeIntegerParameterSpec
 /// when the parameter is an option, which represents
 /// a list of strings from which one is selected.
 /// </summary>
-[System.Runtime.InteropServices.ComVisibleAttribute(false)]
-[System.ComponentModel.DescriptionAttribute("ICapeOptionParameterSpec Interface")]
+[ComVisible(false)]
+[Description("ICapeOptionParameterSpec Interface")]
 public interface ICapeOptionParameterSpec
 {
     /// <summary>
@@ -558,7 +525,7 @@ public interface ICapeOptionParameterSpec
     /// </value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(1), System.ComponentModel.DescriptionAttribute("property Default")]
+    [DispId(1), Description("property Default")]
     String DefaultValue
     {
         get;
@@ -577,7 +544,7 @@ public interface ICapeOptionParameterSpec
     /// </value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(2), System.ComponentModel.DescriptionAttribute("The list of names of the items")]
+    [DispId(2), Description("The list of names of the items")]
     string[] OptionList
     {
         get;
@@ -594,7 +561,7 @@ public interface ICapeOptionParameterSpec
     /// <value>
     /// Converted by COM interop to a COM-based CAPE-OPEN VARIANT_BOOL.
     /// </value>
-    [System.Runtime.InteropServices.DispIdAttribute(3), System.ComponentModel.DescriptionAttribute("True if it only accepts values from the option list.")]
+    [DispId(3), Description("True if it only accepts values from the option list.")]
     bool RestrictedToList
     {
         get;
@@ -619,10 +586,10 @@ public interface ICapeOptionParameterSpec
     /// <param name = "message">Reference to a string that will conain a message regarding the validation of the parameter.</param>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(4)]
-    [System.ComponentModel.DescriptionAttribute("Check if value is OK for this spec as string")]
-    [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.VariantBool)]
-    bool Validate(System.String pValue, ref String message);
+    [DispId(4)]
+    [Description("Check if value is OK for this spec as string")]
+    [return: MarshalAs(UnmanagedType.VariantBool)]
+    bool Validate(String pValue, ref String message);
 };
 
 
@@ -631,10 +598,10 @@ public interface ICapeOptionParameterSpec
 /// when the parameter is an option, which represents
 /// a list of strings from which one is selected.
 /// </summary>
-[System.Runtime.InteropServices.ComImport()]
-[System.Runtime.InteropServices.ComVisibleAttribute(false)]
-[System.Runtime.InteropServices.Guid(COGuids.ICapeOptionParameterSpec_IID)]
-[System.ComponentModel.DescriptionAttribute("ICapeOptionParameterSpec Interface")]
+[ComImport()]
+[ComVisible(false)]
+[Guid(COGuids.ICapeOptionParameterSpec_IID)]
+[Description("ICapeOptionParameterSpec Interface")]
 interface ICapeOptionParameterSpecCOM
 {
     /// <summary>
@@ -648,7 +615,7 @@ interface ICapeOptionParameterSpecCOM
     /// </value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(1), System.ComponentModel.DescriptionAttribute("property Default")]
+    [DispId(1), Description("property Default")]
     String DefaultValue
     {
         get;
@@ -666,7 +633,7 @@ interface ICapeOptionParameterSpecCOM
     /// </value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(2), System.ComponentModel.DescriptionAttribute("The list of names of the items")]
+    [DispId(2), Description("The list of names of the items")]
     Object OptionList
     {
         get;
@@ -682,7 +649,7 @@ interface ICapeOptionParameterSpecCOM
     /// <value>
     /// Converted by COM interop to a COM-based CAPE-OPEN VARIANT_BOOL.
     /// </value>
-    [System.Runtime.InteropServices.DispIdAttribute(3), System.ComponentModel.DescriptionAttribute("True if it only accepts values from the option list.")]
+    [DispId(3), Description("True if it only accepts values from the option list.")]
     bool RestrictedToList
     {
         get;
@@ -706,19 +673,19 @@ interface ICapeOptionParameterSpecCOM
     /// <param name = "message">Reference to a string that will conain a message regarding the validation of the parameter.</param>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(4)]
-    [System.ComponentModel.DescriptionAttribute("Check if value is OK for this spec as string")]
-    [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.VariantBool)]
-    bool Validate(System.String pValue, ref String message);
+    [DispId(4)]
+    [Description("Check if value is OK for this spec as string")]
+    [return: MarshalAs(UnmanagedType.VariantBool)]
+    bool Validate(String pValue, ref String message);
 };
     
 /// <summary>
 /// This interface is for a parameter specification when the parameter is a boolean
 /// </summary>
-[System.Runtime.InteropServices.ComImport()]
-[System.Runtime.InteropServices.ComVisibleAttribute(false)]
-[System.Runtime.InteropServices.Guid(COGuids.ICapeBooleanParameterSpec_IID)]
-[System.ComponentModel.DescriptionAttribute("ICapeBooleanParameterSpec Interface")]
+[ComImport()]
+[ComVisible(false)]
+[Guid(COGuids.ICapeBooleanParameterSpec_IID)]
+[Description("ICapeBooleanParameterSpec Interface")]
 public interface ICapeBooleanParameterSpec
 {
     /// <summary>
@@ -732,7 +699,7 @@ public interface ICapeBooleanParameterSpec
     /// </value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(1), System.ComponentModel.DescriptionAttribute("property Default")]
+    [DispId(1), Description("property Default")]
     bool DefaultValue
     {
         get;
@@ -754,9 +721,9 @@ public interface ICapeBooleanParameterSpec
     /// <param name = "message">Reference to a string that will conain a message regarding the validation of the parameter.</param>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(2)]
-    [System.ComponentModel.DescriptionAttribute("Check if value is OK for this spec")]
-    [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.VariantBool)]
+    [DispId(2)]
+    [Description("Check if value is OK for this spec")]
+    [return: MarshalAs(UnmanagedType.VariantBool)]
     bool Validate(bool pValue, ref String message);
 };
 
@@ -765,10 +732,10 @@ public interface ICapeBooleanParameterSpec
 /// when the parameter is an array of values (maybebe integers,reals,
 /// booleans or arrays again, which represents.
 /// </summary>
-[System.Runtime.InteropServices.ComImport()]
-[System.Runtime.InteropServices.ComVisibleAttribute(false)]
-[System.Runtime.InteropServices.Guid(COGuids.ICapeArrayParameterSpec_IID)]
-[System.ComponentModel.DescriptionAttribute("ICapeArrayParameterSpec Interface")]
+[ComImport()]
+[ComVisible(false)]
+[Guid(COGuids.ICapeArrayParameterSpec_IID)]
+[Description("ICapeArrayParameterSpec Interface")]
 public interface ICapeArrayParameterSpec
 {
     /// <summary>
@@ -782,7 +749,7 @@ public interface ICapeArrayParameterSpec
     /// </value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(1), System.ComponentModel.DescriptionAttribute("Get the number of dimensions of the array")]
+    [DispId(1), Description("Get the number of dimensions of the array")]
     int NumDimensions
     {
         get;
@@ -799,7 +766,7 @@ public interface ICapeArrayParameterSpec
     /// </value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(2), System.ComponentModel.DescriptionAttribute("Get the size of each one of the dimensions of the array")]
+    [DispId(2), Description("Get the size of each one of the dimensions of the array")]
     int[] Size
     {
         get;
@@ -821,7 +788,7 @@ public interface ICapeArrayParameterSpec
     /// </value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(3), System.ComponentModel.DescriptionAttribute("Get the specification of each of the values in the array")]
+    [DispId(3), Description("Get the specification of each of the values in the array")]
     Object[] ItemsSpecifications
     {
         get;
@@ -841,7 +808,7 @@ public interface ICapeArrayParameterSpec
     /// <param name = "messages">A string array containing the message is used to return the reason that the parameter is invalid.</param>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(4), System.ComponentModel.DescriptionAttribute("Check if value is OK for this spec ")]
+    [DispId(4), Description("Check if value is OK for this spec ")]
     Object Validate(Object inputArray, ref string[] messages);
 
 };
@@ -849,10 +816,10 @@ public interface ICapeArrayParameterSpec
 /// <summary>
 /// Interface defining the actual Parameter quantity.
 /// </summary>
-[System.Runtime.InteropServices.ComImport()]
-[System.Runtime.InteropServices.ComVisibleAttribute(false)]
-[System.Runtime.InteropServices.Guid(COGuids.ICapeParameter_IID)]
-[System.ComponentModel.DescriptionAttribute("ICapeParameter Interface")]
+[ComImport()]
+[ComVisible(false)]
+[Guid(COGuids.ICapeParameter_IID)]
+[Description("ICapeParameter Interface")]
 public interface ICapeParameter
 {
     /// <summary>
@@ -870,11 +837,11 @@ public interface ICapeParameter
     /// </value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(1)]
-    [System.ComponentModel.DescriptionAttribute("Gets and sets the specification for the parameter.")]
+    [DispId(1)]
+    [Description("Gets and sets the specification for the parameter.")]
     Object Specification
     {
-        [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.IDispatch)]
+        [return: MarshalAs(UnmanagedType.IDispatch)]
         get;
     }
 
@@ -890,8 +857,8 @@ public interface ICapeParameter
     /// </value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(2)]
-    [System.ComponentModel.DescriptionAttribute("Get and sets the value of the parameter.")]
+    [DispId(2)]
+    [Description("Get and sets the value of the parameter.")]
     Object value
     {
         get;
@@ -915,7 +882,7 @@ public interface ICapeParameter
     /// <value>The validity staus of the parameter, either valid, invalid, or "not validated".</value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(3), System.ComponentModel.DescriptionAttribute("Get the parameter validation status")]
+    [DispId(3), Description("Get the parameter validation status")]
     CapeValidationStatus ValStatus
     {
         get;
@@ -936,7 +903,7 @@ public interface ICapeParameter
     /// <value>The mode of the parameter, input, output, or input/output.</value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(4), System.ComponentModel.DescriptionAttribute("Get the Mode - input,output - of the parameter.")]
+    [DispId(4), Description("Get the Mode - input,output - of the parameter.")]
     CapeParamMode Mode
     {
         get;
@@ -961,9 +928,9 @@ public interface ICapeParameter
     /// <param name = "message">The message is used to return the reason that the parameter is invalid.</param>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(5)]
-    [System.ComponentModel.DescriptionAttribute("Validate the parameter's current value.")]
-    [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.VariantBool)]
+    [DispId(5)]
+    [Description("Validate the parameter's current value.")]
+    [return: MarshalAs(UnmanagedType.VariantBool)]
     bool Validate(ref String message);
 
     /// <summary>
@@ -973,8 +940,8 @@ public interface ICapeParameter
     /// This method sets the parameter to its default value.
     /// </remarks>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(6)]
-    [System.ComponentModel.DescriptionAttribute("Reset the value of the parameter to its default.")]
+    [DispId(6)]
+    [Description("Reset the value of the parameter to its default.")]
     void Reset();
 };
 
@@ -982,10 +949,10 @@ public interface ICapeParameter
 /// </summary>
 /// <remarks>
 /// </remarks>
-[System.Runtime.InteropServices.InterfaceType(System.Runtime.InteropServices.ComInterfaceType.InterfaceIsIDispatch)]
-[System.Runtime.InteropServices.ComVisibleAttribute(true)]
-[System.Runtime.InteropServices.GuidAttribute("3C32AD8E-490D-4822-8A8E-073F5EDFF3F5")]
-[System.ComponentModel.DescriptionAttribute("CapeParameterEvents Interface")]
+[InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
+[ComVisible(true)]
+[Guid("3C32AD8E-490D-4822-8A8E-073F5EDFF3F5")]
+[Description("CapeParameterEvents Interface")]
 interface IParameterEvents
 {
     /// <summary>
@@ -1046,9 +1013,9 @@ interface IParameterEvents
 }
 
 
-class ParameterTypeConverter : System.ComponentModel.ExpandableObjectConverter
+class ParameterTypeConverter : ExpandableObjectConverter
 {
-    public override bool CanConvertTo(System.ComponentModel.ITypeDescriptorContext context, System.Type destinationType)
+    public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
     {
         if (typeof(ICapeParameter).IsAssignableFrom(destinationType))
             return true;
@@ -1057,13 +1024,13 @@ class ParameterTypeConverter : System.ComponentModel.ExpandableObjectConverter
         return base.CanConvertTo(context, destinationType);
     }
         
-    public override Object ConvertTo(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, Object parameter, System.Type destinationType)
+    public override Object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, Object parameter, Type destinationType)
     {
-        if (typeof(System.String).IsAssignableFrom(destinationType) && typeof(ArrayParameterWrapper).IsAssignableFrom(parameter.GetType()))
+        if (typeof(String).IsAssignableFrom(destinationType) && typeof(ArrayParameterWrapper).IsAssignableFrom(parameter.GetType()))
         {
             return "";//((CapeOpen.ArrayParameterWrapper)parameter).;
         }
-        if (typeof(System.String).IsAssignableFrom(destinationType) && typeof(ICapeParameter).IsAssignableFrom(parameter.GetType()))
+        if (typeof(String).IsAssignableFrom(destinationType) && typeof(ICapeParameter).IsAssignableFrom(parameter.GetType()))
         {
             return ((ICapeParameter)parameter).value.ToString();
         }
@@ -1085,10 +1052,10 @@ class ParameterTypeConverter : System.ComponentModel.ExpandableObjectConverter
 /// display unit for a parameter value. 
 /// </para>
 /// </remarks>
-[System.Runtime.InteropServices.ComImport()]
-[System.Runtime.InteropServices.ComVisibleAttribute(false)]
-[System.Runtime.InteropServices.Guid("B777A1BD-0C88-11D3-822E-00C04F4F66C9")]
-[System.ComponentModel.DescriptionAttribute("IATCapeXRealParameterSpec Interface")]
+[ComImport()]
+[ComVisible(false)]
+[Guid("B777A1BD-0C88-11D3-822E-00C04F4F66C9")]
+[Description("IATCapeXRealParameterSpec Interface")]
 interface IATCapeXRealParameterSpec
 {
     /// <summary>
@@ -1106,7 +1073,7 @@ interface IATCapeXRealParameterSpec
     /// Defines the display unit for the parameter.
     /// </value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    [System.Runtime.InteropServices.DispIdAttribute(0x60040003), System.ComponentModel.DescriptionAttribute(" Provide the Aspen Plus display units for for this parameter.")]
+    [DispId(0x60040003), Description(" Provide the Aspen Plus display units for for this parameter.")]
     String DisplayUnits
     {
         get;
@@ -1117,7 +1084,7 @@ interface IATCapeXRealParameterSpec
 /// <summary>
 /// Represents the method that will handle the changing of the value of a parameter.
 /// </summary>
-[System.Runtime.InteropServices.ComVisibleAttribute(false)]
+[ComVisible(false)]
 public delegate void ParameterValueChangedHandler(Object sender, ParameterValueChangedEventArgs args);
 
 /// <summary>
@@ -1126,9 +1093,9 @@ public delegate void ParameterValueChangedHandler(Object sender, ParameterValueC
 /// <remarks>
 /// The IParameterValueChangedEventArgs interface specifies the old and new value of the parameter.
 /// </remarks>
-[System.Runtime.InteropServices.ComVisibleAttribute(true)]
-[System.Runtime.InteropServices.GuidAttribute("41E1A3C4-F23C-4B39-BC54-39851A1D09C9")]
-[System.ComponentModel.DescriptionAttribute("CapeIdentificationEvents Interface")]
+[ComVisible(true)]
+[Guid("41E1A3C4-F23C-4B39-BC54-39851A1D09C9")]
+[Description("CapeIdentificationEvents Interface")]
 interface IParameterValueChangedEventArgs
 {
     /// <summary>
@@ -1162,10 +1129,10 @@ interface IParameterValueChangedEventArgs
 /// The ParameterValueChangedEventArgs event specifies the old and new value of the parameter.
 /// </remarks>
 [Serializable]
-[System.Runtime.InteropServices.ComVisibleAttribute(true)]
-[System.Runtime.InteropServices.GuidAttribute("C3592B59-92E8-4A24-A2EB-E23C38F88E7F")]
-[System.Runtime.InteropServices.ClassInterface(System.Runtime.InteropServices.ClassInterfaceType.None)]
-public class ParameterValueChangedEventArgs : System.EventArgs,
+[ComVisible(true)]
+[Guid("C3592B59-92E8-4A24-A2EB-E23C38F88E7F")]
+[ClassInterface(ClassInterfaceType.None)]
+public class ParameterValueChangedEventArgs : EventArgs,
     IParameterValueChangedEventArgs
 {
     private String m_paramName;
@@ -1225,7 +1192,7 @@ public class ParameterValueChangedEventArgs : System.EventArgs,
 /// <summary>
 /// Represents the method that will handle the changing of the default value of a parameter.
 /// </summary>
-[System.Runtime.InteropServices.ComVisibleAttribute(false)]
+[ComVisible(false)]
 public delegate void ParameterDefaultValueChangedHandler(Object sender, ParameterDefaultValueChangedEventArgs args);
 
 /// <summary>
@@ -1234,9 +1201,9 @@ public delegate void ParameterDefaultValueChangedHandler(Object sender, Paramete
 /// <remarks>
 /// The IParameterDefaultValueChangedEventArgs interface specifies the old and new default value of the parameter.
 /// </remarks>
-[System.Runtime.InteropServices.ComVisibleAttribute(true)]
-[System.Runtime.InteropServices.GuidAttribute("E5D9CE6A-9B10-4A81-9E06-1B6C6C5257F3")]
-[System.ComponentModel.DescriptionAttribute("CapeIdentificationEvents Interface")]
+[ComVisible(true)]
+[Guid("E5D9CE6A-9B10-4A81-9E06-1B6C6C5257F3")]
+[Description("CapeIdentificationEvents Interface")]
 interface IParameterDefaultValueChangedEventArgs
 {
     /// <summary>
@@ -1270,10 +1237,10 @@ interface IParameterDefaultValueChangedEventArgs
 /// The ParameterDefaultValueChangedEventArgs event specifies the old and new default value of the parameter.
 /// </remarks>
 [Serializable]
-[System.Runtime.InteropServices.ComVisibleAttribute(true)]
-[System.Runtime.InteropServices.GuidAttribute("355A5BDD-F6B5-4EEE-97C7-F1533DD28889")]
-[System.Runtime.InteropServices.ClassInterface(System.Runtime.InteropServices.ClassInterfaceType.None)]
-public class ParameterDefaultValueChangedEventArgs : System.EventArgs,
+[ComVisible(true)]
+[Guid("355A5BDD-F6B5-4EEE-97C7-F1533DD28889")]
+[ClassInterface(ClassInterfaceType.None)]
+public class ParameterDefaultValueChangedEventArgs : EventArgs,
     IParameterDefaultValueChangedEventArgs
 {
     private String m_paramName;
@@ -1332,7 +1299,7 @@ public class ParameterDefaultValueChangedEventArgs : System.EventArgs,
 /// <summary>
 /// Represents the method that will handle the changing of the lower bound of a parameter.
 /// </summary>
-[System.Runtime.InteropServices.ComVisibleAttribute(false)]
+[ComVisible(false)]
 public delegate void ParameterLowerBoundChangedHandler(Object sender, ParameterLowerBoundChangedEventArgs args);
 
 /// <summary>
@@ -1341,9 +1308,9 @@ public delegate void ParameterLowerBoundChangedHandler(Object sender, ParameterL
 /// <remarks>
 /// The IParameterLowerBoundChangedEventArgs interface specifies the old and new lower bound of the parameter.
 /// </remarks>
-[System.Runtime.InteropServices.ComVisibleAttribute(true)]
-[System.Runtime.InteropServices.GuidAttribute("FBCE7FC9-0F58-492B-88F9-8A23A23F93B1")]
-[System.ComponentModel.DescriptionAttribute("CapeIdentificationEvents Interface")]
+[ComVisible(true)]
+[Guid("FBCE7FC9-0F58-492B-88F9-8A23A23F93B1")]
+[Description("CapeIdentificationEvents Interface")]
 interface IParameterLowerBoundChangedEventArgs
 {
     /// <summary>
@@ -1377,10 +1344,10 @@ interface IParameterLowerBoundChangedEventArgs
 /// The ParameterLowerBoundChangedEventArgs event specifies the old and new lower bound of the parameter.
 /// </remarks>
 [Serializable]
-[System.Runtime.InteropServices.ComVisibleAttribute(true)]
-[System.Runtime.InteropServices.GuidAttribute("A982AD29-10B5-4C86-AF74-3914DD902384")]
-[System.Runtime.InteropServices.ClassInterface(System.Runtime.InteropServices.ClassInterfaceType.None)]
-public class ParameterLowerBoundChangedEventArgs : System.EventArgs,
+[ComVisible(true)]
+[Guid("A982AD29-10B5-4C86-AF74-3914DD902384")]
+[ClassInterface(ClassInterfaceType.None)]
+public class ParameterLowerBoundChangedEventArgs : EventArgs,
     IParameterLowerBoundChangedEventArgs
 {
     private String m_paramName;
@@ -1439,13 +1406,13 @@ public class ParameterLowerBoundChangedEventArgs : System.EventArgs,
 /// <summary>
 /// Represents the method that will handle the changing of the upper bound of a parameter.
 /// </summary>
-[System.Runtime.InteropServices.ComVisibleAttribute(false)]
+[ComVisible(false)]
 public delegate void ParameterUpperBoundChangedHandler(Object sender, ParameterUpperBoundChangedEventArgs args);
 
 /// <summary>
 /// Represents the method that will handle the changing of the upper bound of a parameter.
 /// </summary>
-[System.Runtime.InteropServices.ComVisibleAttribute(true)]
+[ComVisible(true)]
 delegate void ParameterUpperBoundChangedHandlerCOM(Object sender, object args);
 
 /// <summary>
@@ -1454,9 +1421,9 @@ delegate void ParameterUpperBoundChangedHandlerCOM(Object sender, object args);
 /// <remarks>
 /// The IParameterUpperBoundChangedEventArgs interface specifies the old and new lower bound of the parameter.
 /// </remarks>
-[System.Runtime.InteropServices.ComVisibleAttribute(true)]
-[System.Runtime.InteropServices.GuidAttribute("A2D0FAAB-F30E-48F5-82F1-4877F61950E9")]
-[System.ComponentModel.DescriptionAttribute("CapeIdentificationEvents Interface")]
+[ComVisible(true)]
+[Guid("A2D0FAAB-F30E-48F5-82F1-4877F61950E9")]
+[Description("CapeIdentificationEvents Interface")]
 interface IParameterUpperBoundChangedEventArgs
 {
     /// <summary>
@@ -1490,10 +1457,10 @@ interface IParameterUpperBoundChangedEventArgs
 /// The ParameterUpperBoundChangedEventArgs event specifies the old and new lower bound of the parameter.
 /// </remarks>
 [Serializable]
-[System.Runtime.InteropServices.ComVisibleAttribute(true)]
-[System.Runtime.InteropServices.GuidAttribute("92BF83FE-0855-4382-A15E-744890B5BBF2")]
-[System.Runtime.InteropServices.ClassInterface(System.Runtime.InteropServices.ClassInterfaceType.None)]
-public class ParameterUpperBoundChangedEventArgs : System.EventArgs,
+[ComVisible(true)]
+[Guid("92BF83FE-0855-4382-A15E-744890B5BBF2")]
+[ClassInterface(ClassInterfaceType.None)]
+public class ParameterUpperBoundChangedEventArgs : EventArgs,
     IParameterUpperBoundChangedEventArgs
 {
     private String m_paramName;
@@ -1553,7 +1520,7 @@ public class ParameterUpperBoundChangedEventArgs : System.EventArgs,
 /// <summary>
 /// Represents the method that will handle the changing of the mode of a parameter.
 /// </summary>
-[System.Runtime.InteropServices.ComVisibleAttribute(false)]
+[ComVisible(false)]
 public delegate void ParameterModeChangedHandler(Object sender, ParameterModeChangedEventArgs args);
 
 
@@ -1563,9 +1530,9 @@ public delegate void ParameterModeChangedHandler(Object sender, ParameterModeCha
 /// <remarks>
 /// The IParameterModeChangedEventArgs interface specifies the old and new mode of the parameter.
 /// </remarks>
-[System.Runtime.InteropServices.ComVisibleAttribute(true)]
-[System.Runtime.InteropServices.GuidAttribute("5405E831-4B5F-4A57-A410-8E91BBF9FFD3")]
-[System.ComponentModel.DescriptionAttribute("CapeIdentificationEvents Interface")]
+[ComVisible(true)]
+[Guid("5405E831-4B5F-4A57-A410-8E91BBF9FFD3")]
+[Description("CapeIdentificationEvents Interface")]
 interface IParameterModeChangedEventArgs
 {
     /// <summary>
@@ -1599,10 +1566,10 @@ interface IParameterModeChangedEventArgs
 /// The ParameterModeChangedEventArgs event specifies the old and new mode of the parameter.
 /// </remarks>
 [Serializable]
-[System.Runtime.InteropServices.ComVisibleAttribute(true)]
-[System.Runtime.InteropServices.GuidAttribute("3C953F15-A1F3-47A9-829A-9F7590CEB5E9")]
-[System.Runtime.InteropServices.ClassInterface(System.Runtime.InteropServices.ClassInterfaceType.None)]
-public class ParameterModeChangedEventArgs : System.EventArgs,
+[ComVisible(true)]
+[Guid("3C953F15-A1F3-47A9-829A-9F7590CEB5E9")]
+[ClassInterface(ClassInterfaceType.None)]
+public class ParameterModeChangedEventArgs : EventArgs,
     IParameterModeChangedEventArgs
 {
     private String m_paramName;
@@ -1663,7 +1630,7 @@ public class ParameterModeChangedEventArgs : System.EventArgs,
 /// <summary>
 /// Represents the method that will handle the validation of a parameter.
 /// </summary>
-[System.Runtime.InteropServices.ComVisibleAttribute(false)]
+[ComVisible(false)]
 public delegate void ParameterValidatedHandler(Object sender, ParameterValidatedEventArgs args);
 
 /// <summary>
@@ -1672,9 +1639,9 @@ public delegate void ParameterValidatedHandler(Object sender, ParameterValidated
 /// <remarks>
 /// Provides information about the validation of the parameter.
 /// </remarks>
-[System.Runtime.InteropServices.ComVisibleAttribute(true)]
-[System.Runtime.InteropServices.GuidAttribute("EFD819A4-E4EC-462E-90E6-5D994CA44F8E")]
-[System.ComponentModel.DescriptionAttribute("ParameterValidatedEvent Interface")]
+[ComVisible(true)]
+[Guid("EFD819A4-E4EC-462E-90E6-5D994CA44F8E")]
+[Description("ParameterValidatedEvent Interface")]
 interface IParameterValidatedEventArgs
 {
     /// <summary>
@@ -1721,10 +1688,10 @@ interface IParameterValidatedEventArgs
 /// Provides information about the validation of the parameter.
 /// </remarks>
 [Serializable]
-[System.Runtime.InteropServices.ComVisibleAttribute(true)]
-[System.Runtime.InteropServices.GuidAttribute("5727414A-838D-49F8-AFEF-1CC8C578D756")]
-[System.Runtime.InteropServices.ClassInterface(System.Runtime.InteropServices.ClassInterfaceType.None)]
-public class ParameterValidatedEventArgs : System.EventArgs,
+[ComVisible(true)]
+[Guid("5727414A-838D-49F8-AFEF-1CC8C578D756")]
+[ClassInterface(ClassInterfaceType.None)]
+public class ParameterValidatedEventArgs : EventArgs,
     IParameterValidatedEventArgs
 {
     private String m_paramName;
@@ -1801,7 +1768,7 @@ public class ParameterValidatedEventArgs : System.EventArgs,
 /// <summary>
 /// Represents the method that will handle the resetting of a parameter.
 /// </summary>
-[System.Runtime.InteropServices.ComVisibleAttribute(false)]
+[ComVisible(false)]
 public delegate void ParameterResetHandler(Object sender, ParameterResetEventArgs args);
 
 
@@ -1811,9 +1778,9 @@ public delegate void ParameterResetHandler(Object sender, ParameterResetEventArg
 /// <remarks>
 /// The parameter was reset.
 /// </remarks>
-[System.Runtime.InteropServices.ComVisibleAttribute(true)]
-[System.Runtime.InteropServices.GuidAttribute("12067518-B797-4895-9B26-EA71C60A8803")]
-[System.ComponentModel.DescriptionAttribute("ParameterResetEventArgs Interface")]
+[ComVisible(true)]
+[Guid("12067518-B797-4895-9B26-EA71C60A8803")]
+[Description("ParameterResetEventArgs Interface")]
 interface IParameterResetEventArgs
 {
     /// <summary>
@@ -1831,10 +1798,10 @@ interface IParameterResetEventArgs
 /// The parameter was reset.
 /// </remarks>
 [Serializable]
-[System.Runtime.InteropServices.ComVisibleAttribute(true)]
-[System.Runtime.InteropServices.GuidAttribute("01BF391B-415E-4F5E-905D-395A707DC125")]
-[System.Runtime.InteropServices.ClassInterface(System.Runtime.InteropServices.ClassInterfaceType.None)]
-public class ParameterResetEventArgs : System.EventArgs,
+[ComVisible(true)]
+[Guid("01BF391B-415E-4F5E-905D-395A707DC125")]
+[ClassInterface(ClassInterfaceType.None)]
+public class ParameterResetEventArgs : EventArgs,
     IParameterResetEventArgs
 {
     private String m_paramName;
@@ -1866,7 +1833,7 @@ public class ParameterResetEventArgs : System.EventArgs,
 /// <summary>
 /// Represents the method that will handle the changing of the option list of a parameter.
 /// </summary>
-[System.Runtime.InteropServices.ComVisibleAttribute(false)]
+[ComVisible(false)]
 public delegate void ParameterOptionListChangedHandler(Object sender, ParameterOptionListChangedEventArgs args);
 
 /// <summary>
@@ -1875,9 +1842,9 @@ public delegate void ParameterOptionListChangedHandler(Object sender, ParameterO
 /// <remarks>
 /// The parameter was reset.
 /// </remarks>
-[System.Runtime.InteropServices.ComVisibleAttribute(true)]
-[System.Runtime.InteropServices.GuidAttribute("78E06E7B-00AB-4295-9915-546DC1CD64A6")]
-[System.ComponentModel.DescriptionAttribute("ParameterOptionListChangedEventArgs Interface")]
+[ComVisible(true)]
+[Guid("78E06E7B-00AB-4295-9915-546DC1CD64A6")]
+[Description("ParameterOptionListChangedEventArgs Interface")]
 interface IParameterOptionListChangedEventArgs
 {
     /// <summary>
@@ -1900,10 +1867,10 @@ interface IParameterOptionListChangedEventArgs
 /// The parameter option list was changed.
 /// </remarks>
 [Serializable]
-[System.Runtime.InteropServices.ComVisibleAttribute(true)]
-[System.Runtime.InteropServices.GuidAttribute("2AEC279F-EBEC-4806-AA00-CC215432DB82")]
-[System.Runtime.InteropServices.ClassInterface(System.Runtime.InteropServices.ClassInterfaceType.None)]
-public class ParameterOptionListChangedEventArgs : System.EventArgs,
+[ComVisible(true)]
+[Guid("2AEC279F-EBEC-4806-AA00-CC215432DB82")]
+[ClassInterface(ClassInterfaceType.None)]
+public class ParameterOptionListChangedEventArgs : EventArgs,
     IParameterOptionListChangedEventArgs
 {
     private String m_paramName;
@@ -1938,9 +1905,9 @@ public class ParameterOptionListChangedEventArgs : System.EventArgs,
 /// <remarks>
 /// The restiction to the options list of a parameter was changed.
 /// </remarks>
-[System.Runtime.InteropServices.ComVisibleAttribute(true)]
-[System.Runtime.InteropServices.GuidAttribute("7F357261-095A-4FD4-99C1-ACDAEDA36141")]
-[System.ComponentModel.DescriptionAttribute("ParameterOptionListChangedEventArgs Interface")]
+[ComVisible(true)]
+[Guid("7F357261-095A-4FD4-99C1-ACDAEDA36141")]
+[Description("ParameterOptionListChangedEventArgs Interface")]
 interface IParameterRestrictedToListChangedEventArgs
 {
     /// <summary>
@@ -1963,10 +1930,10 @@ interface IParameterRestrictedToListChangedEventArgs
 /// The parameter restiction to the option list was changed.
 /// </remarks>
 [Serializable]
-[System.Runtime.InteropServices.ComVisibleAttribute(true)]
-[System.Runtime.InteropServices.GuidAttribute("82E0E6C2-3103-4B5A-A5BC-EBAB971B069A")]
-[System.Runtime.InteropServices.ClassInterface(System.Runtime.InteropServices.ClassInterfaceType.None)]
-public class ParameterRestrictedToListChangedEventArgs : System.EventArgs,
+[ComVisible(true)]
+[Guid("82E0E6C2-3103-4B5A-A5BC-EBAB971B069A")]
+[ClassInterface(ClassInterfaceType.None)]
+public class ParameterRestrictedToListChangedEventArgs : EventArgs,
     IParameterRestrictedToListChangedEventArgs
 {
     private String m_paramName;
@@ -2032,32 +1999,32 @@ public class ParameterRestrictedToListChangedEventArgs : System.EventArgs,
 /// <summary>
 /// Represents the method that will handle the changing of whether a paratemer's value is restricted to those in the option list.
 /// </summary>
-[System.Runtime.InteropServices.ComVisibleAttribute(false)]
+[ComVisible(false)]
 public delegate void ParameterRestrictedToListChangedHandler(Object sender, ParameterRestrictedToListChangedEventArgs args);
 
 /// <summary>
 /// Represents the method that will handle the changing of the Kinetic Reaction Chemistry of a PMC.
 /// </summary>
-[System.Runtime.InteropServices.ComVisibleAttribute(false)]
-public delegate void KineticReactionsChangedHandler(Object sender, System.EventArgs args);
+[ComVisible(false)]
+public delegate void KineticReactionsChangedHandler(Object sender, EventArgs args);
 
 
 /// <summary>
 /// Represents the method that will handle the changing of the Equilibrium Reaction Chemistry of a PMC.
 /// </summary>
-[System.Runtime.InteropServices.ComVisibleAttribute(false)]
-public delegate void EquilibriumReactionsChangedHandler(Object sender, System.EventArgs args);
+[ComVisible(false)]
+public delegate void EquilibriumReactionsChangedHandler(Object sender, EventArgs args);
 
 /// <summary>
 /// Base Class defining the actual Parameter quantity.
 /// </summary>
 [Serializable]
-[System.Runtime.InteropServices.ComSourceInterfaces(typeof(IParameterEvents))]
-[System.Runtime.InteropServices.ComVisibleAttribute(true)]
-[System.Runtime.InteropServices.GuidAttribute("F027B4D1-A215-4107-AA75-34E929DD00A5")]
-[System.ComponentModel.DescriptionAttribute("CapeIdentification Interface")]
-[System.Runtime.InteropServices.ClassInterface(System.Runtime.InteropServices.ClassInterfaceType.None)]
-[System.ComponentModel.TypeConverter(typeof(ParameterTypeConverter))]
+[ComSourceInterfaces(typeof(IParameterEvents))]
+[ComVisible(true)]
+[Guid("F027B4D1-A215-4107-AA75-34E929DD00A5")]
+[Description("CapeIdentification Interface")]
+[ClassInterface(ClassInterfaceType.None)]
+[TypeConverter(typeof(ParameterTypeConverter))]
 abstract public class CapeParameter : CapeIdentification,
     ICapeParameter,
     ICapeParameterSpec,
@@ -2094,7 +2061,7 @@ abstract public class CapeParameter : CapeIdentification,
     public CapeParameter(string name, string description, CapeParamMode mode)
         : base(name, description)
     {
-        this.m_mode = mode;
+        m_mode = mode;
     }
 
     /// <summary>
@@ -2137,7 +2104,7 @@ abstract public class CapeParameter : CapeIdentification,
     /// </value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.ComponentModel.BrowsableAttribute(false)]
+    [Browsable(false)]
     Object ICapeParameter.Specification
     {
         get
@@ -2181,7 +2148,7 @@ abstract public class CapeParameter : CapeIdentification,
     /// <value>System.Object</value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.ComponentModel.BrowsableAttribute(false)]
+    [Browsable(false)]
     virtual public Object value
     {
         get;
@@ -2200,7 +2167,7 @@ abstract public class CapeParameter : CapeIdentification,
     /// </value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.ComponentModel.BrowsableAttribute(false)]
+    [Browsable(false)]
     virtual public double[] Dimensionality
     {
         get
@@ -2220,7 +2187,7 @@ abstract public class CapeParameter : CapeIdentification,
     /// </value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.ComponentModel.BrowsableAttribute(false)]
+    [Browsable(false)]
     Object ICapeParameterSpecCOM.Dimensionality
     {
         get
@@ -2247,7 +2214,7 @@ abstract public class CapeParameter : CapeIdentification,
     /// <value>The validity staus of the parameter, either valid, invalid, or "not validated".</value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.ComponentModel.Category("ICapeParameter")]
+    [Category("ICapeParameter")]
     public CapeValidationStatus ValStatus
     {
         get
@@ -2322,7 +2289,7 @@ abstract public class CapeParameter : CapeIdentification,
     /// <value>The mode of the parameter, input, output, or input/output.</value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
-    [System.ComponentModel.Category("ICapeParameter")]
+    [Category("ICapeParameter")]
     public CapeParamMode Mode
     {
         get
@@ -2331,10 +2298,10 @@ abstract public class CapeParameter : CapeIdentification,
         }
         set
         {
-            ParameterModeChangedEventArgs args = new ParameterModeChangedEventArgs(this.ComponentName, m_mode, value);
+            ParameterModeChangedEventArgs args = new ParameterModeChangedEventArgs(ComponentName, m_mode, value);
             OnParameterModeChanged(args);
             m_mode = value;
-            this.NotifyPropertyChanged("Mode");
+            NotifyPropertyChanged("Mode");
         }
     }
                        
@@ -2407,7 +2374,7 @@ abstract public class CapeParameter : CapeIdentification,
     /// <value>The parameter type. </value>
     /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
     /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed.</exception>
-    [System.ComponentModel.Category("ICapeParameterSpec")]
+    [Category("ICapeParameterSpec")]
     abstract public CapeParamType Type
     {
         get;
