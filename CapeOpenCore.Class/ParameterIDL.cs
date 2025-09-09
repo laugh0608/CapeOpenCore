@@ -19,6 +19,7 @@ This file can view properly with any basic editors and browsers (validation done
 
 using System;
 using System.ComponentModel;
+using System.Globalization;
 using System.Runtime.InteropServices;
 
 namespace CapeOpenCore.Class;
@@ -70,71 +71,55 @@ public enum CapeParamMode
 [Description("ICapeParameterSpec Interface")]
 public interface ICapeParameterSpec
 {
-    /// <summary>
-    /// Gets the type of the parameter. 
-    /// </summary>
-    /// <remarks>
-    /// Gets the <see cref = "CapeParamType"/> of the parameter for which this is a specification: real 
-    /// (CAPE_REAL), integer(CAPE_INT), option(CAPE_OPTION), boolean(CAPE_BOOLEAN) 
-    /// or array(CAPE_ARRAY).
-    /// </remarks>
-    /// <value>The parameter type. </value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <summary>获取参数的类型</summary>
+    /// <remarks>获取此参数所对应的 <see cref="CapeParamType"/> 参数类型:
+    /// real(CAPE_REAL), integer(CAPE_INT), option(CAPE_OPTION), boolean(CAPE_BOOLEAN), array(CAPE_ARRAY).</remarks>
+    /// <value>参数类型</value>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(1)]
-    [Description("property Type")]
+    [Description("Property Type")]
     CapeParamType Type { get; }
 
-    /// <summary>
-    /// Gets the dimensionality of the parameter.
-    /// </summary>
-    /// <remarks>
-    /// <para>Gets the dimensionality of the parameter for which this is the 
-    /// specification. The dimensionality represents the physical dimensional 
-    /// axes of this parameter. It is expected that the dimensionality must cover 
-    /// at least 6 fundamental axes (length, mass, time, angle, temperature and 
-    /// charge). A possible implementation could consist in being a constant 
+    /// <summary>获取参数的维度 (dimensionality)。</summary>
+    /// <remarks><para>获取此参数的规格所对应的维度。该维度代表该参数的物理维度轴。
+    /// 预期维度必须至少覆盖 6 个基本轴: (length, mass, time, angle, temperature, charge)。</para>
+    /// <para>A possible implementation could consist in being a constant 
     /// length array vector that contains the exponents of each basic SI unit, 
     /// following directives of SI-brochure (from http://www.bipm.fr/). So if we 
     /// agree on order &lt;m kg s A K,&gt; ... velocity would be 
-    /// &lt;1,0,-1,0,0,0&gt;: that is m1 * s-1 =m/s. We have suggested to the 
-    /// CO Scientific Committee to use the SI base units plus the SI derived units 
-    /// with special symbols (for a better usability and for allowing the 
-    /// definition of angles).</para>
+    /// &lt;1,0,-1,0,0,0&gt;: that is m1 * s-1 =m/s.</para>
+    /// <para>美国环保局已向协调组织科学委员会建议采用国际单位制基本单位，
+    /// 并辅以带有特殊符号的国际单位制导出单位（以提升实用性并允许定义角度）。</para>
     /// </remarks>
-    /// <value>an integer array indicating the exponents of the various dimensional axes.</value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <value>一个整型数组，用于表示各维度轴的指数。</value>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(2)]
-    [Description("property Dimensionality")]
-    double[] Dimensionality
-    {
-        get;
-    }
-};
+    [Description("Property Dimensionality")]
+    double[] Dimensionality { get; }
+}
 
-/// <remarks>
-/// Reference document: Parameter Common Interface
-/// </remarks>
-[ComImport()]
+/// <remarks>参考文档: Parameter Common Interface</remarks>
+[ComImport]
 [ComVisible(false)]
 [Guid(COGuids.ICapeParameterSpec_IID)]
 [Description("ICapeParameterSpec Interface")]
-interface ICapeParameterSpecCOM
+internal interface ICapeParameterSpecCOM
 {
     /// <summary>
     /// Gets the type of the parameter. 
     /// </summary>
     /// <remarks>
-    /// Gets the <see cref = "CapeParamType"/> of the parameter for which this is a specification: real 
+    /// Gets the <see cref="CapeParamType"/> of the parameter for which this is a specification: real 
     /// (CAPE_REAL), integer(CAPE_INT), option(CAPE_OPTION), boolean(CAPE_BOOLEAN) 
     /// or array(CAPE_ARRAY).
     /// </remarks>
     /// <value>The parameter type. </value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(1)]
-    [Description("property Type")]
+    [Description("Property Type")]
     CapeParamType Type
     {
         get;
@@ -158,15 +143,15 @@ interface ICapeParameterSpecCOM
     /// definition of angles).</para>
     /// </remarks>
     /// <value>an integer array indicating the exponents of the various dimensional axes.</value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(2)]
-    [Description("property Dimensionality")]
+    [Description("Property Dimensionality")]
     Object Dimensionality
     {
         get;
     }
-};
+}
 
 /// <summary>
 /// This interface is for a parameter specification when the 
@@ -185,10 +170,10 @@ public interface ICapeRealParameterSpec
     /// <value>
     /// The default value of the parameter.
     /// </value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(1)]
-    [Description("property Default")]
+    [Description("Property Default")]
     double SIDefaultValue
     {
         get;
@@ -204,10 +189,10 @@ public interface ICapeRealParameterSpec
     /// <value>
     /// The lower bound of the parameter.
     /// </value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(2)]
-    [Description("property LowerBound")]
+    [Description("Property LowerBound")]
     double SILowerBound
     {
         get;
@@ -223,10 +208,10 @@ public interface ICapeRealParameterSpec
     /// <value>
     /// The upper bound of the parameter.
     /// </value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(3)]
-    [Description("property UpperBound")]
+    [Description("Property UpperBound")]
     double SIUpperBound
     {
         get;
@@ -247,8 +232,8 @@ public interface ICapeRealParameterSpec
     /// </returns>
     /// <param name = "value">Integer value that will be validated against the parameter's current specification.</param>
     /// <param name = "message">Reference to a string that will conain a message regarding the validation of the parameter.</param>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(4)]
     [Description("Check if value is OK for this spec as double")]
     [return: MarshalAs(UnmanagedType.VariantBool)]
@@ -263,10 +248,10 @@ public interface ICapeRealParameterSpec
     /// <value>
     /// The default value of the parameter.
     /// </value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(1)]
-    [Description("property Default")]
+    [Description("Property Default")]
     double DimensionedDefaultValue
     {
         get;
@@ -282,10 +267,10 @@ public interface ICapeRealParameterSpec
     /// <value>
     /// The lower bound of the parameter.
     /// </value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(2)]
-    [Description("property LowerBound")]
+    [Description("Property LowerBound")]
     double DimensionedLowerBound
     {
         get;
@@ -301,10 +286,10 @@ public interface ICapeRealParameterSpec
     /// <value>
     /// The upper bound of the parameter.
     /// </value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(3)]
-    [Description("property UpperBound")]
+    [Description("Property UpperBound")]
     double DimensionedUpperBound
     {
         get;
@@ -325,20 +310,20 @@ public interface ICapeRealParameterSpec
     /// </returns>
     /// <param name = "value">Integer value that will be validated against the parameter's current specification.</param>
     /// <param name = "message">Reference to a string that will conain a message regarding the validation of the parameter.</param>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(4)]
     [Description("Check if value is OK for this spec as double")]
     [return: MarshalAs(UnmanagedType.VariantBool)]
     bool DimensionedValidate(double value, ref String message);
-};
+}
 
 
 /// <summary>
 /// This interface is for a parameter specification when the 
 /// parameter has a double-precision floating point value.
 /// </summary>
-[ComImport()]
+[ComImport]
 [ComVisible(false)]
 [Guid(COGuids.ICapeRealParameterSpec_IID)]
 [Description("ICapeRealParameterSpec Interface")]
@@ -353,10 +338,10 @@ interface ICapeRealParameterSpecCOM
     /// <value>
     /// The default value of the parameter.
     /// </value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(1)]
-    [Description("property Default")]
+    [Description("Property Default")]
     double DefaultValue
     {
         get;
@@ -371,10 +356,10 @@ interface ICapeRealParameterSpecCOM
     /// <value>
     /// The lower bound of the parameter.
     /// </value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(2)]
-    [Description("property LowerBound")]
+    [Description("Property LowerBound")]
     double LowerBound
     {
         get;
@@ -389,10 +374,10 @@ interface ICapeRealParameterSpecCOM
     /// <value>
     /// The upper bound of the parameter.
     /// </value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(3)]
-    [Description("property UpperBound")]
+    [Description("Property UpperBound")]
     double UpperBound
     {
         get;
@@ -412,19 +397,19 @@ interface ICapeRealParameterSpecCOM
     /// </returns>
     /// <param name = "value">Integer value that will be validated against the parameter's current specification.</param>
     /// <param name = "message">Reference to a string that will conain a message regarding the validation of the parameter.</param>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(4)]
     [Description("Check if value is OK for this spec as double")]
     [return: MarshalAs(UnmanagedType.VariantBool)]
     bool Validate(double value, ref String message);
-};
+}
 
 /// <summary>
 /// This interface is for a parameter specification
 /// when the parameter is an integer value.
 /// </summary>
-[ComImport()]
+[ComImport]
 [ComVisible(false)]
 [Guid(COGuids.ICapeIntegerParameterSpec_IID)]
 [Description("ICapeIntegerParameterSpec Interface")]
@@ -439,8 +424,8 @@ public interface ICapeIntegerParameterSpec
     /// <value>
     /// The default value of the parameter.
     /// </value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(1), Description("property Default")]
     int DefaultValue
     {
@@ -457,8 +442,8 @@ public interface ICapeIntegerParameterSpec
     /// <value>
     /// The lower bound of the parameter.
     /// </value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(2), Description("property LowerBound")]
     int LowerBound
     {
@@ -475,8 +460,8 @@ public interface ICapeIntegerParameterSpec
     /// <value>
     /// The upper bound of the parameter.
     /// </value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(3), Description("property UpperBound")]
     int UpperBound
     {
@@ -497,13 +482,13 @@ public interface ICapeIntegerParameterSpec
     /// </returns>
     /// <param name = "pValue">Integer value that will be validated against the parameter's current specification.</param>
     /// <param name = "message">Reference to a string that will conain a message regarding the validation of the parameter.</param>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(4)]
     [Description("Check if value is OK for this spec as double")]
     [return: MarshalAs(UnmanagedType.VariantBool)]
     bool Validate(int pValue, ref String message);
-};
+}
 
 /// <summary>
 /// This interface is for a parameter specification
@@ -523,8 +508,8 @@ public interface ICapeOptionParameterSpec
     /// <value>
     /// The default value of the parameter.
     /// </value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(1), Description("property Default")]
     String DefaultValue
     {
@@ -536,14 +521,14 @@ public interface ICapeOptionParameterSpec
     /// Gets the list of valid values for the parameter if 'RestrictedtoList' property is true.
     /// </summary>
     /// <remarks>
-    /// Used in validating the parameter if the <see cref = "RestrictedToList">RestrictedToList</see>
+    /// Used in validating the parameter if the <see cref="RestrictedToList">RestrictedToList</see>
     /// is set to <c>true</c>.
     /// </remarks>
     /// <value>
     /// String array as a System.Object, COM Variant containing a SafeArray of BSTR.
     /// </value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(2), Description("The list of names of the items")]
     string[] OptionList
     {
@@ -556,7 +541,7 @@ public interface ICapeOptionParameterSpec
     /// </summary>
     /// <remarks>
     /// If <c>true</c>, the parameter's value will be validated against the Strings
-    /// in the <see cref = "OptionList">OptionList</see>.
+    /// in the <see cref="OptionList">OptionList</see>.
     /// </remarks>
     /// <value>
     /// Converted by COM interop to a COM-based CAPE-OPEN VARIANT_BOOL.
@@ -572,11 +557,11 @@ public interface ICapeOptionParameterSpec
     /// Validates the value against the parameter's specification.
     /// </summary>
     /// <remarks>
-    /// If the value of the <see cref = "RestrictedToList">RestrictedToList</see>
+    /// If the value of the <see cref="RestrictedToList">RestrictedToList</see>
     /// is set to <c>true</c>, the value is valid is valid value for the 
     /// parameter if it is included in the 
-    /// <see cref = "OptionList">OptionList</see>. If the 
-    /// value of <see cref = "RestrictedToList">RestrictedToList</see> is <c>false</c>
+    /// <see cref="OptionList">OptionList</see>. If the 
+    /// value of <see cref="RestrictedToList">RestrictedToList</see> is <c>false</c>
     /// any valid String is a valid value for the parameter.
     /// </remarks>
     /// <returns>
@@ -584,13 +569,13 @@ public interface ICapeOptionParameterSpec
     /// </returns>
     /// <param name = "pValue">A candidate value for the parameter to be tested to determine whether the value is valid.</param>
     /// <param name = "message">Reference to a string that will conain a message regarding the validation of the parameter.</param>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(4)]
     [Description("Check if value is OK for this spec as string")]
     [return: MarshalAs(UnmanagedType.VariantBool)]
     bool Validate(String pValue, ref String message);
-};
+}
 
 
 /// <summary>
@@ -598,7 +583,7 @@ public interface ICapeOptionParameterSpec
 /// when the parameter is an option, which represents
 /// a list of strings from which one is selected.
 /// </summary>
-[ComImport()]
+[ComImport]
 [ComVisible(false)]
 [Guid(COGuids.ICapeOptionParameterSpec_IID)]
 [Description("ICapeOptionParameterSpec Interface")]
@@ -613,8 +598,8 @@ interface ICapeOptionParameterSpecCOM
     /// <value>
     /// The default value of the parameter.
     /// </value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(1), Description("property Default")]
     String DefaultValue
     {
@@ -625,14 +610,14 @@ interface ICapeOptionParameterSpecCOM
     /// Gets the list of valid values for the parameter if 'RestrictedtoList' property is true.
     /// </summary>
     /// <remarks>
-    /// Used in validating the parameter if the <see cref = "RestrictedToList">RestrictedToList</see>
+    /// Used in validating the parameter if the <see cref="RestrictedToList">RestrictedToList</see>
     /// is set to <c>true</c>.
     /// </remarks>
     /// <value>
     /// String array as a System.Object, COM Variant containing a SafeArray of BSTR.
     /// </value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(2), Description("The list of names of the items")]
     Object OptionList
     {
@@ -644,7 +629,7 @@ interface ICapeOptionParameterSpecCOM
     /// </summary>
     /// <remarks>
     /// If <c>true</c>, the parameter's value will be validated against the Strings
-    /// in the <see cref = "OptionList">OptionList</see>.
+    /// in the <see cref="OptionList">OptionList</see>.
     /// </remarks>
     /// <value>
     /// Converted by COM interop to a COM-based CAPE-OPEN VARIANT_BOOL.
@@ -659,11 +644,11 @@ interface ICapeOptionParameterSpecCOM
     /// Validates the value against the parameter's specification.
     /// </summary>
     /// <remarks>
-    /// If the value of the <see cref = "RestrictedToList">RestrictedToList</see>
+    /// If the value of the <see cref="RestrictedToList">RestrictedToList</see>
     /// is set to <c>true</c>, the value is valid is valid value for the 
     /// parameter if it is included in the 
-    /// <see cref = "OptionList">OptionList</see>. If the 
-    /// value of <see cref = "RestrictedToList">RestrictedToList</see> is <c>false</c>
+    /// <see cref="OptionList">OptionList</see>. If the 
+    /// value of <see cref="RestrictedToList">RestrictedToList</see> is <c>false</c>
     /// any valid String is a valid value for the parameter.
     /// </remarks>
     /// <returns>
@@ -671,18 +656,18 @@ interface ICapeOptionParameterSpecCOM
     /// </returns>
     /// <param name = "pValue">A candidate value for the parameter to be tested to determine whether the value is valid.</param>
     /// <param name = "message">Reference to a string that will conain a message regarding the validation of the parameter.</param>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(4)]
     [Description("Check if value is OK for this spec as string")]
     [return: MarshalAs(UnmanagedType.VariantBool)]
     bool Validate(String pValue, ref String message);
-};
+}
     
 /// <summary>
 /// This interface is for a parameter specification when the parameter is a boolean
 /// </summary>
-[ComImport()]
+[ComImport]
 [ComVisible(false)]
 [Guid(COGuids.ICapeBooleanParameterSpec_IID)]
 [Description("ICapeBooleanParameterSpec Interface")]
@@ -697,8 +682,8 @@ public interface ICapeBooleanParameterSpec
     /// <value>
     /// The default value of the parameter.
     /// </value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(1), Description("property Default")]
     bool DefaultValue
     {
@@ -719,20 +704,20 @@ public interface ICapeBooleanParameterSpec
     /// </returns>
     /// <param name = "pValue">Boolean value that will be validated against the parameter's current specification.</param>
     /// <param name = "message">Reference to a string that will conain a message regarding the validation of the parameter.</param>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(2)]
     [Description("Check if value is OK for this spec")]
     [return: MarshalAs(UnmanagedType.VariantBool)]
     bool Validate(bool pValue, ref String message);
-};
+}
 
 /// <summary>
 /// This interface is for a parameter specification
 /// when the parameter is an array of values (maybebe integers,reals,
 /// booleans or arrays again, which represents.
 /// </summary>
-[ComImport()]
+[ComImport]
 [ComVisible(false)]
 [Guid(COGuids.ICapeArrayParameterSpec_IID)]
 [Description("ICapeArrayParameterSpec Interface")]
@@ -747,8 +732,8 @@ public interface ICapeArrayParameterSpec
     /// <value>
     /// The number of dimensions of the array.
     /// </value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(1), Description("Get the number of dimensions of the array")]
     int NumDimensions
     {
@@ -764,8 +749,8 @@ public interface ICapeArrayParameterSpec
     /// <value>
     /// An integer array containing the size of each dimension of the array.
     /// </value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(2), Description("Get the size of each one of the dimensions of the array")]
     int[] Size
     {
@@ -777,17 +762,17 @@ public interface ICapeArrayParameterSpec
     /// value of a parameter.
     /// </summary>
     /// <remarks>
-    /// ﻿An array of interfaces to the correct specification type (<see cref = "ICapeRealParameterSpec"/> ,
-    /// <see cref = "ICapeIntegerParameterSpec"/> , <see cref = "ICapeBooleanParameterSpec"/> , 
-    /// <see cref = "ICapeOptionParameterSpec"/> ). Note that it is also possible, for 
+    /// ﻿An array of interfaces to the correct specification type (<see cref="ICapeRealParameterSpec"/> ,
+    /// <see cref="ICapeIntegerParameterSpec"/> , <see cref="ICapeBooleanParameterSpec"/> , 
+    /// <see cref="ICapeOptionParameterSpec"/> ). Note that it is also possible, for 
     /// example, to configure an array of arrays of integers, which would a similar 
     /// but not identical concept to a two-dimensional matrix of integers.
     /// </remarks>
     /// <value>
-    /// An array of <see cref = "ICapeParameterSpec"/> objects.
+    /// An array of <see cref="ICapeParameterSpec"/> objects.
     /// </value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(3), Description("Get the specification of each of the values in the array")]
     Object[] ItemsSpecifications
     {
@@ -806,17 +791,17 @@ public interface ICapeArrayParameterSpec
     /// </returns>
     /// <param name = "inputArray">The message is used to return the reason that the parameter is invalid.</param>
     /// <param name = "messages">A string array containing the message is used to return the reason that the parameter is invalid.</param>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(4), Description("Check if value is OK for this spec ")]
     Object Validate(Object inputArray, ref string[] messages);
 
-};
+}
 
 /// <summary>
 /// Interface defining the actual Parameter quantity.
 /// </summary>
-[ComImport()]
+[ComImport]
 [ComVisible(false)]
 [Guid(COGuids.ICapeParameter_IID)]
 [Description("ICapeParameter Interface")]
@@ -830,13 +815,13 @@ public interface ICapeParameter
     /// specification as an interface to the correct specification type.
     /// </remarks>
     /// <value>
-    /// An object implementing the <see cref = "ICapeParameterSpec"/>, as well as the
-    /// appropraite specification for the parameter type, <see cref = "ICapeRealParameterSpec"/> ,
-    /// <see cref = "ICapeIntegerParameterSpec"/> , <see cref = "ICapeBooleanParameterSpec"/> , 
-    /// <see cref = "ICapeOptionParameterSpec"/> , or <see cref = "ICapeArrayParameterSpec"/> .
+    /// An object implementing the <see cref="ICapeParameterSpec"/>, as well as the
+    /// appropraite specification for the parameter type, <see cref="ICapeRealParameterSpec"/> ,
+    /// <see cref="ICapeIntegerParameterSpec"/> , <see cref="ICapeBooleanParameterSpec"/> , 
+    /// <see cref="ICapeOptionParameterSpec"/> , or <see cref="ICapeArrayParameterSpec"/> .
     /// </value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(1)]
     [Description("Gets and sets the specification for the parameter.")]
     Object Specification
@@ -855,8 +840,8 @@ public interface ICapeParameter
     /// <value>
     /// The boxed value of the parameter.
     /// </value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(2)]
     [Description("Get and sets the value of the parameter.")]
     Object value
@@ -880,8 +865,8 @@ public interface ICapeParameter
     /// Validate() method was called it returned true.</para>
     /// </remarks>
     /// <value>The validity staus of the parameter, either valid, invalid, or "not validated".</value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(3), Description("Get the parameter validation status")]
     CapeValidationStatus ValStatus
     {
@@ -901,8 +886,8 @@ public interface ICapeParameter
     /// initial estimation value and the user outputs a calculated value.</para>
     /// </remarks>
     /// <value>The mode of the parameter, input, output, or input/output.</value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(4), Description("Get the Mode - input,output - of the parameter.")]
     CapeParamMode Mode
     {
@@ -916,18 +901,18 @@ public interface ICapeParameter
     /// </summary>
     /// <remarks>
     /// This method checks the current value of the parameter to determine if it is an allowed value. In the case of 
-    /// numeric parameters (<see cref = "ICapeRealParameterSpec"/> and <see cref = "ICapeIntegerParameterSpec"/>),
-    /// the value is valid if it is between the upper and lower bound. For String (<see cref = "ICapeOptionParameterSpec"/>),
-    /// if the <see cref = "ICapeOptionParameterSpec.RestrictedToList"/> property is true, the value must be included as one of the
-    /// members of the <see cref = "ICapeOptionParameterSpec.OptionList"/>. Otherwise, any string value is valid. Any boolean value (true/false) 
-    /// valid for the <see cref = "ICapeBooleanParameterSpec"/> paramaters.
+    /// numeric parameters (<see cref="ICapeRealParameterSpec"/> and <see cref="ICapeIntegerParameterSpec"/>),
+    /// the value is valid if it is between the upper and lower bound. For String (<see cref="ICapeOptionParameterSpec"/>),
+    /// if the <see cref="ICapeOptionParameterSpec.RestrictedToList"/> property is true, the value must be included as one of the
+    /// members of the <see cref="ICapeOptionParameterSpec.OptionList"/>. Otherwise, any string value is valid. Any boolean value (true/false) 
+    /// valid for the <see cref="ICapeBooleanParameterSpec"/> paramaters.
     /// </remarks>
     /// <returns>
     /// True if the parameter is valid, false if not valid.
     /// </returns>
     /// <param name = "message">The message is used to return the reason that the parameter is invalid.</param>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(5)]
     [Description("Validate the parameter's current value.")]
     [return: MarshalAs(UnmanagedType.VariantBool)]
@@ -939,11 +924,11 @@ public interface ICapeParameter
     /// <remarks>
     /// This method sets the parameter to its default value.
     /// </remarks>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     [DispId(6)]
     [Description("Reset the value of the parameter to its default.")]
     void Reset();
-};
+}
 
 /// <summary>
 /// </summary>
@@ -965,8 +950,8 @@ interface IParameterEvents
     /// <para>When overriding <c>OnParameterValueChanged</c> in a derived class, be sure to call the base class's <c>OnParameterValueChanged</c> method so that registered 
     /// delegates receive the event.</para>
     /// </remarks>
-    /// <param name = "sender">The <see cref = "RealParameter">RealParameter</see> that raised the event.</param>
-    /// <param name = "args">A <see cref = "ParameterValueChanged">ParameterValueChanged</see> that contains information about the event.</param>
+    /// <param name = "sender">The <see cref="RealParameter">RealParameter</see> that raised the event.</param>
+    /// <param name = "args">A <see cref="ParameterValueChanged">ParameterValueChanged</see> that contains information about the event.</param>
     void ParameterValueChanged(object sender, object args);
 
     /// <summary>
@@ -979,8 +964,8 @@ interface IParameterEvents
     /// <para>When overriding <c>OnParameterModeChanged</c> in a derived class, be sure to call the base class's <c>OnParameterModeChanged</c> method so that registered 
     /// delegates receive the event.</para>
     /// </remarks>
-    /// <param name = "sender">The <see cref = "RealParameter">RealParameter</see> that raised the event.</param>
-    /// <param name = "args">A <see cref = "ParameterModeChangedEventArgs">ParameterModeChangedEventArgs</see> that contains information about the event.</param>
+    /// <param name = "sender">The <see cref="RealParameter">RealParameter</see> that raised the event.</param>
+    /// <param name = "args">A <see cref="ParameterModeChangedEventArgs">ParameterModeChangedEventArgs</see> that contains information about the event.</param>
     void ParameterModeChanged(object sender, object args);
 
     /// <summary>
@@ -993,8 +978,8 @@ interface IParameterEvents
     /// <para>When overriding <c>OnParameterValidated</c> in a derived class, be sure to call the base class's <c>OnParameterValidated</c> method so that registered 
     /// delegates receive the event.</para>
     /// </remarks>
-    /// <param name = "sender">The <see cref = "RealParameter">RealParameter</see> that raised the event.</param>
-    /// <param name = "args">A <see cref = "ParameterValidatedEventArgs">ParameterValidatedEventArgs</see> that contains information about the event.</param>
+    /// <param name = "sender">The <see cref="RealParameter">RealParameter</see> that raised the event.</param>
+    /// <param name = "args">A <see cref="ParameterValidatedEventArgs">ParameterValidatedEventArgs</see> that contains information about the event.</param>
     void ParameterValidated(object sender, object args);
 
     /// <summary>
@@ -1007,8 +992,8 @@ interface IParameterEvents
     /// <para>When overriding <c>OnParameterReset</c> in a derived class, be sure to call the base class's <c>OnParameterReset</c> method so that registered 
     /// delegates receive the event.</para>
     /// </remarks>
-    /// <param name = "sender">The <see cref = "RealParameter">RealParameter</see> that raised the event.</param>
-    /// <param name = "args">A <see cref = "ParameterResetEventArgs">ParameterResetEventArgs</see> that contains information about the event.</param>
+    /// <param name = "sender">The <see cref="RealParameter">RealParameter</see> that raised the event.</param>
+    /// <param name = "args">A <see cref="ParameterResetEventArgs">ParameterResetEventArgs</see> that contains information about the event.</param>
     void ParameterReset(object sender, object args);
 }
 
@@ -1024,7 +1009,7 @@ class ParameterTypeConverter : ExpandableObjectConverter
         return base.CanConvertTo(context, destinationType);
     }
         
-    public override Object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, Object parameter, Type destinationType)
+    public override Object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, Object parameter, Type destinationType)
     {
         if (typeof(String).IsAssignableFrom(destinationType) && typeof(ArrayParameterWrapper).IsAssignableFrom(parameter.GetType()))
         {
@@ -1040,19 +1025,19 @@ class ParameterTypeConverter : ExpandableObjectConverter
         }
         return base.ConvertTo(context, culture, parameter, destinationType);
     }
-};
+}
 
 /// <summary>
 /// Aspen(TM) interface for providing dimension for a real-valued parameter.
 ///</summary>
 /// <remarks>
 /// <para>
-/// Aspen Plus(TM) does not use the <see cref = "ICapeParameterSpec.Dimensionality">ICapeParameterSpec.Dimensionality</see> method. Instead a parameter
+/// Aspen Plus(TM) does not use the <see cref="ICapeParameterSpec.Dimensionality">ICapeParameterSpec.Dimensionality</see> method. Instead a parameter
 /// can implement the IATCapeXRealParameterSpec interface which can be used to define the
 /// display unit for a parameter value. 
 /// </para>
 /// </remarks>
-[ComImport()]
+[ComImport]
 [ComVisible(false)]
 [Guid("B777A1BD-0C88-11D3-822E-00C04F4F66C9")]
 [Description("IATCapeXRealParameterSpec Interface")]
@@ -1072,13 +1057,13 @@ interface IATCapeXRealParameterSpec
     /// <value>
     /// Defines the display unit for the parameter.
     /// </value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     [DispId(0x60040003), Description(" Provide the Aspen Plus display units for for this parameter.")]
     String DisplayUnits
     {
         get;
     }
-};
+}
 
 
 /// <summary>
@@ -1120,7 +1105,7 @@ interface IParameterValueChangedEventArgs
     {
         get;
     }
-};
+}
 
 /// <summary>
 /// Provides data for the value changed event associated with the parameters.
@@ -1147,7 +1132,6 @@ public class ParameterValueChangedEventArgs : EventArgs,
     /// <param name = "oldValue">The name of the PMC prior to the name change.</param>
     /// <param name = "newValue">The name of the PMC after the name change.</param>
     public ParameterValueChangedEventArgs(String paramName, Object oldValue, Object newValue)
-        : base()
     {
         m_paramName = paramName;
         m_oldValue = oldValue;
@@ -1186,7 +1170,7 @@ public class ParameterValueChangedEventArgs : EventArgs,
             return m_newValue;
         }
     }
-};
+}
 
 
 /// <summary>
@@ -1228,7 +1212,7 @@ interface IParameterDefaultValueChangedEventArgs
     {
         get;
     }
-};
+}
 
 /// <summary>
 /// Provides data for the value changed event associated with the parameters.
@@ -1255,7 +1239,6 @@ public class ParameterDefaultValueChangedEventArgs : EventArgs,
     /// <param name = "oldDefaultValue">The default value of the parameter prior to the change.</param>
     /// <param name = "newDefaultValue">The default value of the parameter after the change.</param>
     public ParameterDefaultValueChangedEventArgs(String paramName, Object oldDefaultValue, Object newDefaultValue)
-        : base()
     {
         m_paramName = paramName;
         m_oldDefaultValue = oldDefaultValue;
@@ -1294,7 +1277,7 @@ public class ParameterDefaultValueChangedEventArgs : EventArgs,
             return m_newDefaultValue;
         }
     }
-};
+}
 
 /// <summary>
 /// Represents the method that will handle the changing of the lower bound of a parameter.
@@ -1335,7 +1318,7 @@ interface IParameterLowerBoundChangedEventArgs
     {
         get;
     }
-};
+}
 
 /// <summary>
 /// Provides data for the value changed event associated with the parameters.
@@ -1362,7 +1345,6 @@ public class ParameterLowerBoundChangedEventArgs : EventArgs,
     /// <param name = "oldLowerBound">The name of the PMC prior to the name change.</param>
     /// <param name = "newLowerBound">The name of the PMC after the name change.</param>
     public ParameterLowerBoundChangedEventArgs(String paramName, Object oldLowerBound, Object newLowerBound)
-        : base()
     {
         m_paramName = paramName;
         m_oldLowerBound = oldLowerBound;
@@ -1401,7 +1383,7 @@ public class ParameterLowerBoundChangedEventArgs : EventArgs,
             return m_newLowerBound;
         }
     }
-};
+}
 
 /// <summary>
 /// Represents the method that will handle the changing of the upper bound of a parameter.
@@ -1448,7 +1430,7 @@ interface IParameterUpperBoundChangedEventArgs
     {
         get;
     }
-};
+}
 
 /// <summary>
 /// Provides data for the upper bound changed event associated with the parameters.
@@ -1475,7 +1457,6 @@ public class ParameterUpperBoundChangedEventArgs : EventArgs,
     /// <param name = "oldUpperBound">The upper bound of the parameter prior to the change.</param>
     /// <param name = "newUpperBound">The upper bound of the parameter after the change.</param>
     public ParameterUpperBoundChangedEventArgs(String paramName, Object oldUpperBound, Object newUpperBound)
-        : base()
     {
         m_paramName = paramName;
         m_oldUpperBound = oldUpperBound;
@@ -1514,7 +1495,7 @@ public class ParameterUpperBoundChangedEventArgs : EventArgs,
             return m_newUpperBound;
         }
     }
-};
+}
 
 
 /// <summary>
@@ -1557,7 +1538,7 @@ interface IParameterModeChangedEventArgs
     {
         get;
     }
-};
+}
 
 /// <summary>
 /// Provides data for the mode changed event associated with the parameters.
@@ -1584,7 +1565,6 @@ public class ParameterModeChangedEventArgs : EventArgs,
     /// <param name = "oldMode">The mode of the parameter prior to the change.</param>
     /// <param name = "newMode">The mode of the parameter after the change.</param>
     public ParameterModeChangedEventArgs(String paramName, Object oldMode, Object newMode)
-        : base()
     {
         m_paramName = paramName;
         m_oldMode = oldMode;
@@ -1625,7 +1605,7 @@ public class ParameterModeChangedEventArgs : EventArgs,
             return m_newMode;
         }
     }
-};
+}
 
 /// <summary>
 /// Represents the method that will handle the validation of a parameter.
@@ -1679,7 +1659,7 @@ interface IParameterValidatedEventArgs
     {
         get;
     }
-};
+}
 
 /// <summary>
 /// The parameter was validated.
@@ -1708,7 +1688,6 @@ public class ParameterValidatedEventArgs : EventArgs,
     /// <param name = "oldStatus">The status of the parameter prior to validation.</param>
     /// <param name = "newStatus">The status of the parameter after the validation.</param>
     public ParameterValidatedEventArgs(String paramName, String message, CapeValidationStatus oldStatus, CapeValidationStatus newStatus)
-        : base()
     {
         m_paramName = paramName;
         m_message = message;
@@ -1763,7 +1742,7 @@ public class ParameterValidatedEventArgs : EventArgs,
             return m_newStatus;
         }
     }
-};
+}
 
 /// <summary>
 /// Represents the method that will handle the resetting of a parameter.
@@ -1789,7 +1768,7 @@ interface IParameterResetEventArgs
     {
         get;
     }
-};
+}
 
 /// <summary>
 /// The parameter was reset.
@@ -1810,7 +1789,6 @@ public class ParameterResetEventArgs : EventArgs,
     /// inform the system that the parameter was reset.
     /// </remarks>
     public ParameterResetEventArgs(String paramName)
-        : base()
     {
         m_paramName = paramName;
     }
@@ -1828,7 +1806,7 @@ public class ParameterResetEventArgs : EventArgs,
             return m_paramName;
         }
     }
-};
+}
 
 /// <summary>
 /// Represents the method that will handle the changing of the option list of a parameter.
@@ -1879,7 +1857,6 @@ public class ParameterOptionListChangedEventArgs : EventArgs,
     /// inform the system that the parameter's option list was changed.
     /// </remarks>
     public ParameterOptionListChangedEventArgs(String paramName)
-        : base()
     {
         m_paramName = paramName;
     }
@@ -1897,7 +1874,7 @@ public class ParameterOptionListChangedEventArgs : EventArgs,
             return m_paramName;
         }
     }
-};
+}
 
 /// <summary>
 /// The restiction to the options list of a parameter was changed.
@@ -1921,7 +1898,7 @@ interface IParameterRestrictedToListChangedEventArgs
     {
         get;
     }
-};
+}
 
 /// <summary>
 /// The parameter restiction to the option list was changed.
@@ -1944,7 +1921,6 @@ public class ParameterRestrictedToListChangedEventArgs : EventArgs,
     /// inform the system that the parameter's option list was changed.
     /// </remarks>
     public ParameterRestrictedToListChangedEventArgs(String paramName, bool wasRestricted, bool isRestricted)
-        : base()
     {
         m_paramName = paramName;
         m_isRestricted = isRestricted;
@@ -1994,7 +1970,7 @@ public class ParameterRestrictedToListChangedEventArgs : EventArgs,
             return m_wasRestricted;
         }
     }
-};
+}
 
 /// <summary>
 /// Represents the method that will handle the changing of whether a paratemer's value is restricted to those in the option list.
@@ -2080,7 +2056,7 @@ abstract public class CapeParameter : CapeIdentification,
     /// <para>When overriding <c>OnParameterValidated</c> in a derived class, be sure to call the base class's <c>OnParameterValidated</c> method so that registered 
     /// delegates receive the event.</para>
     /// </remarks>
-    /// <param name = "args">A <see cref = "ParameterValidatedEventArgs">ParameterValidatedEventArgs</see> that contains information about the event.</param>
+    /// <param name = "args">A <see cref="ParameterValidatedEventArgs">ParameterValidatedEventArgs</see> that contains information about the event.</param>
     protected void OnParameterValidated(ParameterValidatedEventArgs args)
     {
         if (ParameterValidated != null)
@@ -2097,13 +2073,13 @@ abstract public class CapeParameter : CapeIdentification,
     /// specification as an interface to the correct specification type.
     /// </remarks>
     /// <value>
-    /// An object implementing the <see cref = "ICapeParameterSpec"/>, as well as the
-    /// appropraite specification for the parameter type, <see cref = "ICapeRealParameterSpec"/> ,
-    /// <see cref = "ICapeIntegerParameterSpec"/> , <see cref = "ICapeBooleanParameterSpec"/> , 
-    /// <see cref = "ICapeOptionParameterSpec"/> , or <see cref = "ICapeArrayParameterSpec"/> .
+    /// An object implementing the <see cref="ICapeParameterSpec"/>, as well as the
+    /// appropraite specification for the parameter type, <see cref="ICapeRealParameterSpec"/> ,
+    /// <see cref="ICapeIntegerParameterSpec"/> , <see cref="ICapeBooleanParameterSpec"/> , 
+    /// <see cref="ICapeOptionParameterSpec"/> , or <see cref="ICapeArrayParameterSpec"/> .
     /// </value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [Browsable(false)]
     Object ICapeParameter.Specification
     {
@@ -2129,7 +2105,7 @@ abstract public class CapeParameter : CapeIdentification,
     /// <para>When overriding <c>OnParameterValueChanged</c> in a derived class, be sure to call the base class's <c>OnParameterValueChanged</c> method so that registered 
     /// delegates receive the event.</para>
     /// </remarks>
-    /// <param name = "args">A <see cref = "OnParameterValueChanged">OnParameterValueChanged</see> that contains information about the event.</param>
+    /// <param name = "args">A <see cref="OnParameterValueChanged">OnParameterValueChanged</see> that contains information about the event.</param>
     protected void OnParameterValueChanged(ParameterValueChangedEventArgs args)
     {
         if (ParameterValueChanged != null)
@@ -2146,8 +2122,8 @@ abstract public class CapeParameter : CapeIdentification,
     /// COM-based CAPE-OPEN.
     /// </remarks>
     /// <value>System.Object</value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [Browsable(false)]
     virtual public Object value
     {
@@ -2165,14 +2141,14 @@ abstract public class CapeParameter : CapeIdentification,
     /// <value>
     /// Null pointer.
     /// </value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [Browsable(false)]
     virtual public double[] Dimensionality
     {
         get
         {
-            return (double[])null;
+            return null;
         }
     }
 
@@ -2185,8 +2161,8 @@ abstract public class CapeParameter : CapeIdentification,
     /// <value>
     /// Null pointer.
     /// </value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [Browsable(false)]
     Object ICapeParameterSpecCOM.Dimensionality
     {
@@ -2212,8 +2188,8 @@ abstract public class CapeParameter : CapeIdentification,
     /// Validate() method was called it returned true.</para>
     /// </remarks>
     /// <value>The validity staus of the parameter, either valid, invalid, or "not validated".</value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [Category("ICapeParameter")]
     public CapeValidationStatus ValStatus
     {
@@ -2239,7 +2215,7 @@ abstract public class CapeParameter : CapeIdentification,
     /// <para>When overriding <c>OnParameterDefaultValueChanged</c> in a derived class, be sure to call the base class's <c>OnParameterDefaultValueChanged</c> method so that registered 
     /// delegates receive the event.</para>
     /// </remarks>
-    /// <param name = "args">A <see cref = "OnParameterDefaultValueChanged">OnParameterDefaultValueChanged</see> that contains information about the event.</param>
+    /// <param name = "args">A <see cref="OnParameterDefaultValueChanged">OnParameterDefaultValueChanged</see> that contains information about the event.</param>
     protected void OnParameterDefaultValueChanged(ParameterDefaultValueChangedEventArgs args)
     {
         if (ParameterDefaultValueChanged != null)
@@ -2265,7 +2241,7 @@ abstract public class CapeParameter : CapeIdentification,
     /// <para>When overriding <c>OnParameterModeChanged</c> in a derived class, be sure to call the base class's <c>OnParameterModeChanged</c> method so that registered 
     /// delegates receive the event.</para>
     /// </remarks>
-    /// <param name = "args">A <see cref = "ParameterModeChangedEventArgs">ParameterModeChangedEventArgs</see> that contains information about the event.</param>
+    /// <param name = "args">A <see cref="ParameterModeChangedEventArgs">ParameterModeChangedEventArgs</see> that contains information about the event.</param>
     protected void OnParameterModeChanged(ParameterModeChangedEventArgs args)
     {
         if (ParameterModeChanged != null)
@@ -2287,8 +2263,8 @@ abstract public class CapeParameter : CapeIdentification,
     /// initial estimation value and the user outputs a calculated value.</para>
     /// </remarks>
     /// <value>The mode of the parameter, input, output, or input/output.</value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [Category("ICapeParameter")]
     public CapeParamMode Mode
     {
@@ -2320,8 +2296,8 @@ abstract public class CapeParameter : CapeIdentification,
     /// True if the parameter is valid, false if not valid.
     /// </returns>
     /// <param name = "message">Reference to a string that will conain a message regarding the validation of the parameter.</param>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed, for example, an unrecognised Compound identifier or UNDEFINED for the props argument.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     abstract public bool Validate(ref String message);
 
 
@@ -2342,7 +2318,7 @@ abstract public class CapeParameter : CapeIdentification,
     /// <para>When overriding <c>OnParameterReset</c> in a derived class, be sure to call the base class's <c>OnParameterReset</c> method so that registered 
     /// delegates receive the event.</para>
     /// </remarks>
-    /// <param name = "args">A <see cref = "ParameterResetEventArgs">ParameterResetEventArgs</see> that contains information about the event.</param>
+    /// <param name = "args">A <see cref="ParameterResetEventArgs">ParameterResetEventArgs</see> that contains information about the event.</param>
     protected void OnParameterReset(ParameterResetEventArgs args)
     {
         if (ParameterReset != null)
@@ -2357,7 +2333,7 @@ abstract public class CapeParameter : CapeIdentification,
     /// <remarks>
     ///  This method sets the parameter's value to the default value.
     /// </remarks>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     abstract public void Reset();
 
 
@@ -2367,13 +2343,13 @@ abstract public class CapeParameter : CapeIdentification,
     /// Gets the type of the parameter. 
     /// </summary>
     /// <remarks>
-    /// Gets the <see cref = "CapeParamType"/> of the parameter for which this is a specification: real 
+    /// Gets the <see cref="CapeParamType"/> of the parameter for which this is a specification: real 
     /// (CAPE_REAL), integer(CAPE_INT), option(CAPE_OPTION), boolean(CAPE_BOOLEAN) 
     /// or array(CAPE_ARRAY).
     /// </remarks>
     /// <value>The parameter type. </value>
-    /// <exception cref ="ECapeUnknown">The error to be raised when other error(s),  specified for this operation, are not suitable.</exception>
-    /// <exception cref = "ECapeInvalidArgument">To be used when an invalid argument value is passed.</exception>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">To be used when an invalid argument value is passed.</exception>
     [Category("ICapeParameterSpec")]
     abstract public CapeParamType Type
     {
