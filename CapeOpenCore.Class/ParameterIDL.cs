@@ -36,12 +36,16 @@ public enum CapeParamType
 {
     /// <summary>双精度 double 参数类型</summary>
     CAPE_REAL = 0,
+
     /// <summary>整数参数类型</summary>
     CAPE_INT = 1,
+
     /// <summary>字符串或 option 参数类型</summary>
     CAPE_OPTION = 2,
+
     /// <summary>布尔值参数类型</summary>
     CAPE_BOOLEAN = 3,
+
     /// <summary>数组参数类型</summary>
     CAPE_ARRAY = 4
 }
@@ -60,8 +64,10 @@ public enum CapeParamMode
 {
     /// <summary>该单元（或任何拥有该参数的组件）将使用该参数的值作为其计算的输入。</summary>
     CAPE_INPUT = 0,
+
     /// <summary>该单元（或任何拥有该参数的组件）将把该参数的值作为其计算结果的输出。</summary>
     CAPE_OUTPUT = 1,
+
     /// <summary>单元（或任何拥有该参数的组件）将使用参数的初始值作为估计值，并计算最终值。</summary>
     CAPE_INPUT_OUTPUT = 2
 }
@@ -107,97 +113,112 @@ public interface ICapeParameterSpec
 [Description("ICapeParameterSpec Interface")]
 internal interface ICapeParameterSpecCOM
 {
-    /// <summary>
-    /// Gets the type of the parameter. 
-    /// </summary>
-    /// <remarks>
-    /// Gets the <see cref="CapeParamType"/> of the parameter for which this is a specification: real 
-    /// (CAPE_REAL), integer(CAPE_INT), option(CAPE_OPTION), boolean(CAPE_BOOLEAN) 
-    /// or array(CAPE_ARRAY).
+    /// <summary>获取参数的类型</summary>
+    /// <remarks>获取此参数所对应的 <see cref="CapeParamType"/> 参数类型:
+    /// real(CAPE_REAL), integer(CAPE_INT), option(CAPE_OPTION), boolean(CAPE_BOOLEAN), array(CAPE_ARRAY).
     /// </remarks>
-    /// <value>The parameter type. </value>
+    /// <value>参数类型</value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(1)]
     [Description("Property Type")]
-    CapeParamType Type
-    {
-        get;
-    }
+    CapeParamType Type { get; }
 
-    /// <summary>
-    /// Gets the dimensionality of the parameter.
-    /// </summary>
-    /// <remarks>
-    /// <para>Gets the dimensionality of the parameter for which this is the 
-    /// specification. The dimensionality represents the physical dimensional 
-    /// axes of this parameter. It is expected that the dimensionality must cover 
-    /// at least 6 fundamental axes (length, mass, time, angle, temperature and 
-    /// charge). A possible implementation could consist in being a constant 
+    /// <summary>获取参数的维度 (dimensionality)。</summary>
+    /// <remarks><para>获取此参数的规格所对应的维度。该维度代表该参数的物理维度轴。
+    /// 预期维度必须至少覆盖 6 个基本轴: (length, mass, time, angle, temperature, charge)。</para>
+    /// <para>A possible implementation could consist in being a constant 
     /// length array vector that contains the exponents of each basic SI unit, 
     /// following directives of SI-brochure (from http://www.bipm.fr/). So if we 
     /// agree on order &lt;m kg s A K,&gt; ... velocity would be 
-    /// &lt;1,0,-1,0,0,0&gt;: that is m1 * s-1 =m/s. We have suggested to the 
-    /// CO Scientific Committee to use the SI base units plus the SI derived units 
-    /// with special symbols (for a better usability and for allowing the 
-    /// definition of angles).</para>
+    /// &lt;1,0,-1,0,0,0&gt;: that is m1 * s-1 =m/s.</para>
+    /// <para>美国环保局已向协调组织科学委员会建议采用国际单位制基本单位，
+    /// 并辅以带有特殊符号的国际单位制导出单位（以提升实用性并允许定义角度）。</para>
     /// </remarks>
-    /// <value>an integer array indicating the exponents of the various dimensional axes.</value>
+    /// <value>一个整型数组，用于表示各维度轴的指数。</value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(2)]
     [Description("Property Dimensionality")]
-    Object Dimensionality
-    {
-        get;
-    }
+    object Dimensionality { get; }
 }
 
-/// <summary>
-/// This interface is for a parameter specification when the 
-/// parameter has a double-precision floating point value.
-/// </summary>
+/// <summary>此接口用于参数具有双精度浮点值时的参数规格说明。</summary>
 [ComVisible(false)]
 [Description("ICapeRealParameterSpec Interface")]
 public interface ICapeRealParameterSpec
 {
+    /// <summary>获取参数的默认值。</summary>
+    /// <remarks>该参数的默认值。</remarks>
+    /// <value>该参数的默认值。</value>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
+    [DispId(1)]
+    [Description("Property Default")]
+    double SIDefaultValue { get; set; }
+
+    /// <summary>获取参数的下限。</summary>
+    /// <remarks>该参数的下限值。</remarks>
+    /// <value>该参数的下限值。</value>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
+    [DispId(2)]
+    [Description("Property LowerBound")]
+    double SILowerBound { get; set; }
+
+    /// <summary>Gets the upper bound of the parameter.</summary>
+    /// <remarks>A upper bound value for the parameter.</remarks>
+    /// <value>The upper bound of the parameter.</value>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
+    [DispId(3)]
+    [Description("Property UpperBound")]
+    double SIUpperBound { get; set; }
+
+    /// <summary>Validates the value against the specification of the parameter.
+    /// The message is used to return the reason that the parameter is invalid.</summary>
+    /// <remarks>The parameter is considered valid if the current value is between 
+    /// the upper and lower bound. The message is used to return the reason 
+    /// that the parameter is invalid.</remarks>
+    /// <returns>True if the parameter is valid, false if not valid.</returns>
+    /// <param name = "value">Integer value that will be validated against the parameter's current specification.</param>
+    /// <param name = "message">Reference to a string that will conain a message regarding the validation of the parameter.</param>
+    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
+    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
+    [DispId(4)]
+    [Description("Check if value is OK for this spec as double")]
+    [return: MarshalAs(UnmanagedType.VariantBool)]
+    bool SIValidate(double value, ref string message);
+
     /// <summary>
-    /// Gets the default value of the parameter.
+    /// 获取参数的默认值。
     /// </summary>
     /// <remarks>
-    /// A default value for the parameter.
+    /// 该参数的默认值。
     /// </remarks>
     /// <value>
-    /// The default value of the parameter.
+    /// 该参数的默认值。
     /// </value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(1)]
     [Description("Property Default")]
-    double SIDefaultValue
-    {
-        get;
-        set;
-    }
+    double DimensionedDefaultValue { get; set; }
 
     /// <summary>
-    /// Gets the lower bound of the parameter.
+    /// 获取参数的下限。
     /// </summary>
     /// <remarks>
-    /// A lower bound value for the parameter.
+    /// 该参数的下限值。
     /// </remarks>
     /// <value>
-    /// The lower bound of the parameter.
+    /// 该参数的下限值。
     /// </value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(2)]
     [Description("Property LowerBound")]
-    double SILowerBound
-    {
-        get;
-        set;
-    }
+    double DimensionedLowerBound { get; set; }
 
     /// <summary>
     /// Gets the upper bound of the parameter.
@@ -212,11 +233,7 @@ public interface ICapeRealParameterSpec
     /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(3)]
     [Description("Property UpperBound")]
-    double SIUpperBound
-    {
-        get;
-        set;
-    }
+    double DimensionedUpperBound { get; set; }
 
     /// <summary>
     /// Validates the value against the specification of the parameter.
@@ -237,87 +254,8 @@ public interface ICapeRealParameterSpec
     [DispId(4)]
     [Description("Check if value is OK for this spec as double")]
     [return: MarshalAs(UnmanagedType.VariantBool)]
-    bool SIValidate(double value, ref String message);
-
-    /// <summary>
-    /// Gets the default value of the parameter.
-    /// </summary>
-    /// <remarks>
-    /// A default value for the parameter.
-    /// </remarks>
-    /// <value>
-    /// The default value of the parameter.
-    /// </value>
-    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
-    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
-    [DispId(1)]
-    [Description("Property Default")]
-    double DimensionedDefaultValue
-    {
-        get;
-        set;
-    }
-
-    /// <summary>
-    /// Gets the lower bound of the parameter.
-    /// </summary>
-    /// <remarks>
-    /// A lower bound value for the parameter.
-    /// </remarks>
-    /// <value>
-    /// The lower bound of the parameter.
-    /// </value>
-    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
-    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
-    [DispId(2)]
-    [Description("Property LowerBound")]
-    double DimensionedLowerBound
-    {
-        get;
-        set;
-    }
-
-    /// <summary>
-    /// Gets the upper bound of the parameter.
-    /// </summary>
-    /// <remarks>
-    /// A upper bound value for the parameter.
-    /// </remarks>
-    /// <value>
-    /// The upper bound of the parameter.
-    /// </value>
-    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
-    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
-    [DispId(3)]
-    [Description("Property UpperBound")]
-    double DimensionedUpperBound
-    {
-        get;
-        set;
-    }
-
-    /// <summary>
-    /// Validates the value against the specification of the parameter.
-    /// The message is used to return the reason that the parameter is invalid.
-    /// </summary>
-    /// <remarks>
-    /// The parameter is considered valid if the current value is between 
-    /// the upper and lower bound. The message is used to return the reason 
-    /// that the parameter is invalid.
-    /// </remarks>
-    /// <returns>
-    /// True if the parameter is valid, false if not valid.
-    /// </returns>
-    /// <param name = "value">Integer value that will be validated against the parameter's current specification.</param>
-    /// <param name = "message">Reference to a string that will conain a message regarding the validation of the parameter.</param>
-    /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
-    /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
-    [DispId(4)]
-    [Description("Check if value is OK for this spec as double")]
-    [return: MarshalAs(UnmanagedType.VariantBool)]
-    bool DimensionedValidate(double value, ref String message);
+    bool DimensionedValidate(double value, ref string message);
 }
-
 
 /// <summary>
 /// This interface is for a parameter specification when the 
@@ -330,40 +268,34 @@ public interface ICapeRealParameterSpec
 interface ICapeRealParameterSpecCOM
 {
     /// <summary>
-    /// Gets the default value of the parameter.
+    /// 获取参数的默认值。
     /// </summary>
     /// <remarks>
-    /// A default value for the parameter.
+    /// 该参数的默认值。
     /// </remarks>
     /// <value>
-    /// The default value of the parameter.
+    /// 该参数的默认值。
     /// </value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(1)]
     [Description("Property Default")]
-    double DefaultValue
-    {
-        get;
-    }
+    double DefaultValue { get; }
 
     /// <summary>
-    /// Gets the lower bound of the parameter.
+    /// 获取参数的下限。
     /// </summary>
     /// <remarks>
-    /// A lower bound value for the parameter.
+    /// 该参数的下限值。
     /// </remarks>
     /// <value>
-    /// The lower bound of the parameter.
+    /// 该参数的下限值。
     /// </value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(2)]
     [Description("Property LowerBound")]
-    double LowerBound
-    {
-        get;
-    }
+    double LowerBound { get; }
 
     /// <summary>
     /// Gets the upper bound of the parameter.
@@ -378,10 +310,7 @@ interface ICapeRealParameterSpecCOM
     /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(3)]
     [Description("Property UpperBound")]
-    double UpperBound
-    {
-        get;
-    }
+    double UpperBound { get; }
 
     /// <summary>
     /// Validates the value against the specification of the parameter.
@@ -402,7 +331,7 @@ interface ICapeRealParameterSpecCOM
     [DispId(4)]
     [Description("Check if value is OK for this spec as double")]
     [return: MarshalAs(UnmanagedType.VariantBool)]
-    bool Validate(double value, ref String message);
+    bool Validate(double value, ref string message);
 }
 
 /// <summary>
@@ -416,40 +345,32 @@ interface ICapeRealParameterSpecCOM
 public interface ICapeIntegerParameterSpec
 {
     /// <summary>
-    /// Gets the default value of the parameter.
+    /// 获取参数的默认值。
     /// </summary>
     /// <remarks>
-    /// A default value for the parameter.
+    /// 该参数的默认值。
     /// </remarks>
     /// <value>
-    /// The default value of the parameter.
+    /// 该参数的默认值。
     /// </value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(1), Description("property Default")]
-    int DefaultValue
-    {
-        get;
-        set;
-    }
+    int DefaultValue { get; set; }
 
     /// <summary>
-    /// Gets the lower bound of the parameter.
+    /// 获取参数的下限。
     /// </summary>
     /// <remarks>
-    /// A lower bound value for the parameter.
+    /// 该参数的下限值。
     /// </remarks>
     /// <value>
-    /// The lower bound of the parameter.
+    /// 该参数的下限值。
     /// </value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(2), Description("property LowerBound")]
-    int LowerBound
-    {
-        get;
-        set;
-    }
+    int LowerBound { get; set; }
 
     /// <summary>
     /// Gets the upper bound of the parameter.
@@ -463,11 +384,7 @@ public interface ICapeIntegerParameterSpec
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(3), Description("property UpperBound")]
-    int UpperBound
-    {
-        get;
-        set;
-    }
+    int UpperBound { get; set; }
 
     /// <summary>
     /// Validates the value sent against the specification of the parameter. 
@@ -487,7 +404,7 @@ public interface ICapeIntegerParameterSpec
     [DispId(4)]
     [Description("Check if value is OK for this spec as double")]
     [return: MarshalAs(UnmanagedType.VariantBool)]
-    bool Validate(int pValue, ref String message);
+    bool Validate(int pValue, ref string message);
 }
 
 /// <summary>
@@ -500,22 +417,18 @@ public interface ICapeIntegerParameterSpec
 public interface ICapeOptionParameterSpec
 {
     /// <summary>
-    /// Gets the default value of the parameter.
+    /// 获取参数的默认值。
     /// </summary>
     /// <remarks>
     /// A default string value for the parameter.
     /// </remarks>
     /// <value>
-    /// The default value of the parameter.
+    /// 该参数的默认值。
     /// </value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(1), Description("property Default")]
-    String DefaultValue
-    {
-        get;
-        set;
-    }
+    string DefaultValue { get; set; }
 
     /// <summary>
     /// Gets the list of valid values for the parameter if 'RestrictedtoList' property is true.
@@ -530,11 +443,7 @@ public interface ICapeOptionParameterSpec
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(2), Description("The list of names of the items")]
-    string[] OptionList
-    {
-        get;
-        set;
-    }
+    string[] OptionList { get; set; }
 
     /// <summary>
     /// A list of Strings that the valueo f the parameter will be validated against.
@@ -547,11 +456,7 @@ public interface ICapeOptionParameterSpec
     /// Converted by COM interop to a COM-based CAPE-OPEN VARIANT_BOOL.
     /// </value>
     [DispId(3), Description("True if it only accepts values from the option list.")]
-    bool RestrictedToList
-    {
-        get;
-        set;
-    }
+    bool RestrictedToList { get; set; }
 
     /// <summary>
     /// Validates the value against the parameter's specification.
@@ -574,9 +479,8 @@ public interface ICapeOptionParameterSpec
     [DispId(4)]
     [Description("Check if value is OK for this spec as string")]
     [return: MarshalAs(UnmanagedType.VariantBool)]
-    bool Validate(String pValue, ref String message);
+    bool Validate(string pValue, ref string message);
 }
-
 
 /// <summary>
 /// This interface is for a parameter specification
@@ -590,21 +494,18 @@ public interface ICapeOptionParameterSpec
 interface ICapeOptionParameterSpecCOM
 {
     /// <summary>
-    /// Gets the default value of the parameter.
+    /// 获取参数的默认值。
     /// </summary>
     /// <remarks>
     /// A default string value for the parameter.
     /// </remarks>
     /// <value>
-    /// The default value of the parameter.
+    /// 该参数的默认值。
     /// </value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(1), Description("property Default")]
-    String DefaultValue
-    {
-        get;
-    }
+    string DefaultValue { get; }
 
     /// <summary>
     /// Gets the list of valid values for the parameter if 'RestrictedtoList' property is true.
@@ -619,10 +520,7 @@ interface ICapeOptionParameterSpecCOM
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(2), Description("The list of names of the items")]
-    Object OptionList
-    {
-        get;
-    }
+    object OptionList { get; }
 
     /// <summary>
     /// A list of Strings that the valueo f the parameter will be validated against.
@@ -635,10 +533,7 @@ interface ICapeOptionParameterSpecCOM
     /// Converted by COM interop to a COM-based CAPE-OPEN VARIANT_BOOL.
     /// </value>
     [DispId(3), Description("True if it only accepts values from the option list.")]
-    bool RestrictedToList
-    {
-        get;
-    }
+    bool RestrictedToList { get; }
 
     /// <summary>
     /// Validates the value against the parameter's specification.
@@ -661,9 +556,9 @@ interface ICapeOptionParameterSpecCOM
     [DispId(4)]
     [Description("Check if value is OK for this spec as string")]
     [return: MarshalAs(UnmanagedType.VariantBool)]
-    bool Validate(String pValue, ref String message);
+    bool Validate(string pValue, ref string message);
 }
-    
+
 /// <summary>
 /// This interface is for a parameter specification when the parameter is a boolean
 /// </summary>
@@ -674,22 +569,18 @@ interface ICapeOptionParameterSpecCOM
 public interface ICapeBooleanParameterSpec
 {
     /// <summary>
-    /// Gets the default value of the parameter.
+    /// 获取参数的默认值。
     /// </summary>
     /// <remarks>
-    /// Gets the default value of the parameter.
+    /// 获取参数的默认值。
     /// </remarks>
     /// <value>
-    /// The default value of the parameter.
+    /// 该参数的默认值。
     /// </value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(1), Description("property Default")]
-    bool DefaultValue
-    {
-        get;
-        set;
-    }
+    bool DefaultValue { get; set; }
 
     /// <summary>
     /// Validates the value sent against the specification of the parameter.
@@ -709,7 +600,7 @@ public interface ICapeBooleanParameterSpec
     [DispId(2)]
     [Description("Check if value is OK for this spec")]
     [return: MarshalAs(UnmanagedType.VariantBool)]
-    bool Validate(bool pValue, ref String message);
+    bool Validate(bool pValue, ref string message);
 }
 
 /// <summary>
@@ -735,10 +626,7 @@ public interface ICapeArrayParameterSpec
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(1), Description("Get the number of dimensions of the array")]
-    int NumDimensions
-    {
-        get;
-    }
+    int NumDimensions { get; }
 
     /// <summary>
     /// Gets the size of each one of the dimensions of the array.
@@ -752,10 +640,7 @@ public interface ICapeArrayParameterSpec
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(2), Description("Get the size of each one of the dimensions of the array")]
-    int[] Size
-    {
-        get;
-    }
+    int[] Size { get; }
 
     /// <summary>
     /// Gets an array of the specifications of each of the items in the 
@@ -774,10 +659,7 @@ public interface ICapeArrayParameterSpec
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(3), Description("Get the specification of each of the values in the array")]
-    Object[] ItemsSpecifications
-    {
-        get;
-    }
+    object[] ItemsSpecifications { get; }
 
     /// <summary>
     /// Validates the value against the specification of the parameter.
@@ -794,8 +676,7 @@ public interface ICapeArrayParameterSpec
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(4), Description("Check if value is OK for this spec ")]
-    Object Validate(Object inputArray, ref string[] messages);
-
+    object Validate(object inputArray, ref string[] messages);
 }
 
 /// <summary>
@@ -824,7 +705,7 @@ public interface ICapeParameter
     /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(1)]
     [Description("Gets and sets the specification for the parameter.")]
-    Object Specification
+    object Specification
     {
         [return: MarshalAs(UnmanagedType.IDispatch)]
         get;
@@ -844,11 +725,7 @@ public interface ICapeParameter
     /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(2)]
     [Description("Get and sets the value of the parameter.")]
-    Object value
-    {
-        get;
-        set;
-    }
+    object value { get; set; }
 
     /// <summary>
     /// Gets the flag to indicate parameter validation's status.
@@ -868,10 +745,7 @@ public interface ICapeParameter
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(3), Description("Get the parameter validation status")]
-    CapeValidationStatus ValStatus
-    {
-        get;
-    }
+    CapeValidationStatus ValStatus { get; }
 
     /// <summary>
     /// Gets and sets the mode of the parameter.
@@ -889,11 +763,7 @@ public interface ICapeParameter
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(4), Description("Get the Mode - input,output - of the parameter.")]
-    CapeParamMode Mode
-    {
-        get;
-        set;
-    }
+    CapeParamMode Mode { get; set; }
 
     /// <summary>
     /// Validates the current value of the parameter against the 
@@ -916,7 +786,7 @@ public interface ICapeParameter
     [DispId(5)]
     [Description("Validate the parameter's current value.")]
     [return: MarshalAs(UnmanagedType.VariantBool)]
-    bool Validate(ref String message);
+    bool Validate(ref string message);
 
     /// <summary>
     /// Sets the value of the parameter to its default value.
@@ -997,7 +867,6 @@ interface IParameterEvents
     void ParameterReset(object sender, object args);
 }
 
-
 class ParameterTypeConverter : ExpandableObjectConverter
 {
     public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
@@ -1008,21 +877,28 @@ class ParameterTypeConverter : ExpandableObjectConverter
             return true;
         return base.CanConvertTo(context, destinationType);
     }
-        
-    public override Object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, Object parameter, Type destinationType)
+
+    public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object parameter,
+        Type destinationType)
     {
-        if (typeof(String).IsAssignableFrom(destinationType) && typeof(ArrayParameterWrapper).IsAssignableFrom(parameter.GetType()))
+        if (typeof(string).IsAssignableFrom(destinationType) &&
+            typeof(ArrayParameterWrapper).IsAssignableFrom(parameter.GetType()))
         {
-            return "";//((CapeOpen.ArrayParameterWrapper)parameter).;
+            return ""; //((CapeOpen.ArrayParameterWrapper)parameter).;
         }
-        if (typeof(String).IsAssignableFrom(destinationType) && typeof(ICapeParameter).IsAssignableFrom(parameter.GetType()))
+
+        if (typeof(string).IsAssignableFrom(destinationType) &&
+            typeof(ICapeParameter).IsAssignableFrom(parameter.GetType()))
         {
             return ((ICapeParameter)parameter).value.ToString();
         }
-        if (typeof(String).IsAssignableFrom(destinationType) && typeof(ICapeIdentification).IsAssignableFrom(parameter.GetType()))
+
+        if (typeof(string).IsAssignableFrom(destinationType) &&
+            typeof(ICapeIdentification).IsAssignableFrom(parameter.GetType()))
         {
             return ((ICapeIdentification)parameter).ComponentName;
         }
+
         return base.ConvertTo(context, culture, parameter, destinationType);
     }
 }
@@ -1059,18 +935,14 @@ interface IATCapeXRealParameterSpec
     /// </value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     [DispId(0x60040003), Description(" Provide the Aspen Plus display units for for this parameter.")]
-    String DisplayUnits
-    {
-        get;
-    }
+    string DisplayUnits { get; }
 }
-
 
 /// <summary>
 /// Represents the method that will handle the changing of the value of a parameter.
 /// </summary>
 [ComVisible(false)]
-public delegate void ParameterValueChangedHandler(Object sender, ParameterValueChangedEventArgs args);
+public delegate void ParameterValueChangedHandler(object sender, ParameterValueChangedEventArgs args);
 
 /// <summary>
 /// Provides data for the value changed event associated with the parameters.
@@ -1085,26 +957,19 @@ interface IParameterValueChangedEventArgs
 {
     /// <summary>
     /// The name of the parameter being changed.</summary>
-    String ParameterName
-    {
-        get;
-    }
+    string ParameterName { get; }
+
     /// <summary>
     /// The value of the parameter prior to the change.</summary>
     /// <remarks>The former value of the parameter can be used to update GUI inforamtion about the PMC.</remarks>
     /// <value>The value of the parameter prior to the change.</value>
-    Object OldValue
-    {
-        get;
-    }
+    object OldValue { get; }
+
     /// <summary>
     /// The value of the parameter after the change.</summary>
     /// <remarks>The new nvalue of the parameter can be used to update GUI inforamtion about the PMC.</remarks>
     /// <value>The value of the parameter after the change.</value>
-    Object NewValue
-    {
-        get;
-    }
+    object NewValue { get; }
 }
 
 /// <summary>
@@ -1120,9 +985,9 @@ interface IParameterValueChangedEventArgs
 public class ParameterValueChangedEventArgs : EventArgs,
     IParameterValueChangedEventArgs
 {
-    private String m_paramName;
-    private Object m_oldValue;
-    private Object m_newValue;
+    private string m_paramName;
+    private object m_oldValue;
+    private object m_newValue;
 
     /// <summary>Creates an instance of the ParameterValueChangedEventArgs class with the old and parameter value.</summary>
     /// <remarks>You can use this constructor when raising the ParameterValueChangedEvent at run time to specify a 
@@ -1131,7 +996,7 @@ public class ParameterValueChangedEventArgs : EventArgs,
     /// <param name = "paramName">The name of the parameter being changed.</param>
     /// <param name = "oldValue">The name of the PMC prior to the name change.</param>
     /// <param name = "newValue">The name of the PMC after the name change.</param>
-    public ParameterValueChangedEventArgs(String paramName, Object oldValue, Object newValue)
+    public ParameterValueChangedEventArgs(string paramName, object oldValue, object newValue)
     {
         m_paramName = paramName;
         m_oldValue = oldValue;
@@ -1141,43 +1006,35 @@ public class ParameterValueChangedEventArgs : EventArgs,
     /// <summary>
     /// The name of the parameter being changed.</summary>
     /// <value>The name of the parameter being changed.</value>
-    public String ParameterName
+    public string ParameterName
     {
-        get
-        {
-            return m_paramName;
-        }
+        get { return m_paramName; }
     }
+
     /// <summary>
     /// The value of the parameter prior to the name change.</summary>
     /// <remarks>The former value of the parameter can be used to update GUI inforamtion about the PMC.</remarks>
     /// <value>The value of the parameter prior to the change.</value>
-    public Object OldValue
+    public object OldValue
     {
-        get
-        {
-            return m_oldValue;
-        }
+        get { return m_oldValue; }
     }
+
     /// <summary>
     /// The value of the parameter after the change.</summary>
     /// <remarks>The new name of the unit can be used to update GUI inforamtion about the PMC.</remarks>
     /// <value>The value of the parameter after the change.</value>
-    public Object NewValue
+    public object NewValue
     {
-        get
-        {
-            return m_newValue;
-        }
+        get { return m_newValue; }
     }
 }
-
 
 /// <summary>
 /// Represents the method that will handle the changing of the default value of a parameter.
 /// </summary>
 [ComVisible(false)]
-public delegate void ParameterDefaultValueChangedHandler(Object sender, ParameterDefaultValueChangedEventArgs args);
+public delegate void ParameterDefaultValueChangedHandler(object sender, ParameterDefaultValueChangedEventArgs args);
 
 /// <summary>
 /// Provides data for the value changed event associated with the parameters.
@@ -1192,26 +1049,19 @@ interface IParameterDefaultValueChangedEventArgs
 {
     /// <summary>
     /// The name of the parameter being changed.</summary>
-    String ParameterName
-    {
-        get;
-    }
+    string ParameterName { get; }
+
     /// <summary>
     /// The default value of the parameter prior to the change.</summary>
     /// <remarks>The default value of the parameter can be used to update GUI inforamtion about the PMC.</remarks>
     /// <value>The default value of the parameter prior to the change.</value>
-    Object OldDefaultValue
-    {
-        get;
-    }
+    object OldDefaultValue { get; }
+
     /// <summary>
     /// The default value of the parameter  after the name change.</summary>
     /// <remarks>The new default value of the parameter can be used to update GUI inforamtion about the PMC.</remarks>
     /// <value>The default value of the parameter after the change.</value>
-    Object NewDefaultValue
-    {
-        get;
-    }
+    object NewDefaultValue { get; }
 }
 
 /// <summary>
@@ -1227,9 +1077,9 @@ interface IParameterDefaultValueChangedEventArgs
 public class ParameterDefaultValueChangedEventArgs : EventArgs,
     IParameterDefaultValueChangedEventArgs
 {
-    private String m_paramName;
-    private Object m_oldDefaultValue;
-    private Object m_newDefaultValue;
+    private string m_paramName;
+    private object m_oldDefaultValue;
+    private object m_newDefaultValue;
 
     /// <summary>Creates an instance of the ParameterDefaultValueChangedEventArgs class with the old and new default values.</summary>
     /// <remarks>You can use this constructor when raising the ParameterDefaultValueChangedEventArgs at run time to specify  
@@ -1238,7 +1088,7 @@ public class ParameterDefaultValueChangedEventArgs : EventArgs,
     /// <param name = "paramName">The name of the parameter being changed.</param>
     /// <param name = "oldDefaultValue">The default value of the parameter prior to the change.</param>
     /// <param name = "newDefaultValue">The default value of the parameter after the change.</param>
-    public ParameterDefaultValueChangedEventArgs(String paramName, Object oldDefaultValue, Object newDefaultValue)
+    public ParameterDefaultValueChangedEventArgs(string paramName, object oldDefaultValue, object newDefaultValue)
     {
         m_paramName = paramName;
         m_oldDefaultValue = oldDefaultValue;
@@ -1248,34 +1098,27 @@ public class ParameterDefaultValueChangedEventArgs : EventArgs,
     /// <summary>
     /// The name of the parameter being changed.</summary>
     /// <value>The name of the parameter being changed.</value>
-    public String ParameterName
+    public string ParameterName
     {
-        get
-        {
-            return m_paramName;
-        }
+        get { return m_paramName; }
     }
+
     /// <summary>
     /// The name of the PMC prior to the name change.</summary>
     /// <remarks>The former name of the unit can be used to update GUI inforamtion about the PMC.</remarks>
     /// <value>The default of the parameter prior to the change.</value>
-    public Object OldDefaultValue
+    public object OldDefaultValue
     {
-        get
-        {
-            return m_oldDefaultValue;
-        }
+        get { return m_oldDefaultValue; }
     }
+
     /// <summary>
     /// The default value of the parameter after the name change.</summary>
     /// <remarks>The new default value for the parameter can be used to update GUI inforamtion about the PMC.</remarks>
     /// <value>The default value of the parameter after the change.</value>
-    public Object NewDefaultValue
+    public object NewDefaultValue
     {
-        get
-        {
-            return m_newDefaultValue;
-        }
+        get { return m_newDefaultValue; }
     }
 }
 
@@ -1283,7 +1126,7 @@ public class ParameterDefaultValueChangedEventArgs : EventArgs,
 /// Represents the method that will handle the changing of the lower bound of a parameter.
 /// </summary>
 [ComVisible(false)]
-public delegate void ParameterLowerBoundChangedHandler(Object sender, ParameterLowerBoundChangedEventArgs args);
+public delegate void ParameterLowerBoundChangedHandler(object sender, ParameterLowerBoundChangedEventArgs args);
 
 /// <summary>
 /// Provides data for the value changed event associated with the parameters.
@@ -1298,26 +1141,19 @@ interface IParameterLowerBoundChangedEventArgs
 {
     /// <summary>
     /// The name of the parameter being changed.</summary>
-    String ParameterName
-    {
-        get;
-    }
+    string ParameterName { get; }
+
     /// <summary>
     /// The lower bound of the parameter prior to the change.</summary>
     /// <remarks>The former lower bound of the parameter can be used to update GUI inforamtion about the PMC.</remarks>
     /// <value>The lower bound of the parameter prior to the change.</value>
-    Object OldLowerBound
-    {
-        get;
-    }
+    object OldLowerBound { get; }
+
     /// <summary>
     /// The lower bound of the parameter after to the change.</summary>
     /// <remarks>The former lower bound of the parameter can be used to update GUI inforamtion about the PMC.</remarks>
     /// <value>The lower bound of the parameter after to the change.</value>
-    Object NewLowerBound
-    {
-        get;
-    }
+    object NewLowerBound { get; }
 }
 
 /// <summary>
@@ -1333,9 +1169,9 @@ interface IParameterLowerBoundChangedEventArgs
 public class ParameterLowerBoundChangedEventArgs : EventArgs,
     IParameterLowerBoundChangedEventArgs
 {
-    private String m_paramName;
-    private Object m_oldLowerBound;
-    private Object m_newLowerBound;
+    private string m_paramName;
+    private object m_oldLowerBound;
+    private object m_newLowerBound;
 
     /// <summary>Creates an instance of the ParameterLowerBoundChangedEventArgs class with the old and new lower bound for the parameter.</summary>
     /// <remarks>You can use this constructor when raising the ParameterLowerBoundChangedEvent at run time to specify that 
@@ -1344,7 +1180,7 @@ public class ParameterLowerBoundChangedEventArgs : EventArgs,
     /// <param name = "paramName">The name of the parameter being changed.</param>
     /// <param name = "oldLowerBound">The name of the PMC prior to the name change.</param>
     /// <param name = "newLowerBound">The name of the PMC after the name change.</param>
-    public ParameterLowerBoundChangedEventArgs(String paramName, Object oldLowerBound, Object newLowerBound)
+    public ParameterLowerBoundChangedEventArgs(string paramName, object oldLowerBound, object newLowerBound)
     {
         m_paramName = paramName;
         m_oldLowerBound = oldLowerBound;
@@ -1354,34 +1190,27 @@ public class ParameterLowerBoundChangedEventArgs : EventArgs,
     /// <summary>
     /// The name of the parameter being changed.</summary>
     /// <value>The name of the parameter being changed.</value>
-    public String ParameterName
+    public string ParameterName
     {
-        get
-        {
-            return m_paramName;
-        }
+        get { return m_paramName; }
     }
+
     /// <summary>
     /// The lower bound of the parameter prior to the change.</summary>
     /// <remarks>The former lower bound of the parameter can be used to update GUI inforamtion about the PMC.</remarks>
     /// <value>The lower bound of the parameter prior to the change.</value>
-    public Object OldLowerBound
+    public object OldLowerBound
     {
-        get
-        {
-            return m_oldLowerBound;
-        }
+        get { return m_oldLowerBound; }
     }
+
     /// <summary>
     /// The lower bound of the parameter after the change.</summary>
     /// <remarks>The new lower bound of the parameter can be used to update GUI inforamtion about the PMC.</remarks>
     /// <value>The lower bound of the parameter after the change.</value>
-    public Object NewLowerBound
+    public object NewLowerBound
     {
-        get
-        {
-            return m_newLowerBound;
-        }
+        get { return m_newLowerBound; }
     }
 }
 
@@ -1389,13 +1218,13 @@ public class ParameterLowerBoundChangedEventArgs : EventArgs,
 /// Represents the method that will handle the changing of the upper bound of a parameter.
 /// </summary>
 [ComVisible(false)]
-public delegate void ParameterUpperBoundChangedHandler(Object sender, ParameterUpperBoundChangedEventArgs args);
+public delegate void ParameterUpperBoundChangedHandler(object sender, ParameterUpperBoundChangedEventArgs args);
 
 /// <summary>
 /// Represents the method that will handle the changing of the upper bound of a parameter.
 /// </summary>
 [ComVisible(true)]
-delegate void ParameterUpperBoundChangedHandlerCOM(Object sender, object args);
+delegate void ParameterUpperBoundChangedHandlerCOM(object sender, object args);
 
 /// <summary>
 /// Provides data for the upper bound changed event associated with the parameters.
@@ -1410,26 +1239,19 @@ interface IParameterUpperBoundChangedEventArgs
 {
     /// <summary>
     /// The name of the parameter being changed.</summary>
-    String ParameterName
-    {
-        get;
-    }
+    string ParameterName { get; }
+
     /// <summary>
     /// The upper bound of the parameter prior to the change.</summary>
     /// <remarks>The former upper bound of the parameter can be used to update GUI inforamtion about the PMC.</remarks>
     /// <value>The upper bound of the parameter prior to the change.</value>
-    Object OldUpperBound
-    {
-        get;
-    }
+    object OldUpperBound { get; }
+
     /// <summary>
     /// The upper bound of the parameter after to the change.</summary>
     /// <remarks>The former upper bound of the parameter can be used to update GUI inforamtion about the PMC.</remarks>
     /// <value>The upper bound of the parameter after to the change.</value>
-    Object NewUpperBound
-    {
-        get;
-    }
+    object NewUpperBound { get; }
 }
 
 /// <summary>
@@ -1445,9 +1267,9 @@ interface IParameterUpperBoundChangedEventArgs
 public class ParameterUpperBoundChangedEventArgs : EventArgs,
     IParameterUpperBoundChangedEventArgs
 {
-    private String m_paramName;
-    private Object m_oldUpperBound;
-    private Object m_newUpperBound;
+    private string m_paramName;
+    private object m_oldUpperBound;
+    private object m_newUpperBound;
 
     /// <summary>Creates an instance of the ParameterUpperBoundChangedEventArgs class with the old and new upper bound for the parameter.</summary>
     /// <remarks>You can use this constructor when raising the ParameterUpperBoundChangedEvent at run time to specify 
@@ -1456,7 +1278,7 @@ public class ParameterUpperBoundChangedEventArgs : EventArgs,
     /// <param name = "paramName">The name of the parameter being changed.</param>
     /// <param name = "oldUpperBound">The upper bound of the parameter prior to the change.</param>
     /// <param name = "newUpperBound">The upper bound of the parameter after the change.</param>
-    public ParameterUpperBoundChangedEventArgs(String paramName, Object oldUpperBound, Object newUpperBound)
+    public ParameterUpperBoundChangedEventArgs(string paramName, object oldUpperBound, object newUpperBound)
     {
         m_paramName = paramName;
         m_oldUpperBound = oldUpperBound;
@@ -1466,44 +1288,35 @@ public class ParameterUpperBoundChangedEventArgs : EventArgs,
     /// <summary>
     /// The name of the parameter being changed.</summary>
     /// <value>The name of the parameter being changed.</value>
-    public String ParameterName
+    public string ParameterName
     {
-        get
-        {
-            return m_paramName;
-        }
+        get { return m_paramName; }
     }
+
     /// <summary>
     /// The upper bound of the parameter prior to the change.</summary>
     /// <remarks>The former upper bound of the parameter can be used to update GUI inforamtion about the PMC.</remarks>
     /// <value>The upper bound of the parameter prior to the change.</value>
-    public Object OldUpperBound
+    public object OldUpperBound
     {
-        get
-        {
-            return m_oldUpperBound;
-        }
+        get { return m_oldUpperBound; }
     }
+
     /// <summary>
     /// The upper bound of the parameter after the change.</summary>
     /// <remarks>The new upper bound of the parameter can be used to update GUI inforamtion about the PMC.</remarks>
     /// <value>The upper bound of the parameter after the change.</value>
-    public Object NewUpperBound
+    public object NewUpperBound
     {
-        get
-        {
-            return m_newUpperBound;
-        }
+        get { return m_newUpperBound; }
     }
 }
-
 
 /// <summary>
 /// Represents the method that will handle the changing of the mode of a parameter.
 /// </summary>
 [ComVisible(false)]
-public delegate void ParameterModeChangedHandler(Object sender, ParameterModeChangedEventArgs args);
-
+public delegate void ParameterModeChangedHandler(object sender, ParameterModeChangedEventArgs args);
 
 /// <summary>
 /// Provides data for the mode changed event associated with the parameters.
@@ -1518,26 +1331,19 @@ interface IParameterModeChangedEventArgs
 {
     /// <summary>
     /// The name of the parameter being changed.</summary>
-    String ParameterName
-    {
-        get;
-    }
+    string ParameterName { get; }
+
     /// <summary>
     /// The mode of the parameter prior to the change.</summary>
     /// <remarks>The former mode of the parameter can be used to update GUI inforamtion about the PMC.</remarks>
     /// <value>The mode of the parameter prior to the change.</value>
-    Object OldMode
-    {
-        get;
-    }
+    object OldMode { get; }
+
     /// <summary>
     /// The mode of the parameter after to the change.</summary>
     /// <remarks>The former mode of the parameter can be used to update GUI inforamtion about the PMC.</remarks>
     /// <value>The mode of the parameter after to the change.</value>
-    Object NewMode
-    {
-        get;
-    }
+    object NewMode { get; }
 }
 
 /// <summary>
@@ -1553,9 +1359,9 @@ interface IParameterModeChangedEventArgs
 public class ParameterModeChangedEventArgs : EventArgs,
     IParameterModeChangedEventArgs
 {
-    private String m_paramName;
-    private Object m_oldMode;
-    private Object m_newMode;
+    private string m_paramName;
+    private object m_oldMode;
+    private object m_newMode;
 
     /// <summary>Creates an instance of the ParameterModeChangedEventArgs class with the old and new upper bound for the parameter.</summary>
     /// <remarks>You can use this constructor when raising the ParameterModeChangedEvent at run time to specify 
@@ -1564,7 +1370,7 @@ public class ParameterModeChangedEventArgs : EventArgs,
     /// <param name = "paramName">The name of the parameter being changed.</param>
     /// <param name = "oldMode">The mode of the parameter prior to the change.</param>
     /// <param name = "newMode">The mode of the parameter after the change.</param>
-    public ParameterModeChangedEventArgs(String paramName, Object oldMode, Object newMode)
+    public ParameterModeChangedEventArgs(string paramName, object oldMode, object newMode)
     {
         m_paramName = paramName;
         m_oldMode = oldMode;
@@ -1576,34 +1382,27 @@ public class ParameterModeChangedEventArgs : EventArgs,
     /// </summary>
     /// <remarks>The name of the parameter being updated can be used to update GUI inforamtion about the PMC.</remarks>
     /// <value>The name of the parameter being changed.</value>
-    public String ParameterName
+    public string ParameterName
     {
-        get
-        {
-            return m_paramName;
-        }
+        get { return m_paramName; }
     }
+
     /// <summary>
     /// The mode of the parameter prior to the change.</summary>
     /// <remarks>The former mode of the parameter can be used to update GUI inforamtion about the PMC.</remarks>
     /// <value>The mode of the parameter prior to the change.</value>
-    public Object OldMode
+    public object OldMode
     {
-        get
-        {
-            return m_oldMode;
-        }
+        get { return m_oldMode; }
     }
+
     /// <summary>
     /// The mode of the parameter after the change.</summary>
     /// <remarks>The new mode of the parameter can be used to update GUI inforamtion about the PMC.</remarks>
     /// <value>The mode of the parameter after the change.</value>
-    public Object NewMode
+    public object NewMode
     {
-        get
-        {
-            return m_newMode;
-        }
+        get { return m_newMode; }
     }
 }
 
@@ -1611,7 +1410,7 @@ public class ParameterModeChangedEventArgs : EventArgs,
 /// Represents the method that will handle the validation of a parameter.
 /// </summary>
 [ComVisible(false)]
-public delegate void ParameterValidatedHandler(Object sender, ParameterValidatedEventArgs args);
+public delegate void ParameterValidatedHandler(object sender, ParameterValidatedEventArgs args);
 
 /// <summary>
 /// The parameter was validated.
@@ -1631,34 +1430,25 @@ interface IParameterValidatedEventArgs
     /// The name of the parameter being updated can be used to update GUI inforamtion about the PMC.
     /// </remarks>
     /// <value>The name of the parameter being changed.</value>
-    String ParameterName
-    {
-        get;
-    }
+    string ParameterName { get; }
+
     /// <summary>
     /// The message reulting from the parameter validation.</summary>
     /// <remarks>The message provides information about the results of the validation process.</remarks>
     /// <value>Information regrading the validation process.</value>
-    String Message
-    {
-        get;
-    }
+    string Message { get; }
+
     /// <summary>
     /// The validation status of the parameter prior to the validation.</summary>
     /// <remarks>Informs the user of the results of the validation process.</remarks>
     /// <value>The validation status of the parameter prior to the validation.</value>
-    CapeValidationStatus OldStatus
-    {
-        get;
-    }
+    CapeValidationStatus OldStatus { get; }
+
     /// <summary>
     /// The validation status of the parameter after the validation.</summary>
     /// <remarks>Informs the user of the results of the validation process.</remarks>
     /// <value>The validation status of the parameter after the validation.</value>
-    CapeValidationStatus NewStatus
-    {
-        get;
-    }
+    CapeValidationStatus NewStatus { get; }
 }
 
 /// <summary>
@@ -1674,8 +1464,8 @@ interface IParameterValidatedEventArgs
 public class ParameterValidatedEventArgs : EventArgs,
     IParameterValidatedEventArgs
 {
-    private String m_paramName;
-    private String m_message;
+    private string m_paramName;
+    private string m_message;
     private CapeValidationStatus m_oldStatus;
     private CapeValidationStatus m_newStatus;
 
@@ -1687,7 +1477,8 @@ public class ParameterValidatedEventArgs : EventArgs,
     /// <param name = "message">The message indicating the results of the parameter validation.</param>
     /// <param name = "oldStatus">The status of the parameter prior to validation.</param>
     /// <param name = "newStatus">The status of the parameter after the validation.</param>
-    public ParameterValidatedEventArgs(String paramName, String message, CapeValidationStatus oldStatus, CapeValidationStatus newStatus)
+    public ParameterValidatedEventArgs(string paramName, string message, CapeValidationStatus oldStatus,
+        CapeValidationStatus newStatus)
     {
         m_paramName = paramName;
         m_message = message;
@@ -1702,45 +1493,36 @@ public class ParameterValidatedEventArgs : EventArgs,
     /// The name of the parameter being updated can be used to update GUI inforamtion about the PMC.
     /// </remarks>
     /// <value>The name of the parameter being changed.</value>
-    public String ParameterName
+    public string ParameterName
     {
-        get
-        {
-            return m_paramName;
-        }
+        get { return m_paramName; }
     }
+
     /// <summary>
     /// The message reulting from the parameter validation.</summary>
     /// <remarks>The message provides information about the results of the validation process.</remarks>
     /// <value>Information regrading the validation process.</value>
-    public String Message
+    public string Message
     {
-        get
-        {
-            return m_message;
-        }
+        get { return m_message; }
     }
+
     /// <summary>
     /// The validation status of the parameter prior to the validation.</summary>
     /// <remarks>Informs the user of the results of the validation process.</remarks>
     /// <value>The validation status of the parameter prior to the validation.</value>
     public CapeValidationStatus OldStatus
     {
-        get
-        {
-            return m_oldStatus;
-        }
+        get { return m_oldStatus; }
     }
+
     /// <summary>
     /// The validation status of the parameter after the validation.</summary>
     /// <remarks>Informs the user of the results of the validation process.</remarks>
     /// <value>The validation status of the parameter after the validation.</value>
     public CapeValidationStatus NewStatus
     {
-        get
-        {
-            return m_newStatus;
-        }
+        get { return m_newStatus; }
     }
 }
 
@@ -1748,8 +1530,7 @@ public class ParameterValidatedEventArgs : EventArgs,
 /// Represents the method that will handle the resetting of a parameter.
 /// </summary>
 [ComVisible(false)]
-public delegate void ParameterResetHandler(Object sender, ParameterResetEventArgs args);
-
+public delegate void ParameterResetHandler(object sender, ParameterResetEventArgs args);
 
 /// <summary>
 /// The parameter was reset.
@@ -1764,10 +1545,7 @@ interface IParameterResetEventArgs
 {
     /// <summary>
     /// The name of the parameter being changed.</summary>
-    String ParameterName
-    {
-        get;
-    }
+    string ParameterName { get; }
 }
 
 /// <summary>
@@ -1783,15 +1561,17 @@ interface IParameterResetEventArgs
 public class ParameterResetEventArgs : EventArgs,
     IParameterResetEventArgs
 {
-    private String m_paramName;
+    private string m_paramName;
+
     /// <summary>Creates an instance of the ParameterResetEventArgs class for the parameter.</summary>
     /// <remarks>You can use this constructor when raising the ParameterResetEventArgs at run time to  
     /// inform the system that the parameter was reset.
     /// </remarks>
-    public ParameterResetEventArgs(String paramName)
+    public ParameterResetEventArgs(string paramName)
     {
         m_paramName = paramName;
     }
+
     /// <summary>
     /// The name of the parameter being changed.
     /// </summary>
@@ -1799,12 +1579,9 @@ public class ParameterResetEventArgs : EventArgs,
     /// The name of the parameter being updated can be used to update GUI inforamtion about the PMC.
     /// </remarks>
     /// <value>The name of the parameter being reset.</value>
-    public String ParameterName
+    public string ParameterName
     {
-        get
-        {
-            return m_paramName;
-        }
+        get { return m_paramName; }
     }
 }
 
@@ -1812,7 +1589,7 @@ public class ParameterResetEventArgs : EventArgs,
 /// Represents the method that will handle the changing of the option list of a parameter.
 /// </summary>
 [ComVisible(false)]
-public delegate void ParameterOptionListChangedHandler(Object sender, ParameterOptionListChangedEventArgs args);
+public delegate void ParameterOptionListChangedHandler(object sender, ParameterOptionListChangedEventArgs args);
 
 /// <summary>
 /// The parameter was reset.
@@ -1832,10 +1609,7 @@ interface IParameterOptionListChangedEventArgs
     /// The name of the parameter being updated can be used to update GUI inforamtion about the PMC.
     /// </remarks>
     /// <value>The name of the parameter being changed.</value>
-    String ParameterName
-    {
-        get;
-    }
+    string ParameterName { get; }
 }
 
 /// <summary>
@@ -1851,15 +1625,17 @@ interface IParameterOptionListChangedEventArgs
 public class ParameterOptionListChangedEventArgs : EventArgs,
     IParameterOptionListChangedEventArgs
 {
-    private String m_paramName;
+    private string m_paramName;
+
     /// <summary>Creates an instance of the ParameterOptionListChangedEventArgs class for the parameter.</summary>
     /// <remarks>You can use this constructor when raising the ParameterOptionListChangedEventArgs at run time to  
     /// inform the system that the parameter's option list was changed.
     /// </remarks>
-    public ParameterOptionListChangedEventArgs(String paramName)
+    public ParameterOptionListChangedEventArgs(string paramName)
     {
         m_paramName = paramName;
     }
+
     /// <summary>
     /// The name of the parameter being changed.
     /// </summary>
@@ -1867,12 +1643,9 @@ public class ParameterOptionListChangedEventArgs : EventArgs,
     /// The name of the parameter being updated can be used to update GUI inforamtion about the PMC.
     /// </remarks>
     /// <value>The name of the parameter being changed.</value>
-    public String ParameterName
+    public string ParameterName
     {
-        get
-        {
-            return m_paramName;
-        }
+        get { return m_paramName; }
     }
 }
 
@@ -1894,10 +1667,7 @@ interface IParameterRestrictedToListChangedEventArgs
     /// The name of the parameter being updated can be used to update GUI inforamtion about the PMC.
     /// </remarks>
     /// <value>The name of the parameter being changed.</value>
-    String ParameterName
-    {
-        get;
-    }
+    string ParameterName { get; }
 }
 
 /// <summary>
@@ -1913,19 +1683,21 @@ interface IParameterRestrictedToListChangedEventArgs
 public class ParameterRestrictedToListChangedEventArgs : EventArgs,
     IParameterRestrictedToListChangedEventArgs
 {
-    private String m_paramName;
+    private string m_paramName;
     private bool m_wasRestricted;
     private bool m_isRestricted;
+
     /// <summary>Creates an instance of the ParameterRestrictedToListChangedEventArgs class for the parameter.</summary>
     /// <remarks>You can use this constructor when raising the ParameterRestrictedToListChangedEventArgs at run time to  
     /// inform the system that the parameter's option list was changed.
     /// </remarks>
-    public ParameterRestrictedToListChangedEventArgs(String paramName, bool wasRestricted, bool isRestricted)
+    public ParameterRestrictedToListChangedEventArgs(string paramName, bool wasRestricted, bool isRestricted)
     {
         m_paramName = paramName;
         m_isRestricted = isRestricted;
         m_wasRestricted = wasRestricted;
     }
+
     /// <summary>
     /// The name of the parameter being changed.
     /// </summary>
@@ -1933,12 +1705,9 @@ public class ParameterRestrictedToListChangedEventArgs : EventArgs,
     /// The name of the parameter being updated can be used to update GUI inforamtion about the PMC.
     /// </remarks>
     /// <value>The name of the parameter being changed.</value>
-    public String ParameterName
+    public string ParameterName
     {
-        get
-        {
-            return m_paramName;
-        }
+        get { return m_paramName; }
     }
 
     /// <summary>
@@ -1950,11 +1719,9 @@ public class ParameterRestrictedToListChangedEventArgs : EventArgs,
     /// <value>Is the parameter vlue restricted to the list?.</value>
     public bool IsRestricted
     {
-        get
-        {
-            return m_isRestricted;
-        }
+        get { return m_isRestricted; }
     }
+
     /// <summary>
     /// States whether the value of the parameter was restricted to the values in the options list prior to the 
     /// change to the resticed to list property.
@@ -1965,10 +1732,7 @@ public class ParameterRestrictedToListChangedEventArgs : EventArgs,
     /// <value>Is the parameter vlue restricted to the list?.</value>
     public bool WasRestricted
     {
-        get
-        {
-            return m_wasRestricted;
-        }
+        get { return m_wasRestricted; }
     }
 }
 
@@ -1976,20 +1740,20 @@ public class ParameterRestrictedToListChangedEventArgs : EventArgs,
 /// Represents the method that will handle the changing of whether a paratemer's value is restricted to those in the option list.
 /// </summary>
 [ComVisible(false)]
-public delegate void ParameterRestrictedToListChangedHandler(Object sender, ParameterRestrictedToListChangedEventArgs args);
+public delegate void ParameterRestrictedToListChangedHandler(object sender,
+    ParameterRestrictedToListChangedEventArgs args);
 
 /// <summary>
 /// Represents the method that will handle the changing of the Kinetic Reaction Chemistry of a PMC.
 /// </summary>
 [ComVisible(false)]
-public delegate void KineticReactionsChangedHandler(Object sender, EventArgs args);
-
+public delegate void KineticReactionsChangedHandler(object sender, EventArgs args);
 
 /// <summary>
 /// Represents the method that will handle the changing of the Equilibrium Reaction Chemistry of a PMC.
 /// </summary>
 [ComVisible(false)]
-public delegate void EquilibriumReactionsChangedHandler(Object sender, EventArgs args);
+public delegate void EquilibriumReactionsChangedHandler(object sender, EventArgs args);
 
 /// <summary>
 /// Base Class defining the actual Parameter quantity.
@@ -2006,9 +1770,8 @@ abstract public class CapeParameter : CapeIdentification,
     ICapeParameterSpec,
     ICapeParameterSpecCOM
 {
-
     CapeParamMode m_mode = CapeParamMode.CAPE_INPUT_OUTPUT;
-        
+
     /// <summary>
     /// The flag to indicate parameter validation's status.
     /// </summary>
@@ -2024,7 +1787,7 @@ abstract public class CapeParameter : CapeIdentification,
     /// Validate() method was called it returned true.</para>
     /// </remarks>
     protected CapeValidationStatus m_ValStatus = CapeValidationStatus.CAPE_NOT_VALIDATED;
-        
+
     /// <summary>
     /// Creates a new instance of the abstract parameter base class. 
     /// </summary>
@@ -2046,6 +1809,7 @@ abstract public class CapeParameter : CapeIdentification,
     /// <remarks><para>Raises the ParameterValidated event through a delegate.</para>        
     /// </remarks>
     public event ParameterValidatedHandler ParameterValidated;
+
     /// <summary>
     /// Occurs when a parameter is validated.
     /// </summary>
@@ -2081,12 +1845,9 @@ abstract public class CapeParameter : CapeIdentification,
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [Browsable(false)]
-    Object ICapeParameter.Specification
+    object ICapeParameter.Specification
     {
-        get
-        {
-            return this;
-        }
+        get { return this; }
     }
 
     /// <summary>
@@ -2095,6 +1856,7 @@ abstract public class CapeParameter : CapeIdentification,
     /// <remarks><para>Raises the ParameterValueChanged event through a delegate.</para>        
     /// </remarks>
     public event ParameterValueChangedHandler ParameterValueChanged;
+
     /// <summary>
     /// Occurs when the user changes of the value of a paramter.
     /// </summary>
@@ -2113,7 +1875,7 @@ abstract public class CapeParameter : CapeIdentification,
             ParameterValueChanged(this, args);
         }
     }
-        
+
     /// <summary>
     /// Gets and sets the value for this Parameter.
     /// </summary>
@@ -2125,11 +1887,7 @@ abstract public class CapeParameter : CapeIdentification,
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [Browsable(false)]
-    virtual public Object value
-    {
-        get;
-        set;
-    }
+    virtual public object value { get; set; }
 
 
     /// <summary>
@@ -2146,10 +1904,7 @@ abstract public class CapeParameter : CapeIdentification,
     [Browsable(false)]
     virtual public double[] Dimensionality
     {
-        get
-        {
-            return null;
-        }
+        get { return null; }
     }
 
     /// <summary>
@@ -2164,12 +1919,9 @@ abstract public class CapeParameter : CapeIdentification,
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [Browsable(false)]
-    Object ICapeParameterSpecCOM.Dimensionality
+    object ICapeParameterSpecCOM.Dimensionality
     {
-        get
-        {
-            return null;
-        }
+        get { return null; }
     }
 
 
@@ -2193,10 +1945,7 @@ abstract public class CapeParameter : CapeIdentification,
     [Category("ICapeParameter")]
     public CapeValidationStatus ValStatus
     {
-        get
-        {
-            return m_ValStatus;
-        }
+        get { return m_ValStatus; }
     }
 
     /// <summary>
@@ -2205,6 +1954,7 @@ abstract public class CapeParameter : CapeIdentification,
     /// <remarks><para>Raises the ParameterDefaultValueChanged event through a delegate.</para>        
     /// </remarks>
     public event ParameterDefaultValueChangedHandler ParameterDefaultValueChanged;
+
     /// <summary>
     /// Occurs when the user changes of the default value of a parameter.
     /// </summary>
@@ -2222,15 +1972,17 @@ abstract public class CapeParameter : CapeIdentification,
         {
             ParameterDefaultValueChanged(this, args);
         }
+
         NotifyPropertyChanged("DefaultValue");
     }
-        
+
     /// <summary>
     /// Occurs when the user changes of the mode of the parameter changes.
     /// </summary>
     /// <remarks><para>Raises the ParameterModeChanged event through a delegate.</para>        
     /// </remarks>
     public event ParameterModeChangedHandler ParameterModeChanged;
+
     /// <summary>
     /// Occurs when the user changes of the mode of a parameter.
     /// </summary>
@@ -2268,10 +2020,7 @@ abstract public class CapeParameter : CapeIdentification,
     [Category("ICapeParameter")]
     public CapeParamMode Mode
     {
-        get
-        {
-            return m_mode;
-        }
+        get { return m_mode; }
         set
         {
             ParameterModeChangedEventArgs args = new ParameterModeChangedEventArgs(ComponentName, m_mode, value);
@@ -2280,7 +2029,7 @@ abstract public class CapeParameter : CapeIdentification,
             NotifyPropertyChanged("Mode");
         }
     }
-                       
+
     /// <summary>
     /// Validates the current value of the parameter against the 
     /// specification of the parameter. 
@@ -2298,8 +2047,7 @@ abstract public class CapeParameter : CapeIdentification,
     /// <param name = "message">Reference to a string that will conain a message regarding the validation of the parameter.</param>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
-    abstract public bool Validate(ref String message);
-
+    abstract public bool Validate(ref string message);
 
 
     /// <summary>
@@ -2308,6 +2056,7 @@ abstract public class CapeParameter : CapeIdentification,
     /// <remarks><para>Raises the ParameterReset event through a delegate.</para>        
     /// </remarks>
     public event ParameterResetHandler ParameterReset;
+
     /// <summary>
     /// Occurs when the user resets a parameter.
     /// </summary>
@@ -2343,17 +2092,12 @@ abstract public class CapeParameter : CapeIdentification,
     /// Gets the type of the parameter. 
     /// </summary>
     /// <remarks>
-    /// Gets the <see cref="CapeParamType"/> of the parameter for which this is a specification: real 
-    /// (CAPE_REAL), integer(CAPE_INT), option(CAPE_OPTION), boolean(CAPE_BOOLEAN) 
-    /// or array(CAPE_ARRAY).
+    /// 获取此参数所对应的 <see cref="CapeParamType"/> 参数类型:
+    /// real(CAPE_REAL), integer(CAPE_INT), option(CAPE_OPTION), boolean(CAPE_BOOLEAN), array(CAPE_ARRAY).
     /// </remarks>
     /// <value>The parameter type. </value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">To be used when an invalid argument value is passed.</exception>
     [Category("ICapeParameterSpec")]
-    abstract public CapeParamType Type
-    {
-        get;
-    }
- 
+    abstract public CapeParamType Type { get; }
 }
