@@ -445,21 +445,19 @@ public interface ICapeArrayParameterSpec
     [DispId(1), Description("Get the number of dimensions of the array")]
     int NumDimensions { get; }
 
-    /// <summary>Gets the size of each one of the dimensions of the array.</summary>
-    /// <remarks>An array containing the specification of each member of the parameter array. </remarks>
-    /// <value>An integer array containing the size of each dimension of the array.</value>
+    /// <summary>获取数组每个维度的大小。</summary>
+    /// <remarks>包含参数数组中每个成员的规格说明的数组。</remarks>
+    /// <value>一个整型数组，包含数组每个维度的大小。</value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(2), Description("Get the size of each one of the dimensions of the array")]
     int[] Size { get; }
 
-    /// <summary>Gets an array of the specifications of each of the items in the 
-    /// value of a parameter.</summary>
+    /// <summary>获取一个数组，该数组包含参数值中每个项目的规格。</summary>
     /// <remarks>An array of interfaces to the correct specification type (<see cref="ICapeRealParameterSpec"/> ,
     /// <see cref="ICapeIntegerParameterSpec"/> , <see cref="ICapeBooleanParameterSpec"/> , 
-    /// <see cref="ICapeOptionParameterSpec"/> ). Note that it is also possible, for 
-    /// example, to configure an array of arrays of integers, which would a similar 
-    /// but not identical concept to a two-dimensional matrix of integers.</remarks>
+    /// <see cref="ICapeOptionParameterSpec"/> ).
+    /// <para>请注意，同样可以配置整数数组的数组，这与二维整数矩阵的概念相似但不完全相同。</para></remarks>
     /// <value>An array of <see cref="ICapeParameterSpec"/> objects.</value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
@@ -467,13 +465,13 @@ public interface ICapeArrayParameterSpec
     object[] ItemsSpecifications { get; }
 
     /// <summary>验证该值是否符合参数的规范。该消息用于返回参数无效的原因。</summary>
-    /// <remarks>This method checks the current value of the parameter to determine if it is an allowed value. </remarks>
+    /// <remarks>此方法检查参数的当前值，以确定其是否为允许值。</remarks>
     /// <returns>如果参数有效则返回 true，否则返回 false。</returns>
-    /// <param name="inputArray">The message is used to return the reason that the parameter is invalid.</param>
-    /// <param name="messages">A string array containing the message is used to return the reason that the parameter is invalid.</param>
+    /// <param name="inputArray">该消息用于返回参数无效的原因。</param>
+    /// <param name="messages">用于返回参数无效原因的字符串数组。</param>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
-    [DispId(4), Description("Check if value is OK for this spec ")]
+    [DispId(4), Description("Check if value is OK for this spec")]
     object Validate(object inputArray, ref string[] messages);
 }
 
@@ -543,7 +541,7 @@ public interface ICapeParameter
 
     /// <summary>Validates the current value of the parameter against the 
     /// specification of the parameter.</summary>
-    /// <remarks>This method checks the current value of the parameter to determine if it is an allowed value. In the case of 
+    /// <remarks>此方法检查参数的当前值，以确定其是否为允许值。In the case of 
     /// numeric parameters (<see cref="ICapeRealParameterSpec"/> and <see cref="ICapeIntegerParameterSpec"/>),
     /// the value is valid if it is between the upper and lower bound. For String (<see cref="ICapeOptionParameterSpec"/>),
     /// if the <see cref="ICapeOptionParameterSpec.RestrictedToList"/> property is true, the value must be included as one of the
