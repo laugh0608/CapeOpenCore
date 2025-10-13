@@ -475,18 +475,17 @@ public interface ICapeArrayParameterSpec
     object Validate(object inputArray, ref string[] messages);
 }
 
-/// <summary>Interface defining the actual Parameter quantity.</summary>
+/// <summary>定义实际参数数量的接口。</summary>
 [ComImport]
 [ComVisible(false)]
 [Guid(COGuids.ICapeParameter_IID)]
 [Description("ICapeParameter Interface")]
 public interface ICapeParameter
 {
-    /// <summary>Gets the Specification for this Parameter</summary>
-    /// <remarks>Gets the specification of the parameter. The Get method returns the 
-    /// specification as an interface to the correct specification type.</remarks>
+    /// <summary>获取此参数的规范</summary>
+    /// <remarks>获取参数的规范。Get 方法将规范作为指向正确规范类型的接口返回。</remarks>
     /// <value>An object implementing the <see cref="ICapeParameterSpec"/>, as well as the
-    /// appropraite specification for the parameter type, <see cref="ICapeRealParameterSpec"/> ,
+    /// appropriate specification for the parameter type, <see cref="ICapeRealParameterSpec"/> ,
     /// <see cref="ICapeIntegerParameterSpec"/> , <see cref="ICapeBooleanParameterSpec"/> , 
     /// <see cref="ICapeOptionParameterSpec"/> , or <see cref="ICapeArrayParameterSpec"/> .</value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
@@ -499,27 +498,25 @@ public interface ICapeParameter
         get;
     }
 
-    /// <summary>Gets and sets the value for this Parameter</summary>
-    /// <remarks>Gets and sets the value of this parameter. Passed as a CapeVariant that 
-    /// should be the same type as the Parameter type.</remarks>
-    /// <value>The boxed value of the parameter.</value>
+    /// <summary>获取并设置此参数的值</summary>
+    /// <remarks>获取并设置此参数的值。作为 CapeVariant 传递，其类型应与参数类型相同。</remarks>
+    /// <value>该参数的盒装值。</value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(2)]
     [Description("Get and sets the value of the parameter.")]
     object value { get; set; }
 
-    /// <summary>Gets the flag to indicate parameter validation's status.</summary>
-    /// <remarks><para>Gets the flag to indicate parameter validation status. It has three 
-    /// possible values:</para>
-    /// <para>   (i)   notValidated(CAPE_NOT_VALIDATED): The PMC's <c>Validate()</c>
+    /// <summary>获取标志以指示参数验证的状态。</summary>
+    /// <remarks><para>获取标志以指示参数验证状态。该标志可能具有三种值：</para>
+    /// <para>(i) notValidated(CAPE_NOT_VALIDATED): The PMC's <c>Validate()</c>
     /// method has not been called after the last time that its value had been 
     /// changed.</para>
-    /// <para>   (ii)  invalid(CAPE_INVALID): The last time that the PMC's 
+    /// <para>(ii) invalid(CAPE_INVALID): The last time that the PMC's 
     /// <c>Validate()</c> method was called it returned false.</para>
-    /// <para>   (iii) valid(CAPE_VALID): the last time that the PMC's
+    /// <para>(iii) valid(CAPE_VALID): the last time that the PMC's
     /// Validate() method was called it returned true.</para></remarks>
-    /// <value>The validity staus of the parameter, either valid, invalid, or "not validated".</value>
+    /// <value>参数的有效性状态，可能是有效、无效或“未验证”。</value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [DispId(3), Description("Get the parameter validation status")]
@@ -1449,7 +1446,7 @@ abstract public class CapeParameter : CapeIdentification,
         }
     }
 
-    /// <summary>Gets and sets the value for this Parameter.</summary>
+    /// <summary>获取并设置此参数的值.</summary>
     /// <remarks>This value uses the System.Object data type for compatibility with 
     /// COM-based CAPE-OPEN.</remarks>
     /// <value>System.Object</value>
@@ -1482,7 +1479,7 @@ abstract public class CapeParameter : CapeIdentification,
     }
 
 
-    /// <summary>Gets the flag to indicate parameter validation's status.</summary>
+    /// <summary>获取标志以指示参数验证的状态。</summary>
     /// <remarks><para>Gets the flag to indicate parameter validation status. It has three 
     /// possible values:</para>
     /// <para>   (i)   notValidated(CAPE_NOT_VALIDATED): The PMC's <c>Validate()</c>
@@ -1492,7 +1489,7 @@ abstract public class CapeParameter : CapeIdentification,
     /// <c>Validate()</c> method was called it returned false.</para>
     /// <para>   (iii) valid(CAPE_VALID): the last time that the PMC's
     /// Validate() method was called it returned true.</para></remarks>
-    /// <value>The validity staus of the parameter, either valid, invalid, or "not validated".</value>
+    /// <value>参数的有效性状态，可能是有效、无效或“未验证”。</value>
     /// <exception cref="ECapeUnknown">当为该操作指定的其他错误不适用时，应抛出的错误。</exception>
     /// <exception cref="ECapeInvalidArgument">当传递无效参数值时使用，例如未识别的复合标识符或 props 参数为 UNDEFINED。</exception>
     [Category("ICapeParameter")]
