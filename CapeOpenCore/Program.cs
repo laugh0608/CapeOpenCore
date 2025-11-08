@@ -11,7 +11,7 @@ internal abstract class Program
     private static void Main(string[] args)
     {
         // Console.WriteLine("Hello, Cape Open World!");
-            
+
         // 执行主程序
         EnsureAdminAndExecuteAsync().Wait();
     }
@@ -32,6 +32,7 @@ internal abstract class Program
             Process.Start(startInfo);
             return;
         }
+
         // 已经是管理员，让用户输入回车确认执行
         await WaitForEnterAsync();
         // 提示用户输入
@@ -58,6 +59,7 @@ internal abstract class Program
             // 处理无效输入
             Console.WriteLine("无效的选择。请输入 1 或 2。");
         }
+
         // 等待用户按任意键退出，以便在控制台窗口中查看输出
         Console.WriteLine("按任意键退出...");
         Console.ReadKey();
@@ -116,7 +118,7 @@ internal abstract class Program
 
             await Task.Delay(1000);
             Console.WriteLine("依赖环境卸载成功...");
-                
+
             Console.WriteLine("等待 3 秒后自动退出...");
             // 异步等待
             await Task.Delay(3000);
@@ -134,13 +136,16 @@ internal abstract class Program
         var principal = new System.Security.Principal.WindowsPrincipal(identity);
         return principal.IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator);
     }
+
     // 等待用户输入逻辑
     private static async Task WaitForEnterAsync()
     {
         Console.WriteLine("请确认已经关闭了所有的 PME 环境后按回车继续...");
         await Task.Run(() =>
         {
-            while (Console.ReadKey(true).Key != ConsoleKey.Enter) { }
+            while (Console.ReadKey(true).Key != ConsoleKey.Enter)
+            {
+            }
         });
         Console.WriteLine("请输入数字选择要执行的操作：");
         Console.WriteLine("[1]: 执行组件注册和单元模块加载。");
