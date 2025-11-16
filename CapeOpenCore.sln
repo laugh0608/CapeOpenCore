@@ -7,10 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapeOpenCore", "CapeOpenCor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapeOpenCore.Class", "CapeOpenCore.Class\CapeOpenCore.Class.csproj", "{6A4FFD66-0444-4842-BD5B-B733CC8B039A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapeOpenCore.Toolkit", "CapeOpenCore.Toolkit\CapeOpenCore.Toolkit.csproj", "{0B06533F-DE1D-40AA-B8E3-556A85D4D2BA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapeOpenCore.Caster", "CapeOpenCore.Caster\CapeOpenCore.Caster.csproj", "{5C2D2142-135B-4075-A8D5-B3138798BC8B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapeOpenCore.Test", "CapeOpenCore.Test\CapeOpenCore.Test.csproj", "{3E56242A-04F5-467A-BC09-43E88CBC586B}"
 EndProject
 Global
@@ -27,14 +23,6 @@ Global
 		{6A4FFD66-0444-4842-BD5B-B733CC8B039A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A4FFD66-0444-4842-BD5B-B733CC8B039A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A4FFD66-0444-4842-BD5B-B733CC8B039A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0B06533F-DE1D-40AA-B8E3-556A85D4D2BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0B06533F-DE1D-40AA-B8E3-556A85D4D2BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0B06533F-DE1D-40AA-B8E3-556A85D4D2BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0B06533F-DE1D-40AA-B8E3-556A85D4D2BA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5C2D2142-135B-4075-A8D5-B3138798BC8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5C2D2142-135B-4075-A8D5-B3138798BC8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5C2D2142-135B-4075-A8D5-B3138798BC8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5C2D2142-135B-4075-A8D5-B3138798BC8B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3E56242A-04F5-467A-BC09-43E88CBC586B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3E56242A-04F5-467A-BC09-43E88CBC586B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E56242A-04F5-467A-BC09-43E88CBC586B}.Release|Any CPU.ActiveCfg = Release|Any CPU
