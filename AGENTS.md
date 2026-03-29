@@ -1,5 +1,27 @@
 # Repository Guidelines
 
+## Archive Notice
+
+本仓库已进入封存状态，当前主开发仓库为：
+
+- [RadishFlow](https://github.com/laugh0608/RadishFlow)
+
+对本仓库的默认处理原则：
+
+- 不再在此仓库中继续推进新产品主线功能
+- 不再把本仓库作为 Rust Core、Rust UI 或 `.NET 10` CAPE-OPEN 适配层的实现载体
+- 若用户请求新功能、架构演进或新产品能力，优先引导或迁移到 `RadishFlow`
+- 本仓库仅保留为历史参考、接口语义来源和资产提取来源
+
+仍可在本仓库进行的工作：
+
+- 文档修订
+- 历史说明补充
+- 为 `RadishFlow` 提取 CAPE-OPEN 接口、GUID、异常语义与注册语义
+- 在用户明确要求下进行极小范围维护
+
+除非用户明确要求，否则不要在本仓库中继续展开大规模代码开发或新架构建设。
+
 ## Project Structure & Module Organization
 CapeOpenCore.sln 汇集三个主要项目：`CapeOpenCore` 控制台注册器（入口 `Program.cs`，负责调用 `RegistrationServices` 注册/反注册组件）、`CapeOpenCore.Class` 核心类库（接口封装、IDL 映射及 `Resources/` 与 `StaticFiles/` 中的注册模板）、`CapeOpenCore.Test` 示例/测试装配件（`MixerExample`、截图位于 `TestScreenshot/`）。`docs/` 存放额外手册，`CapeOpen.BackUp/` 是参考备份，除非需要回溯历史，不要修改。
 

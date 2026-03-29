@@ -2,6 +2,16 @@
 
 本文档概述当前仓库的组织结构、各项目的职责以及后续扩展计划，帮助贡献者快速了解维护重点与开发路线。
 
+## 专题文档
+
+| 文档 | 说明 |
+| --- | --- |
+| `net10-migration-plan.md` | 从 `.NET Framework 4.8` 迁移到仅保留 `.NET 10` 的实施计划，覆盖 COM、注册、运行时加载与部署改造。 |
+| `radishflow-architecture-draft.md` | `RadishFlow` 目标产品的架构草案，定义 Rust Core、Rust UI 与 .NET 10 CAPE-OPEN 适配层的推荐仓库结构。 |
+| `radishflow-capeopen-asset-checklist.md` | 从当前仓库提取 `RadishFlow` 所需 CAPE-OPEN 资产的清单，覆盖接口、GUID、异常语义与注册语义边界。 |
+| `radishflow-mvp-roadmap.md` | `RadishFlow` 第一阶段 MVP 的开发路线图，按里程碑拆分 Rust 内核、FFI、.NET 适配层和 PME 验证。 |
+| `radishflow-startup-checklist.md` | 从 `CapeOpenCore` 启动 `RadishFlow` 的执行清单，包含新仓库命名建议、初始骨架和迁移边界。 |
+
 ## 仓库结构
 
 | 路径 | 说明 |
@@ -48,7 +58,8 @@
 
 ## 未来规划
 
-* **跨平台核心库**：在现有 .NET Framework 4.8 代码基础上，引入全新 .NET 10 项目，实现跨平台的 CAPE-OPEN 交互能力。
+* **现代 .NET 主线**：优先完成从 `.NET Framework 4.8` 到 `.NET 10` 的迁移，当前阶段以 `net10.0-windows` + COM 兼容为主，详见 `net10-migration-plan.md`。
+* **跨平台评估**：在 Windows/COM 主线稳定后，再评估是否拆分出可跨平台复用的纯托管核心能力。
 * **性能扩展**：计划新增 Rust 扩展模块/项目，用于提升流程模拟迭代与求解场景的性能。
 * **示例解耦**：把 `CapeOpenCore.Test` 演进为多个独立示例项目，覆盖混合器、物性包等不同场景。
 

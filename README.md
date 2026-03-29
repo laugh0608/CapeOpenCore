@@ -1,6 +1,38 @@
 # CapeOpenCore
 
+> 本仓库已进入封存状态，作为历史参考与 CAPE-OPEN 资产来源保留。
+>
+> 新的主开发仓库已迁移至：
+> [RadishFlow](https://github.com/laugh0608/RadishFlow)
+
 CapeOpenCore 是一个以 C# 为主的 CAPE-OPEN 组件开发与注册示例仓库，包含 CLI 注册器、核心类库以及混合器测试工程，可用于在流程模拟软件中验证自定义单元与物性包。
+
+## 仓库状态
+
+本仓库当前定位为：
+
+- 历史参考仓库
+- CAPE-OPEN 接口、GUID、异常语义与注册语义的提取来源
+- `.NET Framework 4.8` / 旧式 COM 注册方案的保留样例
+
+本仓库默认**不再承接新产品主线开发**。后续与 Rust Core、Rust UI、`.NET 10` CAPE-OPEN 适配层相关的新工作，请前往 [RadishFlow](https://github.com/laugh0608/RadishFlow)。
+
+## 与新仓库的关系
+
+`RadishFlow` 是新的主开发仓库，目标是：
+
+- 使用 Rust 实现稳态模拟核心
+- 使用 Rust 实现桌面 UI
+- 使用 `.NET 10` 实现 CAPE-OPEN/COM 适配层
+- 第一阶段只导出自有 CAPE-OPEN Unit Operation PMC 给外部 PME 使用
+
+当前 `CapeOpenCore` 保留的主要价值是：
+
+- `*IDL.cs` 与相关接口定义参考
+- `COGuids.cs` 中的 GUID 与 CAPE-OPEN category 语义
+- ECape 异常分类语义
+- 旧注册器与注册表补写逻辑的历史实现参考
+- `MixerExample` 等最小行为样例
 
 ## 仓库概览
 
@@ -22,8 +54,8 @@ dotnet test CapeOpenCore.Test/CapeOpenCore.Test.csproj -c Debug -p:Platform=x64
 
 ## 当前状态与规划
 
-- 核心类库主要基于对 `wbarret1` C# 混合器示例的翻译与重构（.NET Framework 4.8，依赖 Windows API）。
-- 计划引入新的 .NET 10 库以获得跨平台能力，并逐步加入 Rust 扩展模块提升计算性能。
-- 示例项目将逐步拆分并覆盖更多 CAPE-OPEN 场景，配套文档可在 `docs/` 中查阅。
+- 核心类库主要基于对 `wbarret1` C# 混合器示例的翻译与重构（`.NET Framework 4.8`，依赖 Windows API）。
+- 本仓库不再作为未来主产品演进载体，主线规划已转移至 `RadishFlow`。
+- `docs/` 中保留了从 `CapeOpenCore` 过渡到 `RadishFlow` 的迁移、架构和资产提取文档，可继续作为参考。
 
 更多细节与贡献指南请参考 `docs/README.md`。
