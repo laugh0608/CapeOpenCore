@@ -15,6 +15,12 @@
 - 使用独立新仓库开发，不继续在当前仓库主线中生长
 - 当前 `CapeOpenCore` 仓库保留为参考仓库与过渡资产来源
 
+配套文档：
+
+- `radishflow-architecture-draft.md`
+- `radishflow-capeopen-asset-checklist.md`
+- `radishflow-mvp-roadmap.md`
+
 ## 仓库命名建议
 
 推荐仓库名：`RadishFlow`
@@ -148,6 +154,19 @@ RadishFlow/
 6. 写根 `README.md`
 7. 写 `docs/README.md`
 
+## 开新仓库前的迁移前准备
+
+在正式创建 `RadishFlow` 仓库前，建议先在当前仓库完成以下准备：
+
+- 冻结 `RadishFlow` 名称与命名规则
+- 冻结 MVP 范围
+- 冻结目标仓库骨架
+- 冻结第一阶段只导出自有 Unit Operation PMC 的原则
+- 整理当前仓库中可复用的 CAPE-OPEN 接口与注册语义清单
+- 把关键文档先写完整，避免新仓库创建后还回头补方向性讨论
+
+这些准备完成后，再开新仓库会明显顺很多。
+
 ## 从 CapeOpenCore 迁移时该带走什么
 
 新仓库不应该“整仓复制”当前项目，而应按主题提炼资产。
@@ -190,6 +209,7 @@ RadishFlow/
 先迁这些：
 
 - `RadishFlow` 架构草案
+- `RadishFlow` MVP 路线图
 - MVP 范围说明
 - 新仓库开发路线图
 - CAPE-OPEN 适配边界说明
@@ -201,6 +221,10 @@ RadishFlow/
 - GUID 与接口语义约定
 - CAPE-OPEN 类别与注册语义
 - ECape 异常语义
+
+详细提取边界见：
+
+- `radishflow-capeopen-asset-checklist.md`
 
 ### 代码迁移
 
@@ -265,6 +289,10 @@ RadishFlow/
 4. `M4`：Rust FFI 与 .NET 10 适配层联通
 5. `M5`：第一个 CAPE-OPEN Unit Operation PMC 被外部 PME 识别
 
+详细拆分建议见：
+
+- `radishflow-mvp-roadmap.md`
+
 ## 建议的首批文档
 
 新仓库建立后，建议最先写这 5 份文档：
@@ -297,4 +325,3 @@ RadishFlow/
 - 最后把 Rust 核心通过 .NET 10 适配成 CAPE-OPEN Unit Operation PMC
 
 这条启动路径最清晰，也最能避免当前仓库的历史包袱进入新产品主线。
-

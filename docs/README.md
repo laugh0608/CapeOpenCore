@@ -8,6 +8,8 @@
 | --- | --- |
 | `net10-migration-plan.md` | 从 `.NET Framework 4.8` 迁移到仅保留 `.NET 10` 的实施计划，覆盖 COM、注册、运行时加载与部署改造。 |
 | `radishflow-architecture-draft.md` | `RadishFlow` 目标产品的架构草案，定义 Rust Core、Rust UI 与 .NET 10 CAPE-OPEN 适配层的推荐仓库结构。 |
+| `radishflow-capeopen-asset-checklist.md` | 从当前仓库提取 `RadishFlow` 所需 CAPE-OPEN 资产的清单，覆盖接口、GUID、异常语义与注册语义边界。 |
+| `radishflow-mvp-roadmap.md` | `RadishFlow` 第一阶段 MVP 的开发路线图，按里程碑拆分 Rust 内核、FFI、.NET 适配层和 PME 验证。 |
 | `radishflow-startup-checklist.md` | 从 `CapeOpenCore` 启动 `RadishFlow` 的执行清单，包含新仓库命名建议、初始骨架和迁移边界。 |
 
 ## 仓库结构
